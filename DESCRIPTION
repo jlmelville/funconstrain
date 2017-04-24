@@ -1,0 +1,13 @@
+Package: funconstrain
+Type: Package
+Title: Functions for Testing Unconstrained Numerical Optimization
+Version: 0.0.0.9000
+Authors@R: person("Melville", "James", email = "jlmelville@gmail.com",
+    role = c("aut", "cre"))
+Description: Functions for testing unconstrained numerical optimization, taken
+    from More', Garbow and Hillstrom's paper 'Testing unconstrained 
+    optimization software.'
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
