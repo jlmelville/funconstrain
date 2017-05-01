@@ -9,8 +9,12 @@ helical()
 \value{
 A list containing:
 \itemize{
-  \item \code{fn} The function.
-  \item \code{gr} The gradient.
+  \item \code{fn} Function which calculates the value given input
+  parameter vector.
+  \item \code{gr} Function which calculates the gradient vector given input
+  parameter vector.
+  \item \code{fg} A function which calculates both the value and gradient,
+  given the parameter vector, returning a list.
   \item \code{x0} Standard starting point.
 }
 }
