@@ -31,6 +31,7 @@ Testing unconstrained optimization software.
 
 Powell, M. J. D. (1970).
 A hybrid method for nonlinear equations.
-In P. Rabinowitz (Ed.), \emph{Numerical Methods for Nonlinear Algebraic Equations} (pp87-114).
+In P. Rabinowitz (Ed.),
+\emph{Numerical Methods for Nonlinear Algebraic Equations} (pp87-114).
 New York: Gordon & Breach.
 }
