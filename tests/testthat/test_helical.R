@@ -13,7 +13,7 @@ test_that("Gradient is zero at stated minima", {
   gr0 <- testfun$gr(c(1, 0, 0))
   expect_equal(gr0, c(0, 0, 0))
 })
-test_that("Function is zero at stated minima", {
+test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(c(1, 0, 0)), 0)
 })
 test_that("Optimizer can reach minimum from x0", {

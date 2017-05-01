@@ -12,7 +12,7 @@ test_that("f, g, and fg match at x0", {
 test_that("Gradient is zero at stated minima", {
   expect_equal(testfun$gr(c(1, 1)), c(0, 0))
 })
-test_that("Function is zero at stated minima", {
+test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(c(1, 1)), 0)
 })
 test_that("Optimizer can reach minimum from x0", {

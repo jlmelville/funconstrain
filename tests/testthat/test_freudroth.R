@@ -13,7 +13,7 @@ test_that("Gradient is zero at stated minima", {
   expect_equal(testfun$gr(c(5, 4)), c(0, 0))
   expect_equal(testfun$gr(c(11.413, -0.8968)), c(0, 0), tol = 1e-2)
 })
-test_that("Function is zero at stated minima", {
+test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(c(5, 4)), 0, tol = 1e-3)
   expect_equal(testfun$fn(c(11.413, -0.8968)), 48.984, tol = 1e-5)
 })

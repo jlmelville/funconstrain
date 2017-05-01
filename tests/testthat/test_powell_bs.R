@@ -14,7 +14,7 @@ test_that("Gradient is zero at stated minima", {
   expect_equal(gr0[1], 0, tol = 1) # gr is ~ -29.4!
   expect_equal(gr0[2], 0, tol = 1e-4)
 })
-test_that("Function is zero at stated minima", {
+test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(c(1.098e-5, 9.106)), 0, tol = 1e-6)
 })
 test_that("Optimizer can reach minimum from x0", {
