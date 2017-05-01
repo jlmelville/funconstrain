@@ -24,6 +24,7 @@
 #' In P. Rabinowitz (Ed.),
 #' \emph{Numerical Methods for Nonlinear Algebraic Equations} (pp87-114).
 #' New York: Gordon & Breach.
+#' @export
 powell_bs <- function() {
   list(
     fn = function(par) {

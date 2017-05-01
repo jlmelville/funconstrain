@@ -24,6 +24,7 @@
 #' than one variable} (No. 25).
 #' Statistical Techniques Research Group, Section of Mathematical Statistics,
 #' Department of Mathematics, Princeton University.
+#' @export
 beale <- function() {
   list(
     fn = function(par) {

@@ -23,6 +23,7 @@
 #' An automatic method for finding the greatest or least value of a function.
 #' \emph{The Computer Journal}, \emph{3}(3), 175-184.
 #' \url{https://doi.org/10.1093/comjnl/3.3.175}
+#' @export
 rosenbrock <- function() {
   list(
     fn = function(x) {

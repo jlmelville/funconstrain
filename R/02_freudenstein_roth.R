@@ -24,6 +24,7 @@
 #' Numerical solution of systems of nonlinear equations.
 #' \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
 #' \url{https://doi.org/10.1145/321186.321200}
+#' @export
 freud_roth <- function() {
   list(
     fn = function(par) {

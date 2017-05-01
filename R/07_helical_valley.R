@@ -22,6 +22,7 @@
 #' Fletcher, R., & Powell, M. J. (1963).
 #' A rapidly convergent descent method for minimization.
 #' \emph{The Computer Journal}, \emph{6}(2), 163-168.
+#' @export
 helical <- function() {
   theta <- function(x1, x2) {
     res <- 0.5 * atan(x2 / x1) / pi

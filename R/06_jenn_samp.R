@@ -24,6 +24,7 @@
 #' Jennrich, R. I., & Sampson, P. F. (1968).
 #' Application of stepwise regression to non-linear estimation.
 #' \emph{Technometrics}, \emph{10}(1), 63-72.
+#' @export
 jenn_samp <- function(m = 10) {
   list(
     fn = function(par) {
