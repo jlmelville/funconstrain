@@ -8,7 +8,7 @@
 #'   \code{m = 10},
 #' }
 #'
-#' @param m Number of functions in the system.
+#' @param m Number of terms in the objective value.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Function which calculates the value given input

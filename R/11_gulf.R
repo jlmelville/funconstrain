@@ -14,7 +14,7 @@
 #' contains its own minor errors, but you can piece together the correct
 #' equation from these two sources without too much trouble.
 #'
-#' @param m Number of terms in each equation. Should be between 3 and 100,
+#' @param m Number of terms in the objective value. Should be between 3 and 100,
 #' according to the MGH paper. Default value is 99, which Jamil and Xang (2013)
 #' list as the only valid value.
 #' @return A list containing:
