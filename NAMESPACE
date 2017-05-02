@@ -2,6 +2,7 @@
 
 export(bard)
 export(beale)
+export(box_3d)
 export(brown_bs)
 export(freud_roth)
 export(gauss)
