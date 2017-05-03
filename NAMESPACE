@@ -2,6 +2,7 @@
 
 export(bard)
 export(beale)
+export(biggs_exp6)
 export(box_3d)
 export(brown_bs)
 export(brown_den)
