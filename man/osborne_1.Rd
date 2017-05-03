@@ -37,5 +37,5 @@ Osborne, M. R. (1972).
 Some aspects of nonlinear least squares calculations.
 In F. A. Lootsma (Ed.),
 \emph{Numerical methods for nonlinear optimization} (pp. 171-189).
-New York, NY: Academic Press
+New York, NY: Academic Press.
 }
