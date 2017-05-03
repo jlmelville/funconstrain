@@ -24,7 +24,8 @@
 #' \url{https://doi.org/10.1145/355934.355936}
 #'
 #' Colville, A. R. (1968)
-#' A comparative study on nonlinear programming codes (Report No. 320-2949).
+#' \emph{A comparative study on nonlinear programming codes} (Report No.
+#' 320-2949).
 #' New York, NY: IBM.
 #' @export
 wood <- function() {
