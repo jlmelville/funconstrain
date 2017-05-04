@@ -28,7 +28,7 @@
 #' \emph{The Computer Journal}, \emph{3}(3), 175-184.
 #' \url{https://doi.org/10.1093/comjnl/3.3.175}
 #' @export
-rosenbrock <- function() {
+rosen <- function() {
   list(
     fn = function(x) {
       x1 <- x[1]
