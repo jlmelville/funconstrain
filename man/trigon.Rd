@@ -32,6 +32,11 @@ The number of variables in the function, \code{n}, is determined by the
 length of the vector passed to the function and gradient routines. See
 the 'Examples' section.
 }
+\note{
+It seems to be extremely difficult to reach the global minimum for
+any \code{n} from the starting location using the typical gradient-based
+methods (e.g. conjugate gradient, BFGS, L-BFGS).
+}
 \examples{
 trig <- trigon()
 # 6 variable problem using the standard starting point

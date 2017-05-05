@@ -11,6 +11,10 @@
 #' length of the vector passed to the function and gradient routines. See
 #' the 'Examples' section.
 #'
+#' @note It seems to be extremely difficult to reach the global minimum for
+#' any \code{n} from the starting location using the typical gradient-based
+#' methods (e.g. conjugate gradient, BFGS, L-BFGS).
+#'
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Function which calculates the value given input
