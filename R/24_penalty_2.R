@@ -154,8 +154,6 @@ penalty_2 <- function() {
         grad[i] <- grad[i] + 4 * (n - i + 1) * par[i] * f2n
       }
 
-      grad
-
       list(
         fn = fsum,
         gr = grad
