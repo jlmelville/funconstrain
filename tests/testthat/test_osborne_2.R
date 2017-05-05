@@ -21,8 +21,7 @@ test_that("Function value is correct at stated minima", {
 })
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(par = testfun$x0, fn = testfun$fn, gr = testfun$gr,
-                      method = "BFGS", control = list(reltol = 0, abstol = 0,
-                                                      maxit = 1000))
+                      method = "BFGS", control = list(maxit = 1000))
   expect_equal(res$par, min_x, tol = 1e-5)
   expect_equal(res$value, min_fx)
 })
