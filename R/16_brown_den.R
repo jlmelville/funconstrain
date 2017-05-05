@@ -39,7 +39,7 @@ brown_den <- function(m = 20) {
 
       fsum <- 0
       for (i in 1:m) {
-        ti <- i / 5
+        ti <- i * 0.2
         l <- x1 + ti * x2 - exp(ti)
         r <- x3 + x4 * sin(ti) - cos(ti)
         f <- l * l + r * r
@@ -55,7 +55,7 @@ brown_den <- function(m = 20) {
 
       grad <- c(0, 0, 0, 0)
       for (i in 1:m) {
-        ti <- i / 5
+        ti <- i * 0.2
         sinti <- sin(ti)
         l <- x1 + ti * x2 - exp(ti)
         r <- x3 + x4 * sinti - cos(ti)
@@ -79,7 +79,7 @@ brown_den <- function(m = 20) {
       fsum <- 0
       grad <- c(0, 0, 0, 0)
       for (i in 1:m) {
-        ti <- i / 5
+        ti <- i * 0.2
         sinti <- sin(ti)
         l <- x1 + ti * x2 - exp(ti)
         r <- x3 + x4 * sinti - cos(ti)

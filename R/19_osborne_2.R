@@ -56,7 +56,7 @@ osborne_2 <- function() {
 
       fsum <- 0
       for (i in 1:m) {
-        ti <- (i - 1) / 10
+        ti <- (i - 1) * 0.1
         f <- y[i] - (
           x1 * exp(-ti * x5) +
             x2 * exp(-(ti - x9) ^ 2 * x6) +
@@ -109,6 +109,7 @@ osborne_2 <- function() {
         grad[9] <- grad[9] - 4 * x6 * x2 * f9 * f69 * f
         grad[10] <- grad[10] - 4 * x7 * x3 * f10 * f710 * f
         grad[11] <- grad[11] - 4 * x8 * x4 * f11 * f811 * f
+
       }
       grad
     },

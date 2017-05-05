@@ -35,7 +35,7 @@ gauss <- function() {
 
       fsum <- 0
       for (i in 1:m) {
-        ti <- (8 - i) / 2
+        ti <- (8 - i) * 0.5
         f <- x1 * exp(-0.5 * x2 * (ti - x3) ^ 2) - y[i]
         fsum <- fsum + f * f
       }
@@ -48,7 +48,7 @@ gauss <- function() {
 
       grad <- c(0, 0, 0)
       for (i in 1:m) {
-        ti <- (8 - i) / 2
+        ti <- (8 - i) * 0.5
         tx3 <- ti - x3
         tx3s <- tx3 * tx3
         g <- exp(-0.5 * x2 * tx3s)
@@ -69,7 +69,7 @@ gauss <- function() {
       fsum <- 0
       grad <- c(0, 0, 0)
       for (i in 1:m) {
-        ti <- (8 - i) / 2
+        ti <- (8 - i) * 0.5
         tx3 <- ti - x3
         tx3s <- tx3 * tx3
         g <- exp(-0.5 * x2 * tx3s)
