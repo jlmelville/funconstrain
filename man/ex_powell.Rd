@@ -9,12 +9,13 @@ ex_powell()
 \value{
 A list containing:
 \itemize{
-  \item \code{fn} Function which calculates the value given input
+  \item \code{fn} Objective function which calculates the value given input
   parameter vector.
-  \item \code{gr} Function which calculates the gradient vector given input
-  parameter vector.
-  \item \code{fg} Function which calculates both the value and gradient,
-  given the parameter vector, returning a list.
+  \item \code{gr} Gradient function which calculates the gradient vector
+  given input parameter vector.
+  \item \code{fg} A function which, given the parameter vector, calculates
+  both the objective value and gradient, returning a list with members
+  \code{fn} and \code{gr}, respectively.
   \item \code{x0} Function returning the standard starting point, given
   \code{n}, the number of variables desired.
 }
