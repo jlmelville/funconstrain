@@ -2,13 +2,21 @@
 #'
 #' Test function 6 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 2}, \code{m >= n}.
+#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
+#'   functions \code{m >= n}.
 #'   \item Minima: \code{f = 124.362...} at \code{(x1 = x2 = 0.2578)} for
 #'   \code{m = 10},
 #' }
 #'
-#' @param m Number of terms in the objective function.
+#' @note This test problem isn't really unconstrained. \code{x1} must take
+#' a value between \code{(-1, 1)}. Included for the sake of completeness.
+#'
+#' @param m Number of summand functions in the objective function. Should be
+#'   equal to or greater than 2.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Objective function which calculates the value given input
@@ -29,8 +37,29 @@
 #' Jennrich, R. I., & Sampson, P. F. (1968).
 #' Application of stepwise regression to non-linear estimation.
 #' \emph{Technometrics}, \emph{10}(1), 63-72.
+#'
+#' @examples
+#' # Use m = 10 summand functions
+#' fun <- jenn_samp(m = 10)
+#' # Optimize using the standard starting point
+#' # Set 'lower' and 'upper' parameter to constrain par[1]. Only works with
+#' # L-BFGS-B.
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B", lower = -1, upper = 1)
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B",
+#' lower = -1, upper = 1)
+#'
+#' # Use 20 summand functions
+#' fun20 <- jenn_samp(m = 20)
+#' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B",
+#' lower = -1, upper = 1)
 #' @export
 jenn_samp <- function(m = 10) {
+  if (m < 2) {
+    stop("Jennrich-Sampson: m must be >= 2")
+  }
   list(
     fn = function(par) {
       x <- par[1]
@@ -41,7 +70,6 @@ jenn_samp <- function(m = 10) {
         fi <- 2 + 2 * i - (exp(i * x) + exp(i * y))
         fsum <- fsum + fi * fi
       }
-
       fsum
     },
     gr = function(par) {

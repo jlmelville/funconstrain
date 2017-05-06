@@ -2,8 +2,12 @@
 #'
 #' Test function 3 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 2}, \code{m = 2}.
+#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
+#'   functions \code{m = 2}.
 #'   \item Minima: \code{f = 0} at \code{(1.098... e-5, 9.106...) },
 #' }
 #'
@@ -29,6 +33,15 @@
 #' In P. Rabinowitz (Ed.),
 #' \emph{Numerical Methods for Nonlinear Algebraic Equations} (pp87-114).
 #' New York: Gordon & Breach.
+#'
+#' @examples
+#' fun <- powell_bs()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 powell_bs <- function() {
   list(

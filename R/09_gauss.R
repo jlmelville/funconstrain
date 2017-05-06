@@ -2,8 +2,12 @@
 #'
 #' Test function 9 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 3}, \code{m = 15}.
+#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
+#'   functions \code{m = 15}.
 #'   \item Minima: \code{f = 1.12793...e-8}.
 #' }
 #'
@@ -23,6 +27,15 @@
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
 #' \url{https://doi.org/10.1145/355934.355936}
+#'
+#' @examples
+#' fun <- gauss()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 gauss <- function() {
   y <- c(0.0009, 0.0044, 0.0175, 0.0540, 0.1295, 0.2420, 0.3521, 0.3989,

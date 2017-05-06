@@ -2,8 +2,12 @@
 #'
 #' Test function 15 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 4}, \code{m = 11}.
+#'   \item Dimensions: Number of parameters \code{n = 4}, number of summand
+#'   functions \code{m = 11}.
 #'   \item Minima: \code{f = 3.07505...e-4};
 #'   and \code{f = 1.02734...e-3} at \code{(Inf, -14.07..., -Inf, -Inf)}.
 #' }
@@ -28,6 +32,16 @@
 #' Kowalik, J. S., & Osborne, M. R. (1968).
 #' \emph{Methods for unconstrained optimization problems.}
 #' New York, NY: Elsevier North-Holland.
+#'
+#' @examples
+#' fun <- kow_osb()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
+#' "L-BFGS-B")
 #' @export
 kow_osb <- function() {
   m <- 11

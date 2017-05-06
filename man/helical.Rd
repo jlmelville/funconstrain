@@ -23,10 +23,23 @@ A list containing:
 Test function 7 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 3}, \code{m = 3}.
+  \item Dimensions: Number of parameters \code{n = 3}, number of summand
+  functions \code{m = 3}.
   \item Minima: \code{f = 0} at \code{(1, 0, 0)}.
 }
+}
+\examples{
+fun <- helical()
+# Optimize using the standard starting point
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B")
+# Use your own starting point
+res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

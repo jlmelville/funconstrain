@@ -2,8 +2,12 @@
 #'
 #' Test function 10 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 3}, \code{m = 16}.
+#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
+#'   functions \code{m = 16}.
 #'   \item Minima: \code{f = 87.9458...}.
 #' }
 #'
@@ -29,6 +33,15 @@
 #' In J. B. Rosen, O. L. Mangasarian, and K. Ritter (Eds.)
 #' \emph{Nonlinear programming} (pp465-496).
 #' New York: Academic Press.
+#'
+#' @examples
+#' fun <- meyer()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 meyer <- function() {
   y <- c(34780, 28610, 23650, 19630, 16370, 13720, 11540, 9744, 8261, 7030,

@@ -23,11 +23,24 @@ A list containing:
 Test function 2 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 2}, \code{m = 2}.
+  \item Dimensions: Number of parameters \code{n = 2}, number of summand
+  functions \code{m = 2}.
   \item Minima: \code{f = 0} at \code{(5, 4)},
   \code{f = 48.9842...} at \code{(11.41..., -0.8968...)}
 }
+}
+\examples{
+fun <- freud_roth()
+# Optimize using the standard starting point
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B")
+# Use your own starting point
+res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

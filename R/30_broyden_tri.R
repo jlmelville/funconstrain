@@ -2,14 +2,19 @@
 #'
 #' Test function 30 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n} variable, \code{m = n}.
+#'   \item Dimensions: Number of parameters \code{n} variable, number of summand
+#'   functions \code{m = n}.
 #'   \item Minima: \code{f = 0}.
 #' }
 #'
-#' The number of variables in the function, \code{n}, is determined by the
-#' length of the vector passed to the function and gradient routines. See
-#' the 'Examples' section.
+#' The number of parameters, \code{n}, in the objective function is not
+#' specified when invoking this function. It is implicitly set by the length of
+#' the parameter vector passed to the objective and gradient functions that this
+#' function creates. See the 'Examples' section.
 #'
 #' @return A list containing:
 #' \itemize{

@@ -2,8 +2,12 @@
 #'
 #' Test function 8 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 3}, \code{m = 15}.
+#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
+#'   functions \code{m = 15}.
 #'   \item Minima: \code{f = 8.21487...e-3} and
 #'   \code{f = 17.4286} at \code{(0.8406, -Inf, -Inf)}.
 #' }
@@ -30,6 +34,15 @@
 #' estimation problems.
 #' \emph{SIAM Journal on Numerical Analysis}, \emph{7}(1), 157-186.
 #' \url{http://dx.doi.org/10.1137/0707011}
+#'
+#' @examples
+#' fun <- bard()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 bard <- function() {
   y <- c(0.14, 0.18, 0.22, 0.25, 0.29, 0.32, 0.35, 0.39, 0.37, 0.58,

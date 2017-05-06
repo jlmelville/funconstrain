@@ -2,8 +2,12 @@
 #'
 #' Test function 1 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 2}, \code{m = 2}.
+#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
+#'   functions \code{m = 2}.
 #'   \item Minima: \code{f = 0} at \code{(1, 1)}
 #' }
 #'
@@ -28,6 +32,15 @@
 #' An automatic method for finding the greatest or least value of a function.
 #' \emph{The Computer Journal}, \emph{3}(3), 175-184.
 #' \url{https://doi.org/10.1093/comjnl/3.3.175}
+#'
+#' @examples
+#' fun <- rosen()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 rosen <- function() {
   list(

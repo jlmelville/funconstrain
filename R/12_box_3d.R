@@ -2,14 +2,18 @@
 #'
 #' Test function 12 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 3}, \code{m >= n}.
+#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
+#'   functions \code{m >= n}.
 #'   \item Minima: \code{f = 0} at \code{(1, 10, 1), (10, 1, -1)} and
 #'     where \code{x1 = x2} and \code{x3 = 0}.
 #' }
 #'
-#' @param m Number of terms in the objective function. Should be equal to or
-#' greater than 3.
+#' @param m Number of summand functions in the objective function. Should be
+#'   equal to or greater than 3.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Objective function which calculates the value given input
@@ -32,6 +36,20 @@
 #' transformations in constrained problems.
 #' \emph{The Computer Journal}, \emph{9}(1), 67-77.
 #' \url{https://doi.org/10.1093/comjnl/9.1.67}
+#'
+#' @examples
+#' # Use 10 summand functions
+#' fun <- box_3d(m = 10)
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
+#'
+#' # Use 20 summand functions
+#' fun20 <- box_3d(m = 20)
+#' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 box_3d <- function(m = 15) {
   if (m < 3) {

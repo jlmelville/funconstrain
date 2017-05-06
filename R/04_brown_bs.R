@@ -2,8 +2,12 @@
 #'
 #' Test function 4 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 2}, \code{m = 3}.
+#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
+#'   functions \code{m = 3}.
 #'   \item Minima: \code{f = 0} at \code{(1e6, 2e-6) },
 #' }
 #'
@@ -23,6 +27,15 @@
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
 #' \url{https://doi.org/10.1145/355934.355936}
+#'
+#' @examples
+#' fun <- brown_bs()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 brown_bs <- function() {
   list(

@@ -23,10 +23,24 @@ A list containing:
 Test function 14 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 4}, \code{m = 6}.
+  \item Dimensions: Number of parameters \code{n = 4}, number of summand
+  functions \code{m = 6}.
   \item Minima: \code{f = 0} at \code{rep(1, 4)}.
 }
+}
+\examples{
+fun <- wood()
+# Optimize using the standard starting point
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B")
+# Use your own starting point
+res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
+"L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

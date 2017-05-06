@@ -2,8 +2,12 @@
 #'
 #' Test function 11 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 3}, \code{3 <= m <= 100}.
+#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
+#'   functions \code{3 <= m <= 100}.
 #'   \item Minima: \code{f = 0} at \code{(50, 25, 1.5)}.
 #' }
 #'
@@ -14,9 +18,9 @@
 #' contains its own minor errors, but you can piece together the correct
 #' equation from these two sources without too much trouble.
 #'
-#' @param m Number of terms in the objective function. Should be between 3 and
-#' 100, according to the MGH paper. Default value is 99, which Jamil and Xang
-#' (2013) list as the only valid value.
+#' @param m Number of summand functions in the objective function. Should be
+#'   between 3 and 100, according to the MGH paper. Default value is 99, which
+#'   Jamil and Xang (2013) list as the only valid value.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Objective function which calculates the value given input
@@ -40,6 +44,20 @@
 #' Optimisation}, \emph{4}(2), 150-194.
 #' \url{https://doi.org/10.1504/IJMMNO.2013.055204}
 #' \url{https://arxiv.org/abs/1308.4008}
+#'
+#' @examples
+#' # Use 10 summand functions
+#' fun <- gulf(m = 10)
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
+#'
+#' # Use 20 summand functions
+#' fun20 <- gulf(m = 20)
+#' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 gulf <- function(m = 99) {
   y <- c(34780, 28610, 23650, 19630, 16370, 13720, 11540, 9744, 8261, 7030,

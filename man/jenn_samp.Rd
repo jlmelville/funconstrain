@@ -7,7 +7,8 @@
 jenn_samp(m = 10)
 }
 \arguments{
-\item{m}{Number of terms in the objective function.}
+\item{m}{Number of summand functions in the objective function. Should be
+equal to or greater than 2.}
 }
 \value{
 A list containing:
@@ -26,11 +27,37 @@ A list containing:
 Test function 6 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 2}, \code{m >= n}.
+  \item Dimensions: Number of parameters \code{n = 2}, number of summand
+  functions \code{m >= n}.
   \item Minima: \code{f = 124.362...} at \code{(x1 = x2 = 0.2578)} for
   \code{m = 10},
 }
+}
+\note{
+This test problem isn't really unconstrained. \code{x1} must take
+a value between \code{(-1, 1)}. Included for the sake of completeness.
+}
+\examples{
+# Use m = 10 summand functions
+fun <- jenn_samp(m = 10)
+# Optimize using the standard starting point
+# Set 'lower' and 'upper' parameter to constrain par[1]. Only works with
+# L-BFGS-B.
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B", lower = -1, upper = 1)
+# Use your own starting point
+res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B",
+lower = -1, upper = 1)
+
+# Use 20 summand functions
+fun20 <- jenn_samp(m = 20)
+res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B",
+lower = -1, upper = 1)
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

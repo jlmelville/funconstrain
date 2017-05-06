@@ -7,8 +7,8 @@
 linfun_fr(m)
 }
 \arguments{
-\item{m}{Number of terms in the objective function. Should be equal to or
-greater than \code{n}.}
+\item{m}{Number of summand functions in the objective function. Should be
+equal to or greater than \code{n}.}
 }
 \value{
 A list containing:
@@ -28,14 +28,18 @@ A list containing:
 Test function 32 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n} variable, \code{m >= n}.
+  \item Dimensions: Number of parameters \code{n} variable, \code{m >= n}.
   \item Minima: \code{f = m - n} at \code{rep(-1, n)}.
 }
 
-The number of variables in the function, \code{n}, is determined by the
-length of the vector passed to the function and gradient routines. See
-the 'Examples' section.
+The number of parameters, \code{n}, in the objective function is not
+specified when invoking this function. It is implicitly set by the length of
+the parameter vector passed to the objective and gradient functions that this
+function creates. See the 'Examples' section.
 }
 \examples{
 linfr <- linfun_fr(m = 10)
@@ -47,6 +51,12 @@ res_8 <- stats::optim(linfr$x0(8), linfr$fn, linfr$gr, method = "L-BFGS-B")
 # Create your own 4 variable starting point
 res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), linfr$fn, linfr$gr,
                       method = "L-BFGS-B")
+
+# Use 20 summand functions
+linfr_m20 <- linfun_fr(m = 20)
+# Repeat 4 parameter optimization with new test function
+res_n4_m20 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), linfr_m20$fn, linfr_m20$gr,
+method = "L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

@@ -2,8 +2,12 @@
 #'
 #' Test function 17 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 5}, \code{m = 33}.
+#'   \item Dimensions: Number of parameters \code{n = 5}, number of summand
+#'   functions \code{m = 33}.
 #'   \item Minima: \code{f = 5.46489...e-5}.
 #' }
 #'
@@ -29,6 +33,15 @@
 #' In F. A. Lootsma (Ed.),
 #' \emph{Numerical methods for nonlinear optimization} (pp. 171-189).
 #' New York, NY: Academic Press.
+#'
+#' @examples
+#' fun <- osborne_1()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(1:5, fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 osborne_1 <- function() {
   m <- 33

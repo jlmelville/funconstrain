@@ -24,15 +24,20 @@ A list containing:
 Test function 23 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n} variable, \code{m = n + 1}.
+  \item Dimensions: Number of parameters \code{n} variable, number of summand
+  functions \code{m = n + 1}.
   \item Minima: \code{f = 2.24997...e-5} if \code{n = 4};
   \code{f = 7.08765...e-5} if \code{n = 10}.
 }
 
-The number of variables in the function, \code{n}, is determined by the
-length of the vector passed to the function and gradient routines. See
-the 'Examples' section.
+The number of parameters, \code{n}, in the objective function is not
+specified when invoking this function. It is implicitly set by the length of
+the parameter vector passed to the objective and gradient functions that this
+function creates. See the 'Examples' section.
 }
 \examples{
 pen1 <- penalty_1()

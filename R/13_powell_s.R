@@ -2,8 +2,12 @@
 #'
 #' Test function 13 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 4}, \code{m = 4}.
+#'   \item Dimensions: Number of parameters \code{n = 4}, number of summand
+#'   functions \code{m = 4}.
 #'   \item Minima: \code{f = 0} at \code{rep(0, 4)}.
 #' }
 #'
@@ -29,6 +33,16 @@
 #' variables.
 #' \emph{The Computer Journal}, \emph{5}(2), 147-151.
 #' \url{https://doi.org/10.1093/comjnl/5.2.147}
+#'
+#' @examples
+#' fun <- powell_s()
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
+#' "L-BFGS-B")
 #' @export
 powell_s <- function() {
   list(

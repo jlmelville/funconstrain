@@ -2,13 +2,17 @@
 #'
 #' Test function 16 from the More', Garbow and Hillstrom paper.
 #'
+#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' parameters.
+#'
 #' \itemize{
-#'   \item Dimensions: \code{n = 4}, \code{m >= n}.
+#'   \item Dimensions: Number of parameters \code{n = 4}, number of summand
+#'   functions \code{m >= n}.
 #'   \item Minima: \code{f = 85822.2} if \code{m = 20}.
 #' }
 #'
-#' @param m Number of terms in the objective function. Should be equal to or
-#' greater than \code{n}.
+#' @param m Number of summand functions in the objective function. Should be
+#'   equal to or greater than 4.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Objective function which calculates the value given input
@@ -30,6 +34,21 @@
 #' \emph{New computational algorithms for minimizing a sum of squares of
 #' nonlinear functions} (Report No. 71-6).
 #' New Haven, CT: Department of Computer Science, Yale University.
+#'
+#' @examples
+#' # Use 10 summand functions
+#' fun <- brown_den(m = 10)
+#' # Optimize using the standard starting point
+#' x0 <- fun$x0
+#' res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+#' "L-BFGS-B")
+#' # Use your own starting point
+#' res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
+#' "L-BFGS-B")
+#'
+#' # Use 20 summand functions
+#' fun20 <- brown_den(m = 20)
+#' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 brown_den <- function(m = 20) {
   list(

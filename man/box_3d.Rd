@@ -7,8 +7,8 @@
 box_3d(m = 15)
 }
 \arguments{
-\item{m}{Number of terms in the objective function. Should be equal to or
-greater than 3.}
+\item{m}{Number of summand functions in the objective function. Should be
+equal to or greater than 3.}
 }
 \value{
 A list containing:
@@ -27,11 +27,29 @@ A list containing:
 Test function 12 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 3}, \code{m >= n}.
+  \item Dimensions: Number of parameters \code{n = 3}, number of summand
+  functions \code{m >= n}.
   \item Minima: \code{f = 0} at \code{(1, 10, 1), (10, 1, -1)} and
     where \code{x1 = x2} and \code{x3 = 0}.
 }
+}
+\examples{
+# Use 10 summand functions
+fun <- box_3d(m = 10)
+# Optimize using the standard starting point
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B")
+# Use your own starting point
+res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
+
+# Use 20 summand functions
+fun20 <- box_3d(m = 20)
+res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

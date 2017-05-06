@@ -23,10 +23,23 @@ A list containing:
 Test function 10 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 3}, \code{m = 16}.
+  \item Dimensions: Number of parameters \code{n = 3}, number of summand
+  functions \code{m = 16}.
   \item Minima: \code{f = 87.9458...}.
 }
+}
+\examples{
+fun <- meyer()
+# Optimize using the standard starting point
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B")
+# Use your own starting point
+res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

@@ -7,8 +7,8 @@
 biggs_exp6(m = 13)
 }
 \arguments{
-\item{m}{Number of terms in the objective function. Should be equal to or
-greater than \code{n}.}
+\item{m}{Number of summand functions in the objective function. Should be
+equal to or greater than 6.}
 }
 \value{
 A list containing:
@@ -27,14 +27,31 @@ A list containing:
 Test function 18 from the More', Garbow and Hillstrom paper.
 }
 \details{
+The objective function is the sum of \code{m} functions, each of \code{n}
+parameters.
+
 \itemize{
-  \item Dimensions: \code{n = 6}, \code{m >= n}.
+  \item Dimensions: Number of parameters \code{n = 6}, number of summand
+  functions \code{m >= n}.
   \item Minima: \code{f = 5.65565...e-3} if \code{m = 13};
   not reported in the MGH (1981) paper is \code{(f = 0)} at
   \code{c(1, 10, 1, 5, 4, 3)} and \code{c(4, 10, 3, 5, 1, 1)}
   (and probably others) for all \code{m} (probably: I stopped testing after
   \code{m = 1000}).
 }
+}
+\examples{
+fun <- biggs_exp6()
+# Optimize using the standard starting point
+x0 <- fun$x0
+res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
+"L-BFGS-B")
+# Use your own starting point
+res <- stats::optim(1:6, fun$fn, fun$gr, method = "L-BFGS-B")
+
+# Use 20 summand functions
+fun20 <- biggs_exp6(m = 20)
+res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 }
 \references{
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
