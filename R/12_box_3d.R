@@ -8,7 +8,8 @@
 #'     where \code{x1 = x2} and \code{x3 = 0}.
 #' }
 #'
-#' @param m Number of terms in the objective value. Should be 3 or greater.
+#' @param m Number of terms in the objective function. Should be equal to or
+#' greater than 3.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Function which calculates the value given input

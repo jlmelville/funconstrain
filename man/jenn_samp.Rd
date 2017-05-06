@@ -7,7 +7,7 @@
 jenn_samp(m = 10)
 }
 \arguments{
-\item{m}{Number of terms in the objective value.}
+\item{m}{Number of terms in the objective function.}
 }
 \value{
 A list containing:

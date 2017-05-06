@@ -7,7 +7,8 @@
 brown_den(m = 20)
 }
 \arguments{
-\item{m}{Number of terms in the objective value.}
+\item{m}{Number of terms in the objective function. Should be equal to or
+greater than \code{n}.}
 }
 \value{
 A list containing:

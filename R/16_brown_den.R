@@ -7,7 +7,8 @@
 #'   \item Minima: \code{f = 85822.2} if \code{m = 20}.
 #' }
 #'
-#' @param m Number of terms in the objective value.
+#' @param m Number of terms in the objective function. Should be equal to or
+#' greater than \code{n}.
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Function which calculates the value given input

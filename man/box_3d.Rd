@@ -7,7 +7,8 @@
 box_3d(m = 15)
 }
 \arguments{
-\item{m}{Number of terms in the objective value. Should be 3 or greater.}
+\item{m}{Number of terms in the objective function. Should be equal to or
+greater than 3.}
 }
 \value{
 A list containing:

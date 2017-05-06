@@ -7,9 +7,9 @@
 gulf(m = 99)
 }
 \arguments{
-\item{m}{Number of terms in the objective value. Should be between 3 and 100,
-according to the MGH paper. Default value is 99, which Jamil and Xang (2013)
-list as the only valid value.}
+\item{m}{Number of terms in the objective function. Should be between 3 and
+100, according to the MGH paper. Default value is 99, which Jamil and Xang
+(2013) list as the only valid value.}
 }
 \value{
 A list containing:
