@@ -53,53 +53,46 @@ meyer <- function() {
       x2 <- par[2]
       x3 <- par[3]
 
-      fsum <- 0
-      for (i in 1:m) {
-        ti <- 45 + 5 * i
-        f <- x1 * exp(x2 / (ti + x3)) - y[i]
-        fsum <- fsum + f * f
-      }
-      fsum
+      ti <- 45 + 5 * (1:m)
+      fi <- x1 * exp(x2 / (ti + x3)) - y
+
+      sum(fi * fi)
     },
     gr = function(par) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
 
-      grad <- c(0, 0, 0)
-      for (i in 1:m) {
-        ti <- 45 + 5 * i
-        tix3 <- ti + x3
-        tix3s <- tix3 * tix3
-        g <- exp(x2 / tix3)
-        f <- x1 * g - y[i]
-        gf2 <- g * f * 2
-        grad[1] <- grad[1] + gf2
-        grad[2] <- grad[2] + (x1 * gf2) / tix3
-        grad[3] <- grad[3] - (x1 * x2 * gf2) / tix3s
-      }
-      grad
+      ti <- 45 + 5 * (1:m)
+      tix3 <- ti + x3
+      tix3s <- tix3 * tix3
+      e <- exp(x2 / tix3)
+      fi <- x1 * e - y
+      ef2 <- e * fi * 2
+
+      dx <- sum(ef2)
+      dy <- sum((x1 * ef2) / tix3)
+      dz <- -sum((x1 * x2 * ef2) / tix3s)
+      c(dx, dy, dz)
     },
     fg = function(par) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
 
-      fsum <- 0
-      grad <- c(0, 0, 0)
-      for (i in 1:m) {
-        ti <- 45 + 5 * i
-        tix3 <- ti + x3
-        g <- exp(x2 / tix3)
-        f <- x1 * g - y[i]
-        fsum <- fsum + f * f
+      ti <- 45 + 5 * (1:m)
+      tix3 <- ti + x3
+      tix3s <- tix3 * tix3
+      e <- exp(x2 / tix3)
+      fi <- x1 * e - y
+      fsum <- sum(fi * fi)
 
-        tix3s <- tix3 * tix3
-        gf2 <- g * f * 2
-        grad[1] <- grad[1] + gf2
-        grad[2] <- grad[2] + (x1 * gf2) / tix3
-        grad[3] <- grad[3] - (x1 * x2 * gf2) / tix3s
-      }
+      ef2 <- e * fi * 2
+
+      dx <- sum(ef2)
+      dy <- sum((x1 * ef2) / tix3)
+      dz <- -sum((x1 * x2 * ef2) / tix3s)
+      grad <- c(dx, dy, dz)
 
       list(
         fn = fsum,

@@ -42,8 +42,10 @@
 #' res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 #' @export
 helical <- function() {
+  one_div_2pi <- 0.5 / pi
+
   theta <- function(x1, x2) {
-    res <- 0.5 * atan(x2 / x1) / pi
+    res <- one_div_2pi * atan(x2 / x1)
     if (x1 < 0) {
       res <- res + 0.5
     }
@@ -70,16 +72,17 @@ helical <- function() {
       xx <- x * x
       yy <- y * y
       sxy <- sqrt(xx + yy)
-      sxy1 <- sxy - 1
-      txy <- theta(x, y)
-      ztxy <- z - 10 * txy
       pyyxx <- pi * (yy / xx  + 1)
 
-      c(
-        1000 * y * 10 * ztxy / (pyyxx * xx) + 200 * x * sxy1 / sxy,
-        200 * y * sxy1 / sxy - 1000 * ztxy / (pyyxx * x),
-        200 * ztxy + 2 * z
-      )
+      fx <- 10 * (z - 10 * theta(x, y))
+      fy <- 10 * (sxy - 1)
+      fz <- z
+
+      dx <- (100 * y * fx) / (pyyxx * xx) + (20 * x * fy) / sxy
+      dy <- (-100 * fx) / (pyyxx * x) + (20 * y * fy) / sxy
+      dz <- 20 * fx + 2 * z
+
+      c(dx, dy, dz)
     },
     fg = function(par) {
       x <- par[1]
@@ -89,21 +92,18 @@ helical <- function() {
       xx <- x * x
       yy <- y * y
       sxy <- sqrt(xx + yy)
-      sxy1 <- sxy - 1
-      txy <- theta(x, y)
-      ztxy <- z - 10 * txy
       pyyxx <- pi * (yy / xx  + 1)
 
-      f1 <- 10 * ztxy
-      f2 <- 10 * sxy1
-      f3 <- z
+      fx <- 10 * (z - 10 * theta(x, y))
+      fy <- 10 * (sxy - 1)
+      fz <- z
 
-      fsum <- f1 * f1 + f2 * f2 + f3 * f3
-      grad <- c(
-        1000 * y * 10 * ztxy / (pyyxx * xx) + 200 * x * sxy1 / sxy,
-        200 * y * sxy1 / sxy - 1000 * ztxy / (pyyxx * x),
-        200 * ztxy + 2 * z
-      )
+      dx <- (100 * y * fx) / (pyyxx * xx) + (20 * x * fy) / sxy
+      dy <- (-100 * fx) / (pyyxx * x) + (20 * y * fy) / sxy
+      dz <- 20 * fx + 2 * z
+
+      fsum <- fx * fx + fy * fy + fz * fz
+      grad <- c(dx, dy, dz)
 
       list(
         fn = fsum,
