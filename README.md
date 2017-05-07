@@ -37,8 +37,7 @@ vector otherwise.
 # The famous Rosenbrock function is a problem with two parameters
 rbrock <- rosen()
 
-# rbrock is a list containing function (fn), gradient (gr) and starting point
-# (x0, a 2D numeric vector)
+# rbrock is a list containing function (fn), gradient (gr) and starting point (x0, a 2D numeric vector)
 # Pass them to an optimization method:
 res <- stats::optim(par = rbrock$x0, fn = rbrock$fn, gr = rbrock$gr, method = "L-BFGS-B")
 # Or feel free to ignore the suggested starting point and use your own:
@@ -47,8 +46,8 @@ res <- stats::optim(par = c(1.2, 1.2), fn = rbrock$fn, gr = rbrock$gr, method = 
 # The Chebyquad function is defined for multiple parameters (any n > 0)
 cheby <- chebyquad()
 
-# To use different values of n, we provide it to the starting point x0, which
-# is a function now that n can take multiple values for this test set.
+# To use different values of n, we provide it to the starting point x0, which is a function now that n can
+# take multiple values for this test set.
 # A five-parameter version:
 res_n5 <- stats::optim(par = cheby$x0(n = 5), fn = cheby$fn, gr = cheby$gr, method = "L-BFGS-B")
 # And a 10-parameter version:
