@@ -60,76 +60,68 @@
 #' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 gulf <- function(m = 99) {
-  y <- c(34780, 28610, 23650, 19630, 16370, 13720, 11540, 9744, 8261, 7030,
-         6005, 5147, 4427, 3820, 3307, 2872)
   # can be between 3 and 100
   if (m < 3 || m > 100) {
     stop("Gulf research and development function: m must be between 3 and 100")
   }
+
+  y <- c(34780, 28610, 23650, 19630, 16370, 13720, 11540, 9744, 8261, 7030,
+         6005, 5147, 4427, 3820, 3307, 2872)
+  p66 <- 2 / 3
+
   list(
     fn = function(par) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
 
-      p66 <- 2 / 3
-      fsum <- 0
-      for (i in 1:m) {
-        ti <- i * 0.01
-        y <- 25 + (-50 * log(ti)) ^ p66
-
-        fi <- exp(-(abs(x2 - y) ^ x3) / x1) - ti
-        fsum <- fsum + fi * fi
-      }
-      fsum
+      ti <- 1:m * 0.01
+      y <- 25 + (-50 * log(ti)) ^ p66
+      fi <- exp(-(abs(x2 - y) ^ x3) / x1) - ti
+      sum(fi * fi)
     },
     gr = function(par) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
 
-      p66 <- 2 / 3
-      grad <- c(0, 0, 0)
-      for (i in 1:m) {
-        ti <- i * 0.01
-        y <- 25 + (-50 * log(ti)) ^ p66
+      ti <- 1:m * 0.01
+      y <- 25 + (-50 * log(ti)) ^ p66
 
-        x2y <- x2 - y
-        ax2y <- abs(x2y)
-        x2yz <- ax2y ^ x3
-        e <- exp(-x2yz / x1)
-        fi <- e - ti
+      x2y <- x2 - y
+      ax2y <- abs(x2y)
+      x2yz <- ax2y ^ x3
+      e <- exp(-x2yz / x1)
+      fi <- e - ti
+      efxyz2 <- 2 * e * fi * x2yz
 
-        grad[1] <- grad[1] + 2 * x2yz * e * fi / (x1 * x1)
-        grad[2] <- grad[2] - 2 * x3 * e * x2yz * fi / (x1 * x2y)
-        grad[3] <- grad[3] - 2 * x2yz * log(ax2y) * e * fi / x1
-      }
-      grad
+      dx <- sum(efxyz2 / (x1 * x1))
+      dy <- -sum(efxyz2 * x3 / (x1 * x2y))
+      dz <- -sum(efxyz2 * log(ax2y) / x1)
+
+      c(dx, dy, dz)
     },
     fg = function(par) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
 
-      p66 <- 2 / 3
-      fsum <- 0
-      grad <- c(0, 0, 0)
-      for (i in 1:m) {
-        ti <- i * 0.01
-        y <- 25 + (-50 * log(ti)) ^ p66
+      ti <- 1:m * 0.01
+      y <- 25 + (-50 * log(ti)) ^ p66
 
-        x2y <- x2 - y
-        ax2y <- abs(x2y)
-        x2yz <- ax2y ^ x3
-        e <- exp(-x2yz / x1)
-        fi <- e - ti
+      x2y <- x2 - y
+      ax2y <- abs(x2y)
+      x2yz <- ax2y ^ x3
+      e <- exp(-x2yz / x1)
+      fi <- e - ti
+      efxyz2 <- 2 * e * fi * x2yz
 
-        fsum <- fsum + fi * fi
+      dx <- sum(efxyz2 / (x1 * x1))
+      dy <- -sum(efxyz2 * x3 / (x1 * x2y))
+      dz <- -sum(efxyz2 * log(ax2y) / x1)
 
-        grad[1] <- grad[1] + 2 * x2yz * e * fi / (x1 * x1)
-        grad[2] <- grad[2] - 2 * x3 * e * x2yz * fi / (x1 * x2y)
-        grad[3] <- grad[3] - 2 * x2yz * log(ax2y) * e * fi / x1
-      }
+      fsum <- sum(fi * fi)
+      grad <- c(dx, dy, dz)
 
       list(
         fn = fsum,
