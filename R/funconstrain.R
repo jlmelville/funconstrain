@@ -45,7 +45,10 @@
 #' \itemize{
 #'   \item \code{m} The number of summand functions as described above. This
 #'   needs only to be provided when the test problem allows for variable
-#'   \code{m}. Default values are provided in all these cases.
+#'   \code{m}. Default values are provided in all these cases, but be aware
+#'   that the defaults were chosen abritrarily, and some functions put
+#'   a restriction on the acceptable value of \code{m} based on the number
+#'   of parameters, \code{n}. If in doubt, ensure it's specified explicitly.
 #' }
 #'
 #' @section Test Function Return Value:

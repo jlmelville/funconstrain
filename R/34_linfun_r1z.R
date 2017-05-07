@@ -55,7 +55,7 @@
 #' res_n4_m20 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), linr1z_m20$fn,
 #' linr1z_m20$gr, method = "L-BFGS-B")
 #' @export
-linfun_r1z <- function(m) {
+linfun_r1z <- function(m = 100) {
   list(
     fn = function(par) {
       n <- length(par)

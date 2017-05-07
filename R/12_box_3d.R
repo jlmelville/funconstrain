@@ -51,7 +51,7 @@
 #' fun20 <- box_3d(m = 20)
 #' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
-box_3d <- function(m = 15) {
+box_3d <- function(m = 20) {
   if (m < 3) {
     stop("box3d: m must be >= 3")
   }

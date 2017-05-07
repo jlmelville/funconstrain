@@ -4,7 +4,7 @@
 \alias{linfun_fr}
 \title{Linear Function - Full Rank}
 \usage{
-linfun_fr(m)
+linfun_fr(m = 100)
 }
 \arguments{
 \item{m}{Number of summand functions in the objective function. Should be

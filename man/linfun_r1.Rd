@@ -4,7 +4,7 @@
 \alias{linfun_r1}
 \title{Linear Function - Rank 1}
 \usage{
-linfun_r1(m)
+linfun_r1(m = 100)
 }
 \arguments{
 \item{m}{Number of summand functions in the objective function. Should be

@@ -4,7 +4,7 @@
 \alias{box_3d}
 \title{Box Three-Dimensional Function}
 \usage{
-box_3d(m = 15)
+box_3d(m = 20)
 }
 \arguments{
 \item{m}{Number of summand functions in the objective function. Should be

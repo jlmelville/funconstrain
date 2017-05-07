@@ -52,7 +52,7 @@
 #' res_n4_m20 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), linfr_m20$fn, linfr_m20$gr,
 #' method = "L-BFGS-B")
 #' @export
-linfun_fr <- function(m) {
+linfun_fr <- function(m = 100) {
   if (m < 1) {
     stop("Linear Function - Full Rank: m must be positive")
   }
