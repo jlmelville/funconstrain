@@ -120,7 +120,7 @@ ex_rosen <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 20) {
       if (n %% 2 != 0) {
         stop("Extended Rosenbrock: n must be even")
       }
