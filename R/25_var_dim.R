@@ -115,7 +115,7 @@ var_dim <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 30) {
       if (n < 1) {
         stop("Variably Dimensioned: n must be positive")
       }

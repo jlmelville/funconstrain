@@ -115,7 +115,7 @@ linfun_r1z <- function(m = 100) {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 45) {
       if (n < 1) {
         stop("Linear Function - Rank 1 with Zero Columns and Rows:",
              "n must be positive")

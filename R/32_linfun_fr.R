@@ -112,7 +112,7 @@ linfun_fr <- function(m = 100) {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 45) {
       if (n < 1) {
         stop("Linear Function - Full Rank: n must be positive")
       }

@@ -101,7 +101,7 @@ brown_al <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 30) {
       if (n < 1) {
         stop("Brown Almost-Linear: n must be positive")
       }

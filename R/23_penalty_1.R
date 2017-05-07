@@ -113,7 +113,7 @@ penalty_1 <- function() {
         gr = grad
       )
     },
-    x0 = function(n = 10) {
+    x0 = function(n = 25) {
       if (n < 1) {
         stop("Penalty Function I: n must be positive")
       }
