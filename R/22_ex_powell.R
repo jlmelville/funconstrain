@@ -145,7 +145,7 @@ ex_powell <- function() {
         gr = grad
       )
     },
-    x0 = function(n = 12) {
+    x0 = function(n = 20) {
       if (n %% 4 != 0) {
         stop("Extended Powell: n must be a multiple of 4")
       }
