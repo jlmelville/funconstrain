@@ -113,7 +113,7 @@ disc_bv <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 35) {
       if (n < 1) {
         stop("Discrete Boundary Value: n must be positive")
       }

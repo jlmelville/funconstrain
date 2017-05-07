@@ -180,7 +180,7 @@ chebyquad <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 50) {
       if (n < 1) {
         stop("Chebyquad: n must be positive")
       }

@@ -163,7 +163,7 @@ disc_ie <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 35) {
       if (n < 1) {
         stop("Discrete Integral Equation: n must be positive")
       }

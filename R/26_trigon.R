@@ -97,7 +97,7 @@ trigon <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 30) {
       if (n < 1) {
         stop("Trigonometric: n must be positive")
       }

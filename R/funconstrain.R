@@ -77,7 +77,10 @@
 #'   the number of parameters, \code{n} is fixed, this is a fixed length
 #'   numeric vector. Where \code{n} can have multiple values, this is a function
 #'   which takes one value, \code{n} and returns a numeric vector of length
-#'   \code{n}.
+#'   \code{n}. Where \code{x0} is a function, \code{n} also has a default. Like
+#'   \code{m}, these have been chosen arbitrarily, but with the idea that if
+#'   you were to use these test functions in the order provided in the MGH
+#'   paper, the value of \code{n} increases from \code{2} to \code{50}.
 #' }
 #'
 #' It's much more straightforward than it sounds. See the 'Examples' section

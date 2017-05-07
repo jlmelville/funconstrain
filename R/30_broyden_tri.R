@@ -99,7 +99,7 @@ broyden_tri <- function() {
         gr = grad
       )
     },
-    x0 = function(n) {
+    x0 = function(n = 40) {
       if (n < 1) {
         stop("Broyden Tridiagonal: n must be positive")
       }
