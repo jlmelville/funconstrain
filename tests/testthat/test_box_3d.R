@@ -1,5 +1,5 @@
 context("Box 3D")
-testfun <- box_3d()
+testfun <- box_3d(m = 15)
 min_x <- c(1, 10, 1)
 min_fx <- 0
 test_that("Analytical and finite difference gradients match at x0", {
