@@ -68,17 +68,14 @@ osborne_2 <- function() {
       x10 <- par[10]
       x11 <- par[11]
 
-      fsum <- 0
-      for (i in 1:m) {
-        ti <- (i - 1) * 0.1
-        f <- y[i] - (
+      ti <- ((1:m) - 1) * 0.1
+      fi <- y - (
           x1 * exp(-ti * x5) +
-            x2 * exp(-(ti - x9) ^ 2 * x6) +
-            x3 * exp(-(ti - x10) ^ 2 * x7) +
-            x4 * exp(-(ti - x11) ^ 2 * x8))
-        fsum <- fsum + f * f
-      }
-      fsum
+          x2 * exp(-(ti - x9) ^ 2 * x6) +
+          x3 * exp(-(ti - x10) ^ 2 * x7) +
+          x4 * exp(-(ti - x11) ^ 2 * x8))
+      sum(fi * fi)
+
     },
     gr = function(par) {
       x1 <- par[1]
@@ -93,38 +90,40 @@ osborne_2 <- function() {
       x10 <- par[10]
       x11 <- par[11]
 
-      grad <- rep(0, 11)
-      for (i in 1:m) {
-        ti <- (i - 1) * 0.1
-        f5 <- exp(-ti * x5)
-        f15 <- x1 * f5
-        f9 <- ti - x9
-        f9s <- f9 * f9
-        f69 <- exp(-f9s * x6)
-        f269 <- x2 * f69
-        f10 <- ti - x10
-        f10s <- f10 * f10
-        f710 <- exp(-f10s * x7)
-        f3710 <- x3 * f710
-        f11 <- ti - x11
-        f11s <- f11 * f11
-        f811 <- exp(-f11s * x8)
-        f4811 <- x4 * f811
-        f <- y[i] - (f15 + f269 + f3710 + f4811)
+      ti <- ((1:m) - 1) * 0.1
 
-        grad[1] <- grad[1] - 2 * f5 * f
-        grad[2] <- grad[2] - 2 * f69 * f
-        grad[3] <- grad[3] - 2 * f710 * f
-        grad[4] <- grad[4] - 2 * f811 * f
-        grad[5] <- grad[5] + 2 * ti * f15 * f
-        grad[6] <- grad[6] + 2 * f9s * f269 * f
-        grad[7] <- grad[7] + 2 * f10s * f3710 * f
-        grad[8] <- grad[8] + 2 * f11s * f4811 * f
-        grad[9] <- grad[9] - 4 * x6 * x2 * f9 * f69 * f
-        grad[10] <- grad[10] - 4 * x7 * x3 * f10 * f710 * f
-        grad[11] <- grad[11] - 4 * x8 * x4 * f11 * f811 * f
+      f5 <- exp(-ti * x5)
+      f15 <- x1 * f5
+      f9 <- ti - x9
+      f9s <- f9 * f9
+      f69 <- exp(-f9s * x6)
+      f269 <- x2 * f69
+      f10 <- ti - x10
+      f10s <- f10 * f10
+      f710 <- exp(-f10s * x7)
+      f3710 <- x3 * f710
+      f11 <- ti - x11
+      f11s <- f11 * f11
+      f811 <- exp(-f11s * x8)
+      f4811 <- x4 * f811
 
-      }
+      f <- y - (f15 + f269 + f3710 + f4811)
+      f2 <- 2 * f
+
+      grad <- c(
+        sum(-f2 * f5),
+        sum(-f2 * f69),
+        sum(-f2 * f710),
+        sum(-f2 * f811),
+        sum(f2 * f15 * ti),
+        sum(f2 * f9s * f269),
+        sum(f2 * f10s * f3710),
+        sum(f2 * f11s * f4811),
+        sum(-f2 * 2 * x6 * x2 * f9 * f69),
+        sum(-f2 * 2 * x7 * x3 * f10 * f710),
+        sum(-f2 * 2 * x8 * x4 * f11 * f811)
+      )
+
       grad
     },
     fg = function(par) {
@@ -140,40 +139,40 @@ osborne_2 <- function() {
       x10 <- par[10]
       x11 <- par[11]
 
-      fsum <- 0
-      grad <- rep(0, 11)
-      for (i in 1:m) {
-        ti <- (i - 1) * 0.1
-        f5 <- exp(-ti * x5)
-        f15 <- x1 * f5
-        f9 <- ti - x9
-        f9s <- f9 * f9
-        f69 <- exp(-f9s * x6)
-        f269 <- x2 * f69
-        f10 <- ti - x10
-        f10s <- f10 * f10
-        f710 <- exp(-f10s * x7)
-        f3710 <- x3 * f710
-        f11 <- ti - x11
-        f11s <- f11 * f11
-        f811 <- exp(-f11s * x8)
-        f4811 <- x4 * f811
-        f <- y[i] - (f15 + f269 + f3710 + f4811)
+      ti <- ((1:m) - 1) * 0.1
 
-        fsum <- fsum + f * f
+      f5 <- exp(-ti * x5)
+      f15 <- x1 * f5
+      f9 <- ti - x9
+      f9s <- f9 * f9
+      f69 <- exp(-f9s * x6)
+      f269 <- x2 * f69
+      f10 <- ti - x10
+      f10s <- f10 * f10
+      f710 <- exp(-f10s * x7)
+      f3710 <- x3 * f710
+      f11 <- ti - x11
+      f11s <- f11 * f11
+      f811 <- exp(-f11s * x8)
+      f4811 <- x4 * f811
 
-        grad[1] <- grad[1] - 2 * f5 * f
-        grad[2] <- grad[2] - 2 * f69 * f
-        grad[3] <- grad[3] - 2 * f710 * f
-        grad[4] <- grad[4] - 2 * f811 * f
-        grad[5] <- grad[5] + 2 * ti * f15 * f
-        grad[6] <- grad[6] + 2 * f9s * f269 * f
-        grad[7] <- grad[7] + 2 * f10s * f3710 * f
-        grad[8] <- grad[8] + 2 * f11s * f4811 * f
-        grad[9] <- grad[9] - 4 * x6 * x2 * f9 * f69 * f
-        grad[10] <- grad[10] - 4 * x7 * x3 * f10 * f710 * f
-        grad[11] <- grad[11] - 4 * x8 * x4 * f11 * f811 * f
-      }
+      f <- y - (f15 + f269 + f3710 + f4811)
+      fsum <- sum(f * f)
+
+      f2 <- 2 * f
+      grad <- c(
+        sum(-f2 * f5),
+        sum(-f2 * f69),
+        sum(-f2 * f710),
+        sum(-f2 * f811),
+        sum(f2 * f15 * ti),
+        sum(f2 * f9s * f269),
+        sum(f2 * f10s * f3710),
+        sum(f2 * f11s * f4811),
+        sum(-f2 * 2 * x6 * x2 * f9 * f69),
+        sum(-f2 * 2 * x7 * x3 * f10 * f710),
+        sum(-f2 * 2 * x8 * x4 * f11 * f811)
+      )
 
       list(
         fn = fsum,

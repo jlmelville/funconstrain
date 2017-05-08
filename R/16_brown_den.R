@@ -58,15 +58,11 @@ brown_den <- function(m = 20) {
       x3 <- par[3]
       x4 <- par[4]
 
-      fsum <- 0
-      for (i in 1:m) {
-        ti <- i * 0.2
-        l <- x1 + ti * x2 - exp(ti)
-        r <- x3 + x4 * sin(ti) - cos(ti)
-        f <- l * l + r * r
-        fsum <- fsum + f * f
-      }
-      fsum
+      ti <- (1:m) * 0.2
+      l <- x1 + ti * x2 - exp(ti)
+      r <- x3 + x4 * sin(ti) - cos(ti)
+      f <- l * l + r * r
+      sum(f * f)
     },
     gr = function(par) {
       x1 <- par[1]
@@ -74,22 +70,19 @@ brown_den <- function(m = 20) {
       x3 <- par[3]
       x4 <- par[4]
 
-      grad <- c(0, 0, 0, 0)
-      for (i in 1:m) {
-        ti <- i * 0.2
-        sinti <- sin(ti)
-        l <- x1 + ti * x2 - exp(ti)
-        r <- x3 + x4 * sinti - cos(ti)
-        f <- l * l + r * r
-        lf4 <- 4 * l * f
-        rf4 <- 4 * r * f
-
-        grad[1] <- grad[1] + lf4
-        grad[2] <- grad[2] + lf4 * ti
-        grad[3] <- grad[3] + rf4
-        grad[4] <- grad[4] + rf4 * sinti
-      }
-      grad
+      ti <- (1:m) * 0.2
+      sinti <- sin(ti)
+      l <- x1 + ti * x2 - exp(ti)
+      r <- x3 + x4 * sinti - cos(ti)
+      f <- l * l + r * r
+      lf4 <- 4 * l * f
+      rf4 <- 4 * r * f
+      c(
+        sum(lf4),
+        sum(lf4 * ti),
+        sum(rf4),
+        sum(rf4 * sinti)
+      )
     },
     fg = function(par) {
       x1 <- par[1]
@@ -97,24 +90,21 @@ brown_den <- function(m = 20) {
       x3 <- par[3]
       x4 <- par[4]
 
-      fsum <- 0
-      grad <- c(0, 0, 0, 0)
-      for (i in 1:m) {
-        ti <- i * 0.2
-        sinti <- sin(ti)
-        l <- x1 + ti * x2 - exp(ti)
-        r <- x3 + x4 * sinti - cos(ti)
-        f <- l * l + r * r
-        lf4 <- 4 * l * f
-        rf4 <- 4 * r * f
+      ti <- (1:m) * 0.2
+      sinti <- sin(ti)
+      l <- x1 + ti * x2 - exp(ti)
+      r <- x3 + x4 * sinti - cos(ti)
+      f <- l * l + r * r
+      lf4 <- 4 * l * f
+      rf4 <- 4 * r * f
 
-        fsum <- fsum + f * f
-
-        grad[1] <- grad[1] + lf4
-        grad[2] <- grad[2] + lf4 * ti
-        grad[3] <- grad[3] + rf4
-        grad[4] <- grad[4] + rf4 * sinti
-      }
+      fsum <- sum(f * f)
+      grad <- c(
+        sum(lf4),
+        sum(lf4 * ti),
+        sum(rf4),
+        sum(rf4 * sinti)
+      )
 
       list(
         fn = fsum,

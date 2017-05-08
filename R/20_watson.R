@@ -64,14 +64,13 @@ watson <- function() {
 
         fa <- 0
         fb <- 0
-        tij2 <- 1 / ti
-        tij1 <- 1
-        for (j in 1:n) {
-          fa <- fa + (j - 1) * par[j] * tij2
-          fb <- fb + par[j] * tij1
-          tij2 <- tij1
-          tij1 <- tij1 * ti
-        }
+
+        tij2 <- ti ^ (0:(n - 2))
+        tij1 <- ti ^ (0:(n - 1))
+
+        fa <- sum(1:(n - 1) * par[2:n] * tij2)
+        fb <- sum(par * tij1)
+
         fi <- fa - fb * fb - 1
         fsum <- fsum + fi * fi
       }
@@ -92,25 +91,17 @@ watson <- function() {
         fa <- 0
         fb <- 0
 
-        tij2 <- 1 / ti
-        tij1 <- 1
-        for (j in 1:n) {
-          fa <- fa + (j - 1) * par[j] * tij2
-          fb <- fb + par[j] * tij1
+        tij2 <- ti ^ (-1:(n - 2))
+        tij1 <- ti ^ (0:(n - 1))
 
-          tij2 <- tij1
-          tij1 <- tij1 * ti
-        }
+        fa <- sum(1:(n - 1) * par[2:n] * tij2[2:length(tij2)])
+        fb <- sum(par * tij1)
+
         fi <- fa - fb * fb - 1
-
-        tij2 <- 1 / ti
-        tij1 <- 1
         fi2 <- 2 * fi
-        for (j in 1:n) {
-          grad[j] <- grad[j] + fi2 * ((j - 1) * tij2 - 2 * fb * tij1)
-          tij2 <- tij1
-          tij1 <- tij1 * ti
-        }
+
+        grad <- grad + fi2 * (0:(n - 1) * tij2 - 2 * fb * tij1)
+
       }
       f31 <- par[2] - par[1] ^ 2 - 1
 
@@ -130,31 +121,24 @@ watson <- function() {
       fsum <- 0
       grad <- rep(0, n)
       for (i in 1:29) {
+
         ti <- i / 29
 
         fa <- 0
         fb <- 0
 
-        tij2 <- 1 / ti
-        tij1 <- 1
-        for (j in 1:n) {
-          fa <- fa + (j - 1) * par[j] * tij2
-          fb <- fb + par[j] * tij1
+        tij2 <- ti ^ (-1:(n - 2))
+        tij1 <- ti ^ (0:(n - 1))
 
-          tij2 <- tij1
-          tij1 <- tij1 * ti
-        }
+        fa <- sum(1:(n - 1) * par[2:n] * tij2[2:length(tij2)])
+        fb <- sum(par * tij1)
+
         fi <- fa - fb * fb - 1
-        fsum <- fsum + fi * fi
-
-        tij2 <- 1 / ti
-        tij1 <- 1
         fi2 <- 2 * fi
-        for (j in 1:n) {
-          grad[j] <- grad[j] + fi2 * ((j - 1) * tij2 - 2 * fb * tij1)
-          tij2 <- tij1
-          tij1 <- tij1 * ti
-        }
+
+        fsum <- fsum + fi * fi
+        grad <- grad + fi2 * (0:(n - 1) * tij2 - 2 * fb * tij1)
+
       }
       f30 <- par[1]
       f31 <- par[2] - par[1] ^ 2 - 1
