@@ -52,7 +52,7 @@ powell_bs <- function() {
       f1 <- 1e4 * x * y - 1
       f2 <- exp(-x) + exp(-y) - 1.0001
 
-      f1 ^ 2 + f2 ^ 2
+      f1 * f1 + f2 * f2
     },
     gr = function(par) {
       x <- par[1]

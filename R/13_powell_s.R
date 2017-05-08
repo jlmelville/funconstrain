@@ -45,6 +45,7 @@
 #' "L-BFGS-B")
 #' @export
 powell_s <- function() {
+
   list(
     fn = function(par) {
       x1 <- par[1]
@@ -52,12 +53,14 @@ powell_s <- function() {
       x3 <- par[3]
       x4 <- par[4]
 
+      x14 <- x1 - x4
+      x14s <- x14 * x14
       f1 <- x1 + 10 * x2
-      f2 <- sqrt(5) * (x3 - x4)
+      f2s <- 5 * (x3 - x4) ^ 2
       f3 <- (x2 - 2 * x3) ^ 2
-      f4 <- sqrt(10) * (x1 - x4) ^ 2
+      f4s <- 10 * x14s * x14s
 
-      f1 * f1 + f2 * f2 + f3 * f3 + f4 * f4
+      f1 * f1 + f2s + f3 * f3 + f4s
     },
     gr = function(par) {
       x1 <- par[1]
@@ -95,12 +98,12 @@ powell_s <- function() {
       x12 <- x1 + 10 * x2
 
       f1 <- x12
-      f2 <- sqrt(5) * x34
+      f2s <- 5 * x34 * x34
       f3 <- x23_2
-      f4 <- sqrt(10) * x14_2
+      f4s <- 10 * x14_2 * x14_2
 
       list(
-        fn = f1 * f1 + f2 * f2 + f3 * f3 + f4 * f4,
+        fn = f1 * f1 + f2s + f3 * f3 + f4s,
         gr = c(
           40 * x14_3 + 2 * x12,
           4 * x23_3 + 20 * x12,

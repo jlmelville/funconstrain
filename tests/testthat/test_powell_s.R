@@ -3,7 +3,7 @@ testfun <- powell_s()
 min_x <- rep(0, 4)
 min_fx <- 0
 test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0)
+  expect_gfd(testfun, testfun$x0, tol = 1e-4)
 })
 test_that("f, g, and fg match at x0", {
   fg <- testfun$fg(testfun$x0)

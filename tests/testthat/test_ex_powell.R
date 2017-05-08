@@ -4,7 +4,7 @@ min_x <- rep(0, 12)
 min_fx <- 0
 
 test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0(12))
+  expect_gfd(testfun, testfun$x0(12), tol = 1e-4)
 })
 test_that("f, g, and fg match at x0", {
   x0 <- testfun$x0(12)

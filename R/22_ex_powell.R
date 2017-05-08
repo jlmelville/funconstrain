@@ -68,11 +68,11 @@ ex_powell <- function() {
         z <- 4 * i
 
         fw <- par[w] + 10 * par[x]
-        fx <- sqrt5 * (par[y] - par[z])
+        fxs <- 5 * (par[y] - par[z]) ^ 2
         fy <- (par[x] - 2 * par[y]) ^ 2
-        fz <- sqrt10 * (par[w] - par[z]) ^ 2
+        fzs <- 10 * (par[w] - par[z]) ^ 4
 
-        fsum <- fsum + fw * fw + fx * fx + fy * fy + fz * fz
+        fsum <- fsum + fw * fw + fxs + fy * fy + fzs
       }
 
       fsum
@@ -122,16 +122,16 @@ ex_powell <- function() {
 
         fw <- par[w] + 10 * par[x]
         pyz <- par[y] - par[z]
-        fx <- sqrt5 * pyz
+        fxs <- 5 * pyz * pyz
         px2py <- par[x] - 2 * par[y]
         fy <- px2py * px2py
         px2py3 <- fy * px2py
         pwz <- par[w] - par[z]
         pwz2 <- pwz * pwz
         pwz3 <- pwz2 * pwz
-        fz <- sqrt10 * pwz2
+        fzs <- 10 * pwz2 * pwz2
 
-        fsum <- fsum + fw * fw + fx * fx + fy * fy + fz * fz
+        fsum <- fsum + fw * fw + fxs + fy * fy + fzs
 
         grad[w] <- grad[w] + 40 * pwz3 + 2 * fw
         grad[x] <- grad[x] + 4 * px2py3 + 20 * fw
