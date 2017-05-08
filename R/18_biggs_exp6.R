@@ -66,14 +66,11 @@ biggs_exp6 <- function(m = 13) {
       x5 <- par[5]
       x6 <- par[6]
 
-      fsum <- 0
-      for (i in 1:m) {
-        ti <- 0.1 * i
-        y <- exp(-ti) - 5 * exp(-10 * ti) + 3 * exp(-4 * ti)
-        f <- x3 * exp(-ti * x1) - x4 * exp(-ti * x2) + x6 * exp(-ti * x5) - y
-        fsum <- fsum + f * f
-      }
-      fsum
+      ti <- 0.1 * (1:m)
+      yi <- exp(-ti) - 5 * exp(-10 * ti) + 3 * exp(-4 * ti)
+      fi <- x3 * exp(-ti * x1) - x4 * exp(-ti * x2) + x6 * exp(-ti * x5) - yi
+      sum(fi * fi)
+
     },
     gr = function(par) {
       x1 <- par[1]
@@ -83,26 +80,26 @@ biggs_exp6 <- function(m = 13) {
       x5 <- par[5]
       x6 <- par[6]
 
-      grad <- c(0, 0, 0, 0, 0, 0)
-      for (i in 1:m) {
-        ti <- 0.1 * i
-        y <- exp(-ti) - 5 * exp(-10 * ti) + 3 * exp(-4 * ti)
-        f1 <- exp(-ti * x1)
-        f31 <- x3 * f1
-        f2 <- exp(-ti * x2)
-        f42 <- x4 * f2
-        f5 <- exp(-ti * x5)
-        f65 <- x6 * exp(-ti * x5)
-        f <- f31 - f42 + f65 - y
+      ti <- 0.1 * (1:m)
+      yi <- exp(-ti) - 5 * exp(-10 * ti) + 3 * exp(-4 * ti)
+      f1 <- exp(-ti * x1)
+      f31 <- x3 * f1
+      f2 <- exp(-ti * x2)
+      f42 <- x4 * f2
+      f5 <- exp(-ti * x5)
+      f65 <- x6 * exp(-ti * x5)
+      fi <- f31 - f42 + f65 - yi
+      fi2 <- 2 * fi
+      tfi2 <- fi2 * ti
 
-        grad[1] <- grad[1] - 2 * ti * f31 * f
-        grad[2] <- grad[2] + 2 * ti * f42 * f
-        grad[3] <- grad[3] + 2 * f1 * f
-        grad[4] <- grad[4] - 2 * f2 * f
-        grad[5] <- grad[5] - 2 * ti * f65 * f
-        grad[6] <- grad[6] + 2 * f5 * f
-      }
-      grad
+      c(
+        -sum(tfi2 * f31),
+         sum(tfi2 * f42),
+         sum(fi2 * f1),
+        -sum(fi2 * f2),
+        -sum(tfi2 * f65),
+         sum(fi2 * f5)
+      )
     },
     fg = function(par) {
       x1 <- par[1]
@@ -112,28 +109,27 @@ biggs_exp6 <- function(m = 13) {
       x5 <- par[5]
       x6 <- par[6]
 
-      fsum <- 0
-      grad <- c(0, 0, 0, 0, 0, 0)
-      for (i in 1:m) {
-        ti <- 0.1 * i
-        y <- exp(-ti) - 5 * exp(-10 * ti) + 3 * exp(-4 * ti)
-        f1 <- exp(-ti * x1)
-        f31 <- x3 * f1
-        f2 <- exp(-ti * x2)
-        f42 <- x4 * f2
-        f5 <- exp(-ti * x5)
-        f65 <- x6 * exp(-ti * x5)
-        f <- f31 - f42 + f65 - y
+      ti <- 0.1 * (1:m)
+      yi <- exp(-ti) - 5 * exp(-10 * ti) + 3 * exp(-4 * ti)
+      f1 <- exp(-ti * x1)
+      f31 <- x3 * f1
+      f2 <- exp(-ti * x2)
+      f42 <- x4 * f2
+      f5 <- exp(-ti * x5)
+      f65 <- x6 * exp(-ti * x5)
+      fi <- f31 - f42 + f65 - yi
+      fi2 <- 2 * fi
+      tfi2 <- fi2 * ti
 
-        fsum <- fsum + f * f
-
-        grad[1] <- grad[1] - 2 * ti * f31 * f
-        grad[2] <- grad[2] + 2 * ti * f42 * f
-        grad[3] <- grad[3] + 2 * f1 * f
-        grad[4] <- grad[4] - 2 * f2 * f
-        grad[5] <- grad[5] - 2 * ti * f65 * f
-        grad[6] <- grad[6] + 2 * f5 * f
-      }
+      fsum <- sum(fi * fi)
+      grad <- c(
+        -sum(tfi2 * f31),
+        sum(tfi2 * f42),
+        sum(fi2 * f1),
+        -sum(fi2 * f2),
+        -sum(tfi2 * f65),
+        sum(fi2 * f5)
+      )
 
       list(
         fn = fsum,
