@@ -154,7 +154,7 @@ watson <- function() {
         gr = grad
       )
     },
-    x0 = function(n = 15) {
+    x0 = function(n = 12) {
       if (!(2 <= n && n <= 31)) {
         stop("Watson: n must be between 2-31")
       }
