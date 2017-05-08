@@ -29,8 +29,16 @@ parameters.
 \itemize{
   \item Dimensions: Number of parameters \code{n = 3}, number of summand
   functions \code{m = 16}.
-  \item Minima: \code{f = 87.9458...}.
+  \item Minima: the MGH (1981) only provides the optimal value, with \code{f
+  = 87.9458...}. Meyer and Roth (1972) give the optimal parameter values as
+  \code{(0.0056, 6181.4, 345.2)}, with \code{f = 88}.
 }
+}
+\note{
+The gradient is large even at the optimal value, and enormous if using the
+level of precision given by Meyer and Roth (smallest gradient component is at
+least 1e4). It is not recommended to rely on the typical gradient norm
+termination conditions if using this test function.
 }
 \examples{
 fun <- meyer()
@@ -52,4 +60,9 @@ Theoretical and computational aspects of nonlinear regression.
 In J. B. Rosen, O. L. Mangasarian, and K. Ritter (Eds.)
 \emph{Nonlinear programming} (pp465-496).
 New York: Academic Press.
+
+Meyer, R. R., & Roth, P. M. (1972).
+Modified damped least squares: an algorithm for non-linear estimation.
+\emph{IMA Journal of Applied Mathematics}, \emph{9}(2), 218-233.
+\url{https://doi.org/10.1093/imamat/9.2.218}
 }
