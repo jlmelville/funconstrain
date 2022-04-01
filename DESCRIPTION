@@ -9,7 +9,6 @@ Description: Functions for testing unconstrained numerical optimization, taken
     optimization software.'
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 6.0.1
 Suggests: testthat
 URL: https://github.com/jlmelville/funconstrain
