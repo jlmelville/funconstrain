@@ -132,7 +132,7 @@ chebyquad <- function() {
       }
       grad
     },
-    he = function(x) { # ?? seems to have error in 1,1 element
+    he = function(x) { 
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
        fvec <- rep(0.0,n)
