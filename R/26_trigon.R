@@ -82,7 +82,7 @@ trigon <- function() {
 
       2 * (fi * (1:n * sinx - cosx) + sinx * sum(fi))
     },
-    he = function(x) { # ?? 1,1 element error?
+    he = function(x) { 
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
 
