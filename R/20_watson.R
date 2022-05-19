@@ -115,7 +115,6 @@ watson <- function() {
 
     },
     he = function(x) { 
-      # Possibly error in h[1,1]
       n <- length(x)
       h <- matrix(0.0, ncol=n, nrow=n)
       for (i in 1:29) {
