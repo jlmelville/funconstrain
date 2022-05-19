@@ -94,7 +94,7 @@ linfun_fr <- function(m = 100) {
 
       2 * fi - (m4 * (sum(fi) + (m - n) * fnm))
     },
-    he = function(x) { # ?? seems to have error of 2 in 1,1 element
+    he = function(x) { 
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
        for (i in 1:n){
