@@ -89,8 +89,7 @@ var_dim <- function() {
 
       grad
     },
-    he = function(x) { # ?? seems to have error of 2 in 1,1 element, also 
-          # quite big error in n, n
+    he = function(x) { # rather large discrepancy from approximations in n, n
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
        t1 <- 0.0
