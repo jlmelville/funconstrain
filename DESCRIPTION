@@ -2,8 +2,9 @@ Package: funconstrain
 Type: Package
 Title: Functions for Testing Unconstrained Numerical Optimization
 Version: 0.0.0.9001
-Authors@R: person("James", "Melville", email = "jlmelville@gmail.com",
-    role = c("aut", "cre"))
+Authors@R: c( person("James", "Melville", email = "jlmelville@gmail.com",
+    role = c("aut", "cre")), person(given = c("John", "C"), family = "Nash", role =
+    c("ctb"), email = "nashjc@uottawa.ca"))
 Description: Functions for testing unconstrained numerical optimization, taken
     from More', Garbow and Hillstrom's paper 'Testing unconstrained 
     optimization software.'
