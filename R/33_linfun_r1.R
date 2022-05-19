@@ -83,7 +83,7 @@ linfun_r1 <- function(m = 100) {
       fi <- 1:m * sum_jx - 1
       2 * 1:n * sum(1:m * fi)
     },
-    he = function(x) { # ?? seems to have error
+    he = function(x) { 
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
        s1 <- 0.0
