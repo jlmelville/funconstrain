@@ -81,7 +81,7 @@ broyden_tri <- function() {
 
       grad
     },
-    he = function(x) { # ?? seems to have error of 2 in 1,1 element
+    he = function(x) {
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
 #       ! For i <- 1
