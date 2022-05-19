@@ -122,7 +122,7 @@ disc_ie <- function() {
       }
       grad
     },
-    he = function(x) { # ?? seems to have error of 2 in 1,1 element
+    he = function(x) { 
        n <- length(x)
        w1 <- rep(0, n)
        w2 <- rep(0, n+1)
