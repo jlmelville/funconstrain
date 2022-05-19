@@ -100,7 +100,7 @@ broyden_band <- function() {
 
       grad
     },
-    he = function(x) { # ?? seems to have error 
+    he = function(x) { 
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
 
