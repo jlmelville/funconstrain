@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -39,6 +41,7 @@
 #' @export
 brown_bs <- function() {
   list(
+    m = NA,
     fn = function(par) {
       x <- par[1]
       y <- par[2]
@@ -59,6 +62,16 @@ brown_bs <- function() {
         2 * y * f3 + 2 * (x - 1e6),
         2 * x * f3 + 2 * (y - 2e-6)
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+       h <- matrix(NA, nrow=2, ncol=2)
+       h[1,1] <- 2.0*( 1.0 + x2 ^ 2 )
+       h[1,2] <- 4.0*( x1*x2 - 1.0 )
+       h[2,2] <- 2.0*( 1.0 + x1 ^ 2 )
+       h[2,1] <- h[1,2]
+       h
     },
     fg = function(par) {
       x <- par[1]

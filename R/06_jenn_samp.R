@@ -23,6 +23,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -61,6 +63,7 @@ jenn_samp <- function(m = 10) {
     stop("Jennrich-Sampson: m must be >= 2")
   }
   list(
+    m = NA,
     fn = function(par) {
       x <- par[1]
       y <- par[2]
@@ -85,6 +88,21 @@ jenn_samp <- function(m = 10) {
         grad[2] <- grad[2] - 2 * i * eiy * fi
       }
       grad
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      h <- matrix(0.0, nrow=2, ncol=2)
+      for (i in 1:m) {
+        d1 <- exp( i*x1 )
+        d2 <- exp( i*x2 )
+        t1 <- 2.0 + 2.0*i - ( d1 + d2 )
+        h[1,1] <- h[1,1] + 2.0*( (i*d1) ^ 2 - t1*i ^ 2*d1 )
+        h[1,2] <- h[1,2] + 2.0*i ^ 2*d1*d2
+        h[2,2] <- h[2,2] + 2.0*( (i*d2) ^ 2 - t1*i ^ 2*d2 )
+      }
+      h[2,1] <- h[1,2]
+      h
     },
     fg = function(par) {
       x <- par[1]

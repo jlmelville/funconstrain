@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -47,6 +49,7 @@
 #' @export
 var_dim <- function() {
   list(
+    m = length(par) + 1,
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
@@ -85,6 +88,30 @@ var_dim <- function() {
       grad <- grad + 1:n * (fn1_2 + fn13_4)
 
       grad
+    },
+    he = function(x) { # ?? seems to have error of 2 in 1,1 element, also 
+          # quite big error in n, n
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)
+       t1 <- 0.0
+       for (j in 1:n) {
+          t1 <- t1 + j*( x[j]-1.0 )
+       }
+       t <- 1.0 + 6.0*t1^2 # ?? why?
+       for (j in 1:n) {
+          h[j,j] <- 2.0 + 2.0 * t * j^2
+          if (j > 1) {
+            for (k in 1:(j-1)) {
+               h[k,j] <- 2.0*t*j*k
+            }
+          }
+       }
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

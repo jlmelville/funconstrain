@@ -18,6 +18,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -84,6 +86,43 @@ bard <- function() {
         grad[3] <- grad[3] + f2 * u * w / aa
       }
       grad
+    },
+    he = function(par) {
+       y8 <- c(0.14, 0.18, 0.22, 0.25, 0.29, 0.32, 0.35, 0.39, 0.37, 
+          0.58, 0.73, 0.96, 1.34, 2.10, 4.39 )
+
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      h <- matrix(0.0, nrow=3, ncol=3)
+      for (i in 1:m) {
+         d1 <- i
+         d2 <- 16.0 - i
+         d3 <- min( d1, d2 )
+
+         s1 <- d2*x2 + d3*x3
+         if ( s1 != 0.0 ) {
+             t1 <- y8[i] - ( x1 + ( d1 / s1 ) )
+             t2 <- d1 / s1 ^ 2
+             t3 <- - 2.0*d1 / s1 ^ 3
+             s2 <- t1*t3 + t2 ^ 2
+             h[1,1] <- h[1,1] + 2.0
+             h[1,2] <- h[1,2] - 2.0*d2*t2
+             h[2,2] <- h[2,2] + 2.0*s2*d2 ^ 2
+             h[1,3] <- h[1,3] - 2.0*t2*d3
+             h[2,3] <- h[2,3] + 2.0*s2*d2*d3
+             h[3,3] <- h[3,3] + 2.0*s2*d3 ^ 2
+             
+         } else {
+             h[1:n, 1,] <- .Machine$double.xmax
+             flag <- - 3
+             return
+         }
+      } # end loop
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

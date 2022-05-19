@@ -26,6 +26,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -56,6 +58,7 @@
 #' @export
 trigon <- function() {
   list(
+    m = length(par),
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
@@ -78,6 +81,39 @@ trigon <- function() {
       fi <- n - cos_sum + 1:n * (1 - cosx) - sinx
 
       2 * (fi * (1:n * sinx - cosx) + sinx * sum(fi))
+    },
+    he = function(x) { # ?? 1,1 element error?
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)
+
+       s1 <- 0.0
+       for (j in 1:n) {
+          h[j,j] <- sin( x[j] )
+          s1 <- s1 + cos( x[j] )
+       }
+       s2 <- 0.0
+       for (j in 1:n) {
+          th <- cos( x[j] )
+          t <- ( n+j ) - h[j,j] - s1 - j*th
+          s2 <- s2 + t
+          if (j > 1) {
+            for (k in (1:(j-1))){
+              h[k,j] <- 2.0*(sin(x[k])*(( n+j+k )*h[j,j]-th) - h[j,j]*cos(x[k]) )
+            }
+          }
+          h[j,j] <- (j*(j+2)+n)*h[j,j]^2 + 
+               th*(th-(2*j+2)*h[j,j]) + t*(j*th + h[j,j] )
+       }
+
+       for (j in 1:n) {
+          h[j,j] <- 2.0*( h[j,j] + cos(x[j])*s2 )
+       }
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

@@ -25,6 +25,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -56,6 +58,7 @@
 chebyquad <- function() {
 
   list(
+    m = NA,
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
@@ -129,6 +132,84 @@ chebyquad <- function() {
       }
       grad
     },
+    he = function(x) { # ?? seems to have error in 1,1 element
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)
+       fvec <- rep(0.0,n)
+       gvec <- rep(0.0,n)
+       for (j in 1:n) {
+          t1 <- 1.0
+          t2 <- 2.0*x[j] - 1.0
+          t <- 2.0*t2
+          for (i in 1:n){ 
+             fvec[i] <- fvec[i] + t2
+             th <- t*t2 - t1
+             t1 <- t2
+             t2 <- th
+          }
+       }
+       d1 <- 1.0/n
+       for (i in 1:n) {
+          fvec[i] <- d1*fvec[i]
+          if ( (i %% 2) == 0 ) {
+             fvec[i] <- fvec[i] + 1.0/( i^2 - 1.0 )
+          }
+       }
+       d2 <- 2.0*d1
+       for (j in 1:n) { 
+          h[j,j] <- 4.0*d1
+          t1 <- 1.0
+          t2 <- 2.0*x[j] - 1.0
+          t <- 2.0*t2
+          s1 <- 0.0
+          s2 <- 2.0
+          p1 <- 0.0
+          p2 <- 0.0
+          gvec[1] <- s2
+          for (i in 2:n) {
+             th <- 4.0*t2 + t*s2 - s1
+             s1 <- s2
+             s2 <- th
+             th <- t*t2 - t1
+             t1 <- t2
+             t2 <- th
+             th <- 8.0*s1 + t*p2 - p1
+             p1 <- p2
+             p2 <- th
+             gvec[i] <- s2
+             h[j,j] <- h[j,j] + fvec[i]*th + d1*s2 ^ 2
+          }
+          h[j,j] <- d2*h[j,j]
+          if (j > 1) { # needed for R
+           for (k in 1:(j-1)) {
+             h[k,j] <- 0.0
+             tt1 <- 1.0
+             tt2 <- 2.0*x[k] - 1.0
+             tt <- 2.0*tt2
+             ss1 <- 0.0
+             ss2 <- 2.0
+             for (i in 1:n) {
+                h[k,j] <- h[k,j] + ss2*gvec[i]
+                tth <- 4.0*tt2 + tt*ss2 - ss1
+                ss1 <- ss2
+                ss2 <- tth
+                tth <- tt*tt2 - tt1
+                tt1 <- tt2
+                tt2 <- tth
+             }
+             h[k,j] <- d2*d1*h[k,j]
+           }
+          } # end if
+       }
+
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
+    },
+
     fg = function(par) {
       n <- length(par)
       if (n < 1) {

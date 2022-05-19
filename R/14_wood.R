@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -79,6 +81,30 @@ wood <- function() {
         360 * x3_3 + (2 - 360 * x4) * x3 - 2,
         (1001 * x4 - 900 * x3_2 + 99 * x2 - 200) * 0.2
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      x4 <- par[4]
+      h <- matrix(0.0, ncol=4, nrow=4)
+      h[1,1] <- 1.2e+3*x1 ^ 2 - 4.0e+2*x2 + 2.0
+      h[2,2] <- 2.202e+2
+      h[3,3] <- 1.08e+3*x3 ^ 2 - 3.6e+2*x4 + 2.0
+      h[4,4] <- 2.002e+2
+      h[1,2] <- -4.0e+2*x1
+      h[1,3] <- 0.0
+      h[2,3] <- 0.0
+      h[1,4] <- 0.0
+      h[2,4] <- 1.98e+1
+      h[3,4] <- -3.6e+2*x3
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h[4,1] <- h[1,4]
+      h[4,2] <- h[2,4]
+      h[4,3] <- h[3,4]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

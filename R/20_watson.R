@@ -24,6 +24,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -111,6 +113,49 @@ watson <- function() {
 
       grad
 
+    },
+    he = function(x) { 
+      # Possibly error in h[1,1]
+      n <- length(x)
+      h <- matrix(0.0, ncol=n, nrow=n)
+      for (i in 1:29) {
+          d1 <- i/29.0
+          d2 <- 1.0
+          s1 <- 0.0
+          s2 <- x[1]
+          for (j in 2:n) {
+             s1 <- s1 + (j-1)*d2*x[j]
+             d2 <- d1*d2
+             s2 <- s2 + d2*x[j]
+          }
+          t <- 2.0*( s1 - s2^2 - 1.0 )*d1^2
+          s3 <- 2.0*d1*s2
+          d2 <- 1.0/d1
+          for (j in 1:n) {
+             t1 <- (j-1) - s3
+             h[j,j] <- h[j,j] + ( t1^2 - t ) * d2^2
+             d3 <- 1.0/d1
+             if (j > 1) {
+               for (k in 1:(j-1)) {
+                  h[k,j] <- h[k,j] + ( t1*( (k-1) - s3 ) - t )*d2*d3
+                  d3 <- d1*d3
+               }
+             }
+             d2 <- d1*d2
+          }
+       }
+       t3 <- x[2] - x[1]^2 - 1.0
+       h[1,1] <- h[1,1] + 1.0 - 2.0*( t3 - 2.0*x[1]^2 )
+       h[2,2] <- h[2,2] + 1.0
+       h[1,2] <- h[1,2] - 2.0*x[1]
+
+      for (j in 1:(n-1)) { # symmetrize
+        for (k in (j+1):n) {
+          h[k,j] <- h[j,k]        
+        }
+      }
+      h <- 2.0 * h
+      h
     },
     fg = function(par) {
       n <- length(par)
