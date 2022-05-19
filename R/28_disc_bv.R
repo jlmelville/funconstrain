@@ -90,7 +90,7 @@ disc_bv <- function() {
       grad[2:n] <- grad[2:n] - 2 * fi[1:(n - 1)]
       grad
     },
-    he = function(x) { # ?? seems to have error of 2 in 1,1 element
+    he = function(x) {
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)      
        d1 <- 1.0 / ( n + 1.0 )
