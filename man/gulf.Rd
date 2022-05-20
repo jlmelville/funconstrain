@@ -18,6 +18,8 @@ A list containing:
   parameter vector.
   \item \code{gr} Gradient function which calculates the gradient vector
   given input parameter vector.
+  \item \code{he} If available, the hessian matrix (second derivatives)
+  of the function w.r.t. the parameters at the given values.
   \item \code{fg} A function which, given the parameter vector, calculates
   both the objective value and gradient, returning a list with members
   \code{fn} and \code{gr}, respectively.
@@ -62,12 +64,12 @@ res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\url{https://doi.org/10.1145/355934.355936}
+\doi{doi.org/10.1145/355934.355936}
 
 Jamil, M., & Yang, X. S. (2013).
 A literature survey of benchmark functions for global optimisation problems.
 \emph{International Journal of Mathematical Modelling and Numerical
 Optimisation}, \emph{4}(2), 150-194.
-\url{https://doi.org/10.1504/IJMMNO.2013.055204}
-\url{https://arxiv.org/abs/1308.4008}
+\doi{doi.org/10.1504/IJMMNO.2013.055204}
+\doi{arxiv.org/abs/1308.4008}
 }
