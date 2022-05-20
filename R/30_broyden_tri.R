@@ -34,12 +34,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Broyden, C. G. (1965).
 #' A class of methods for solving nonlinear simultaneous equations.
 #' \emph{Mathematics of computation}, \emph{19}(92), 577-593.
-#' \url{https://doi.org/10.2307/2003941}
+#' \doi{doi.org/10.2307/2003941}
 #'
 #' @examples
 #' btri <- broyden_tri()
@@ -81,7 +81,7 @@ broyden_tri <- function() {
 
       grad
     },
-    he = function(x) {
+    he = function(x) { 
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
 #       ! For i <- 1

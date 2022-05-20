@@ -34,7 +34,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' @examples
 #' vdim <- var_dim()
@@ -49,7 +49,6 @@
 #' @export
 var_dim <- function() {
   list(
-    m = length(par) + 1,
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
@@ -89,14 +88,14 @@ var_dim <- function() {
 
       grad
     },
-    he = function(x) { # rather large discrepancy from approximations in n, n
-       n <- length(x)
+    he = function(par) { # quite big discrepancy in n, n from numeric approx.
+       n <- length(par)
        h <- matrix(0.0, nrow=n, ncol=n)
        t1 <- 0.0
        for (j in 1:n) {
-          t1 <- t1 + j*( x[j]-1.0 )
+          t1 <- t1 + j*( par[j]-1.0 )
        }
-       t <- 1.0 + 6.0*t1^2 # ?? why?
+       t <- 1.0 + 6.0*t1^2 # 
        for (j in 1:n) {
           h[j,j] <- 2.0 + 2.0 * t * j^2
           if (j > 1) {

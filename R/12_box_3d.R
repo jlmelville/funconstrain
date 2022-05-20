@@ -31,13 +31,13 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Box, M. J. (1966).
 #' A comparison of several current optimization methods, and the use of
 #' transformations in constrained problems.
 #' \emph{The Computer Journal}, \emph{9}(1), 67-77.
-#' \url{https://doi.org/10.1093/comjnl/9.1.67}
+#' \doi{doi.org/10.1093/comjnl/9.1.67}
 #'
 #' @examples
 #' # Use 10 summand functions

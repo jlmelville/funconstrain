@@ -35,7 +35,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Gill, P. E., Murray, W., & Pitfield, R. A. (1972).
 #' \emph{The implementation of two revised quasi-Newton algorithms for

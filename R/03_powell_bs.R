@@ -28,7 +28,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Powell, M. J. D. (1970).
 #' A hybrid method for nonlinear equations.

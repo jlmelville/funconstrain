@@ -29,13 +29,13 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Bard, Y. (1970).
 #' Comparison of gradient methods for the solution of nonlinear parameter
 #' estimation problems.
 #' \emph{SIAM Journal on Numerical Analysis}, \emph{7}(1), 157-186.
-#' \url{http://dx.doi.org/10.1137/0707011}
+#' \doi{dx.doi.org/10.1137/0707011}
 #'
 #' @examples
 #' fun <- bard()
@@ -50,7 +50,7 @@ bard <- function() {
   y <- c(0.14, 0.18, 0.22, 0.25, 0.29, 0.32, 0.35, 0.39, 0.37, 0.58,
          0.73, 0.96, 1.34, 2.10, 4.39)
   m <- 15
-
+  n <- 3
   list(
     fn = function(par) {
       x1 <- par[1]
@@ -115,8 +115,8 @@ bard <- function() {
              
          } else {
              h[1:n, 1,] <- .Machine$double.xmax
-             flag <- - 3
-             return
+             # flag <- - 3
+             return()
          }
       } # end loop
       h[2,1] <- h[1,2]

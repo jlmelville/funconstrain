@@ -34,12 +34,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Broyden, C. G. (1971).
 #' The convergence of an algorithm for solving sparse nonlinear systems.
 #' \emph{Mathematics of Computation}, \emph{25}(114), 285-294.
-#' \url{https://doi.org/10.1090/S0025-5718-1971-0297122-5}
+#' \doi{doi.org/10.1090/S0025-5718-1971-0297122-5}
 #'
 #' @examples
 #' btri <- broyden_band()
@@ -100,7 +100,7 @@ broyden_band <- function() {
 
       grad
     },
-    he = function(x) { 
+    he = function(x) {
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
 

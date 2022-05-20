@@ -29,12 +29,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Freudenstein, F., & Roth, B. (1963).
 #' Numerical solution of systems of nonlinear equations.
 #' \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
-#' \url{https://doi.org/10.1145/321186.321200}
+#' \doi{doi.org/10.1145/321186.321200}
 #'
 #' @examples
 #' fun <- freud_roth()

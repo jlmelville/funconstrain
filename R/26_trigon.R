@@ -38,7 +38,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Spedicato, E. (1975).
 #' \emph{Computational experience with quasi-Newton algorithms for minimization
@@ -58,7 +58,7 @@
 #' @export
 trigon <- function() {
   list(
-    m = length(par),
+    m = 30,
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
@@ -82,23 +82,23 @@ trigon <- function() {
 
       2 * (fi * (1:n * sinx - cosx) + sinx * sum(fi))
     },
-    he = function(x) { 
-       n <- length(x)
+    he = function(par) { 
+       n <- length(par)
        h <- matrix(0.0, nrow=n, ncol=n)
 
        s1 <- 0.0
        for (j in 1:n) {
-          h[j,j] <- sin( x[j] )
-          s1 <- s1 + cos( x[j] )
+          h[j,j] <- sin( par[j] )
+          s1 <- s1 + cos( par[j] )
        }
        s2 <- 0.0
        for (j in 1:n) {
-          th <- cos( x[j] )
+          th <- cos( par[j] )
           t <- ( n+j ) - h[j,j] - s1 - j*th
           s2 <- s2 + t
           if (j > 1) {
             for (k in (1:(j-1))){
-              h[k,j] <- 2.0*(sin(x[k])*(( n+j+k )*h[j,j]-th) - h[j,j]*cos(x[k]) )
+              h[k,j] <- 2.0*(sin(par[k])*(( n+j+k )*h[j,j]-th) - h[j,j]*cos(par[k]) )
             }
           }
           h[j,j] <- (j*(j+2)+n)*h[j,j]^2 + 
@@ -106,7 +106,7 @@ trigon <- function() {
        }
 
        for (j in 1:n) {
-          h[j,j] <- 2.0*( h[j,j] + cos(x[j])*s2 )
+          h[j,j] <- 2.0*( h[j,j] + cos(par[j])*s2 )
        }
        for (j in 1:(n-1)) { # symmetrize
          for (k in (j+1):n) {

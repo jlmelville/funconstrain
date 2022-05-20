@@ -36,7 +36,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Meyer, R. R. (1970).
 #' Theoretical and computational aspects of nonlinear regression.
@@ -47,7 +47,7 @@
 #' Meyer, R. R., & Roth, P. M. (1972).
 #' Modified damped least squares: an algorithm for non-linear estimation.
 #' \emph{IMA Journal of Applied Mathematics}, \emph{9}(2), 218-233.
-#' \url{https://doi.org/10.1093/imamat/9.2.218}
+#' \doi{doi.org/10.1093/imamat/9.2.218}
 #'
 #' @examples
 #' fun <- meyer()
@@ -112,8 +112,8 @@ meyer <- function() {
           h[3,3] <- h[3,3] + 2.0*t1*x1*x2/d2 ^ 3*( 2.0*t2 + s1*x2/d2 )
         } else {
           h <- matrix(0.0, ncol=3, nrow=3)
-          flag <- - 3
-          return
+          # flag <- - 3
+          return()
         } 
       } # end loop
       h[2,1] <- h[1,2]

@@ -37,12 +37,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Fletcher, R. (1965).
 #' Function minimization without evaluating derivatives - a review.
 #' \emph{The Computer Journal}, \emph{8}(1), 33-41.
-#' \url{https://doi.org/10.1093/comjnl/8.1.33}
+#' \doi{doi.org/10.1093/comjnl/8.1.33}
 #'
 #' @examples
 #' cheb <- chebyquad()

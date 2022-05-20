@@ -35,7 +35,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' @examples
 #' linfr <- linfun_fr(m = 10)
@@ -94,7 +94,7 @@ linfun_fr <- function(m = 100) {
 
       2 * fi - (m4 * (sum(fi) + (m - n) * fnm))
     },
-    he = function(x) { 
+    he = function(x) {
        n <- length(x)
        h <- matrix(0.0, nrow=n, ncol=n)
        for (i in 1:n){
