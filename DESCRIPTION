@@ -1,16 +1,17 @@
 Package: funconstrain
 Type: Package
 Title: Functions for Testing Unconstrained Numerical Optimization
-Version: 0.0.0.9001
-Authors@R: c( person("James", "Melville", email = "jlmelville@gmail.com",
-    role = c("aut", "cre")), person(given = c("John", "C"), family = "Nash", role =
-    c("ctb"), email = "nashjc@uottawa.ca"))
+Version: 0.0.0.9002
+Authors@R: c( person(given = "James", family = "Melville", email = "jlmelville@gmail.com",
+                    role = c("aut", "cre") ), 
+    person(given = "John C", family = "Nash", email = "nashjc@uottawa.ca",
+                    role = c("ctb") ) )
 Description: Functions for testing unconstrained numerical optimization, taken
     from More', Garbow and Hillstrom's paper 'Testing unconstrained 
     optimization software.'
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 6.0.1
+RoxygenNote: 7.2.0
 Suggests: testthat
 URL: https://github.com/jlmelville/funconstrain
 BugReports: https://github.com/jlmelville/funconstrain/issues
