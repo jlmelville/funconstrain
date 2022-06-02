@@ -27,6 +27,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -36,14 +38,14 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Jamil, M., & Yang, X. S. (2013).
 #' A literature survey of benchmark functions for global optimisation problems.
 #' \emph{International Journal of Mathematical Modelling and Numerical
 #' Optimisation}, \emph{4}(2), 150-194.
-#' \url{https://doi.org/10.1504/IJMMNO.2013.055204}
-#' \url{https://arxiv.org/abs/1308.4008}
+#' \doi{doi.org/10.1504/IJMMNO.2013.055204}
+#' \doi{arxiv.org/abs/1308.4008}
 #'
 #' @examples
 #' # Use 10 summand functions
@@ -65,8 +67,6 @@ gulf <- function(m = 99) {
     stop("Gulf research and development function: m must be between 3 and 100")
   }
 
-  y <- c(34780, 28610, 23650, 19630, 16370, 13720, 11540, 9744, 8261, 7030,
-         6005, 5147, 4427, 3820, 3307, 2872)
   p66 <- 2 / 3
 
   list(
@@ -100,6 +100,38 @@ gulf <- function(m = 99) {
       dz <- -sum(efxyz2 * log(ax2y) / x1)
 
       c(dx, dy, dz)
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      h <- matrix(0.0, ncol=3, nrow=3)
+      d1 <- p66
+      for (i in 1:m) {
+          arg <- 0.01*i
+          r <- ( -50.0*log( arg ) ) ^ d1 + 25.0 - x2
+          t1 <- abs( r ) ^ x3/x1
+          t2 <- exp( -t1 )
+          t3 <- t1*t2*( t1*t2 + ( t1 - 1.0 )*( t2 - arg ) )
+          t <- t1*t2*( t2 - arg )
+          logr <- log( abs( r ) )
+          h[1,1] <- h[1,1] + t3 - t
+          h[1,2] <- h[1,2] + t3/r
+          h[2,2] <- h[2,2] + ( t + x3*t3 )/r ^ 2
+          h[1,3] <- h[1,3] - t3*logr
+          h[2,3] <- h[2,3] + (t-x3*t3*logr)/r
+          h[3,3] <- h[3,3] + t3*logr ^ 2
+       }
+
+       h[1,1] <- h[1,1] / x1 ^ 2
+       h[1,2] <- h[1,2]*x3/x1
+       h[2,2] <- h[2,2]*x3
+       h[1,3] <- h[1,3] / x1
+       h <- 2.0 * h
+       h[2,1] <- h[1,2]
+       h[3,1] <- h[1,3]
+       h[3,2] <- h[2,3]
+       h
     },
     fg = function(par) {
       x1 <- par[1]

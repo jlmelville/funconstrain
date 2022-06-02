@@ -30,11 +30,11 @@ test_that("Optimizer can reach minimum from x0", {
                       method = "L-BFGS-B", control = list(maxit = 1000,
                                                           factr = 1e-1))
   expect_equal(res$par, min_x4, tol = 1e-4)
-  expect_equal(res$value, min_fx4, tol = 1e-6)
+  expect_equal(res$value, min_fx4, tol = 1e-6) # NOTE:220519 get fn not orig
 
   res <- stats::optim(par = testfun$x0(10), fn = testfun$fn, gr = testfun$gr,
                       method = "L-BFGS-B", control = list(maxit = 1000,
                                                           factr = 1e-1))
-  expect_equal(res$par, min_x10, tol = 1e-4)
+  expect_equal(res$par, min_x10, tol = 1e-3)
   expect_equal(res$value, min_fx10)
 })

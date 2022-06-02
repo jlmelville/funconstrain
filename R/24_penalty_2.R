@@ -23,6 +23,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -33,7 +35,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Gill, P. E., Murray, W., & Pitfield, R. A. (1972).
 #' \emph{The implementation of two revised quasi-Newton algorithms for
@@ -119,6 +121,41 @@ penalty_2 <- function() {
       }
 
       grad
+    },
+    he = function(x) { # ?? failing? Why?
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)
+       t1 <- -1.0
+       for (j in 1:n){
+          t1 <- t1 + ( n-j+1 ) * x[j]^2
+       }
+       d1 <- exp( 0.1 )
+       d2 <- 1.0
+       th <- 4.0*t1
+       s2 <- 0.0
+       for (j in 1:n){
+          h[j,j] <- 8.0*( ( n-j+1 )*x[j] )^2 + ( n-j+1 )*th
+          s1 <- exp( x[j]/10.0 )
+          if ( j > 1 ) {
+             s3 <- s1 + s2 - d2*( d1 + 1.0 )
+             h[j  ,j  ] <- h[j  ,j  ] + 1.0e-5*s1*( s3 + s1 - 1.0/d1 + 2.0*s1 ) / 50.0
+             h[j-1,j-1] <- h[j-1,j-1] + 1.0e-5*s2*( s2 + s3 ) / 50.0
+             for (k in 1:(j-1)){
+                t1 <- exp( k/10.0 )
+                h[k,j] <- 8.0*( n-j+1 )*( n-k+1 )*x[j]*x[k]
+             }
+             h[j-1,j] <- h[j-1,j] + 1.0e-5*s1*s2/50.0
+          }
+          s2 <- s1
+          d2 <- d1*d2
+       }
+       h[1,1] <- h[1,1] + 2.0
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

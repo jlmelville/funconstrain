@@ -18,6 +18,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -27,7 +29,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Kowalik, J. S., & Osborne, M. R. (1968).
 #' \emph{Methods for unconstrained optimization problems.}
@@ -89,6 +91,42 @@ kow_osb <- function() {
         grad[4] <- grad[4] + nfx2 / den2
       }
       grad
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      x4 <- par[4]
+      h <- matrix(0.0, ncol=4, nrow=4)
+      for (i in 1:m) {
+         s1 <- u[i] + x2
+          t1 <- u[i] ^ 2 + u[i]*x3 + x4
+
+          if ( t1 != 0.0 ) {
+             d1 <- y[i] - x1*u[i]*s1/t1
+             h[1,1] <- h[1,1] + 2.0*( u[i]*s1/t1 ) ^ 2
+             h[1,2] <- h[1,2] + 2.0*u[i]/t1*( x1*u[i]*s1/t1 - d1 )
+             h[2,2] <- h[2,2] + 2.0*( x1*u[i]/t1 ) ^ 2
+             h[1,3] <- h[1,3] + 2.0*s1*u[i] ^ 2/t1 ^ 2*( d1 - u[i]*s1*x1/t1 )
+             h[2,3] <- h[2,3] + 2.0*x1*u[i] ^ 2/t1 ^ 2*( d1 - x1*u[i]*s1/t1 )
+             h[3,3] <- h[3,3] + 2.0*u[i] ^ 3*x1*s1/t1 ^ 3*( x1*u[i]*s1/t1 - 2.0*d1 )
+             h[1,4] <- h[1,4] + 2.0*u[i]*s1/t1 ^ 2*( d1 - u[i]*s1*x1/t1 )
+             h[2,4] <- h[2,4] + 2.0*x1*u[i]/t1 ^ 2*( d1 - x1*u[i]*s1/t1 )
+             h[3,4] <- h[3,4] + 2.0*x1*u[i] ^ 2*s1/t1 ^ 3*( x1*u[i]*s1/t1 - 2.0*d1 )
+             h[4,4] <- h[4,4] + 2.0*x1*u[i]*s1/t1 ^ 3*( x1*u[i]*s1/t1 - 2.0*d1 )
+          } else {
+             h<-matrix(.Machine$double.eps, nrow=4, ncol=4)
+             # flag <- - 3
+             return()
+          } 
+      }
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h[4,1] <- h[1,4]
+      h[4,2] <- h[2,4]
+      h[4,3] <- h[3,4]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

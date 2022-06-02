@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,7 +34,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Spedicato, E. (1975).
 #' \emph{Computational experience with quasi-Newton algorithms for minimization
@@ -91,6 +93,26 @@ ex_rosen <- function() {
       }
 
       grad
+    },
+    he = function(x) {
+       n <- length(x)
+       if (n %% 2 != 0) {
+         stop("Extended Rosenbrock: n must be even")
+       }
+       h <- matrix(0.0, nrow=n, ncol=n)
+       halfn <- n / 2    
+       for (jh in 1:halfn) {
+          j <- 2*jh - 1 # issue because Fortran used do j = 1, n, 2
+          h[j  ,j  ] <- 1.2e+3*x[j] ^ 2 - 4.0e+2*x[j+1] + 2.0
+          h[j  ,j+1] <- -4.0e+2*x[j]
+          h[j+1,j+1] <- 2.0e+2
+       }
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

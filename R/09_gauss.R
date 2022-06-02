@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -26,7 +28,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' @examples
 #' fun <- gauss()
@@ -74,6 +76,38 @@ gauss <- function() {
         grad[3] <- grad[3] + 2 * x1g * x2 * tx3 * f
       }
       grad
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+
+       y9 <- c(0.0009, 0.0044, 0.0175, 0.0540, 0.1295, 0.2420, 0.3521,
+         0.3989, 0.3521, 0.2420, 0.1295, 0.0540, 0.0175, 0.0044, 0.0009)      
+       h <- matrix(0.0, ncol=3, nrow=3)
+       for (i in 1:m) {
+          d1 <- 0.5*(i-1)
+          d2 <- 3.5 - d1 - x3
+          arg <- 0.5*x2*d2 ^ 2
+          r <- exp( - arg )
+          t <- x1*r - y9[i]
+          t1 <- 2.0*x1*r - y9[i]
+          h[1,1] <- h[1,1] + r ^ 2
+          h[1,2] <- h[1,2] - r*t1*d2 ^ 2
+          h[2,2] <- h[2,2] + r*t1*d2 ^ 4
+          h[1,3] <- h[1,3] + d2*r*t1
+          h[2,3] <- h[2,3] + d2*r*( t - arg*t1 )
+          h[3,3] <- h[3,3] + r*( x2*t1*d2 ^ 2 - t )
+       }
+       h[1,1] <- 2.0*h[1,1]
+       h[2,2] <- 0.5*x1*h[2,2]
+       h[1,3] <- 2.0*x2*h[1,3]
+       h[2,3] <- 2.0*x1*h[2,3]
+       h[3,3] <- 2.0*x1*x2*h[3,3]
+       h[2,1] <- h[1,2]
+       h[3,1] <- h[1,3]
+       h[3,2] <- h[2,3]
+       h
     },
     fg = function(par) {
       x1 <- par[1]

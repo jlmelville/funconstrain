@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,12 +34,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' More', J. J., & Cosnard, M. Y. (1979).
 #' Numerical solution of nonlinear equations.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{5}(1), 64-85.
-#' \url{https://doi.org/10.1145/355815.355820}
+#' \doi{doi.org/10.1145/355815.355820}
 #'
 #' @examples
 #' dbv <- disc_bv()
@@ -87,6 +89,49 @@ disc_bv <- function() {
       grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
       grad[2:n] <- grad[2:n] - 2 * fi[1:(n - 1)]
       grad
+    },
+    he = function(x) { 
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)      
+       d1 <- 1.0 / ( n + 1.0 )
+#       ! For i <- 1
+       d2 <- d1
+       arg <- x[1] + d2 + 1.0
+       t  <- 2.0*x[1] - x[2] + d1^2 * arg^3 / 2.0
+       t1 <- 2.0 + 1.5 * d1^2 * arg^2
+       h[1,1] <-   2.0*( 3.0 * d1^2 * arg*t + t1^2 )
+       h[1,2] <- - 2.0*t1
+       h[2,2] <-   2.0
+       
+       for (i in 2:(n-1)){ # ?? Check i is > 1 and n >=2
+          d2 <- i*d1
+          arg <- x[i] + d2 + 1.0
+          t  <- 2.0*x[i] - x[i-1] - x[i+1] + d1^2 * arg^3 / 2.0
+          t1 <- 2.0 + 1.5 * d1^2 * arg^2
+          h[i-1,i-1] <- h[i-1,i-1] + 2.0
+          h[i-1,i  ] <- h[i-1,i  ] - 2.0*t1
+          h[i,  i  ] <- h[i,  i  ] + 2.0*( 3.0*d1 ^ 2*arg*t + t1 ^ 2 )
+          h[i-1,i+1] <- h[i-1,i+1] + 2.0
+          h[i  ,i+1] <- h[i  ,i+1] - 2.0*t1
+          h[i+1,i+1] <- h[i+1,i+1] + 2.0
+       }
+
+#       ! For i <- n
+       d2 <- n*d1
+       arg <- x[n] + d2 + 1.0
+       t  <- 2.0*x[n] - x[n-1] + d1^2 * arg^3 / 2.0
+       t1 <- 2.0 + 1.5 * d1^2 * arg^2
+       h[n-1,n-1] <- h[n-1,n-1] + 2.0
+       h[n-1,n  ] <- h[n-1,n  ] - 2.0*t1
+       h[n,  n  ] <- h[n,  n  ] + 2.0* (3.0 * d1^2 * arg * t + t1^2 )
+
+
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

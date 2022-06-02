@@ -13,6 +13,8 @@ A list containing:
   parameter vector.
   \item \code{gr} Gradient function which calculates the gradient vector
   given input parameter vector.
+  \item \code{he} If available, the hessian matrix (second derivatives)
+  of the function w.r.t. the parameters at the given values.
   \item \code{fg} A function which, given the parameter vector, calculates
   both the objective value and gradient, returning a list with members
   \code{fn} and \code{gr}, respectively.
@@ -46,7 +48,7 @@ res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
 More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\url{https://doi.org/10.1145/355934.355936}
+\doi{doi.org/10.1145/355934.355936}
 
 Colville, A. R. (1968)
 \emph{A comparative study on nonlinear programming codes} (Report No.

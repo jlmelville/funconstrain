@@ -18,6 +18,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -27,12 +29,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Freudenstein, F., & Roth, B. (1963).
 #' Numerical solution of systems of nonlinear equations.
 #' \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
-#' \url{https://doi.org/10.1145/321186.321200}
+#' \doi{doi.org/10.1145/321186.321200}
 #'
 #' @examples
 #' fun <- freud_roth()
@@ -45,6 +47,7 @@
 #' @export
 freud_roth <- function() {
   list(
+    m = NA,
     fn = function(par) {
       x <- par[1]
       y <- par[2]
@@ -64,6 +67,20 @@ freud_roth <- function() {
         12 * yyyy * y - 40 * yyyy + 8 * yy * y - 240 * yy +
           (24 * x + 24) * y - 32 * x + 864
       )
+    },
+    he = function(par) {
+       x1 <- par[1]
+       x2 <- par[2]
+       h <- matrix(NA, nrow=2, ncol=2)
+       t1 <- - 13.0 + x1 + ( ( 5.0 - x2 )*x2 - 2.0 )*x2
+       t2 <- - 29.0 + x1 + ( ( x2 + 1.0 )*x2 - 14.0 )*x2
+       h[1,1] <- 4.0
+       h[1,2] <- 8.0*( 3.0*x2 - 4.0 )
+       h[2,2] <- 2.0*(                                                                     
+            t1*( - 6.0*x2 + 10.0 ) + ( ( 10.0 - 3.0*x2 )*x2 - 2.0 ) ^ 2 + 
+            t2*(   6.0*x2 +  2.0 ) + ( ( 3.0*x2 + 2.0 )*x2 - 14.0 ) ^ 2 )
+       h[2,1] <- h[1,2]
+       h
     },
     fg = function(par) {
       x <- par[1]

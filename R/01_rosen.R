@@ -26,12 +26,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Rosenbrock, H. (1960).
 #' An automatic method for finding the greatest or least value of a function.
 #' \emph{The Computer Journal}, \emph{3}(3), 175-184.
-#' \url{https://doi.org/10.1093/comjnl/3.3.175}
+#' \doi{doi.org/10.1093/comjnl/3.3.175}
 #'
 #' @examples
 #' fun <- rosen()
@@ -44,6 +44,7 @@
 #' @export
 rosen <- function() {
   list(
+    m = NA,
     fn = function(x) {
       x1 <- x[1]
       x2 <- x[2]
@@ -55,6 +56,18 @@ rosen <- function() {
       c(
         -400 * x1 * (x2 - x1 * x1) - 2 * (1 - x1),
         200 *      (x2 - x1 * x1))
+    },
+    he = function(x) {
+      x1 <- x[1]
+      x2 <- x[2]
+      h <- matrix(NA, nrow=2, ncol=2)
+      t1 <- 10.0*( x2 - x1 ^ 2 )
+       t1 <- 10.0*( x2 - x1 ^ 2 )
+       h[1,1] <- 2.0*( 400.0*x1 ^ 2 - 20.0*t1 + 1.0 )
+       h[1,2] <- - 400.0*x1
+       h[2,2] <- 200.0
+       h[2,1] <- h[1,2]
+       h
     },
     fg = function(x) {
       x1 <- x[1]

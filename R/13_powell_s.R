@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -26,13 +28,13 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Powell, M. J. D. (1962).
 #' An iterative method for finding stationary values of a function of several
 #' variables.
 #' \emph{The Computer Journal}, \emph{5}(2), 147-151.
-#' \url{https://doi.org/10.1093/comjnl/5.2.147}
+#' \doi{doi.org/10.1093/comjnl/5.2.147}
 #'
 #' @examples
 #' fun <- powell_s()
@@ -81,6 +83,35 @@ powell_s <- function() {
         10 * x34 - 8 * x23_3,
         -10 * x34 - 40 * x14_3
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      x4 <- par[4]
+      h <- matrix(0.0, ncol=4, nrow=4)
+      d3 <- ( x2 - 2.0*x3 ) ^ 2
+      d4 <- sqrt( 10.0 )*( x1 - x4 ) ^ 2
+      t1 <- 2.0*( x2 - 2.0*x3 )
+      t2 <- 2.0*sqrt( 10.0 )*( x1 - x4 )
+      t3 <- 2.0*sqrt( 10.0 )
+      h[1,1] <- 2.0*( 1.0 + d4*t3 + t2 ^ 2 )
+      h[1,2] <- 20.0
+      h[2,2] <- 2.0*( 100.0 + 2.0*d3 + t1 ^ 2 )
+      h[1,3] <- 0.0
+      h[2,3] <- - 4.0*( 2.0*d3 + t1 ^ 2 )
+      h[3,3] <- 8.0*( 1.25 + 2.0*d3 + t1 ^ 2 )
+      h[1,4] <- - 2.0*( d4*t3 + t2 ^ 2 )
+      h[2,4] <- 0.0
+      h[3,4] <- - 10.0
+      h[4,4] <- 2.0*( 5.0 + d4*t3 + t2 ^ 2 )
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h[4,1] <- h[1,4]
+      h[4,2] <- h[2,4]
+      h[4,3] <- h[3,4]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

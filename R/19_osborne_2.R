@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -26,7 +28,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Osborne, M. R. (1972).
 #' Some aspects of nonlinear least squares calculations.
@@ -45,7 +47,7 @@
 #' @export
 osborne_2 <- function() {
   m <- 65
-
+  n <- 11
   y <- c(1.366, 1.191, 1.112, 1.013, 0.991, 0.885, 0.831, 0.847, 0.786, 0.725,
          0.746, 0.679, 0.608, 0.655, 0.616, 0.606, 0.602, 0.626, 0.651, 0.724,
          0.649, 0.649, 0.694, 0.644, 0.624, 0.661, 0.612, 0.558, 0.533, 0.495,
@@ -125,6 +127,67 @@ osborne_2 <- function() {
       )
 
       grad
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      x4 <- par[4]
+      x5 <- par[5]
+      x6 <- par[6]
+      x7 <- par[7]
+      x8 <- par[8]
+      x9 <- par[9]
+      x10 <- par[10]
+      x11 <- par[11]
+      h <- matrix(0.0, ncol=11, nrow=11)
+
+      for (i in 1:m) {
+          t1 <- (i - 1)/ 10.0
+          d1 <- exp( - t1*x5 )
+          d2 <- exp( - ( t1 - x9 ) ^ 2*x6 )
+          d3 <- exp( - ( t1 - x10 ) ^ 2*x7 )
+          d4 <- exp( - ( t1 - x11 ) ^ 2*x8 )
+          s1 <- y[i] - ( x1*d1 + x2*d2 + x3*d3 + x4*d4 )
+
+          w1 <- - c( d1, d2, d3, d4, - t1*x1*d1, 
+                 - ( t1 - x9 ) ^ 2*x2*d2,
+                 - ( t1 - x10 ) ^ 2*x3*d3,
+                 - ( t1 - x11 ) ^ 2*x4*d4,
+                 2.0*( t1 - x9 )*x6*x2*d2,
+                 2.0*( t1 - x10 )*x7*x3*d3,
+                 2.0*( t1 - x11 )*x8*x4*d4 )
+
+          for (k in 1:n) {
+             for (j in 1:k) {
+                h[j,k] <- h[j,k] + 2.0*w1[j]*w1[k]
+             }
+          }
+
+          h[ 1, 5] <- h[ 1, 5] + 2.0*s1*t1*d1
+          h[ 5, 5] <- h[ 5, 5] - 2.0*s1*t1 ^ 2*x1*d1
+          h[ 2, 6] <- h[ 2, 6] + 2.0*s1*( t1 - x9 ) ^ 2*d2
+          h[ 6, 6] <- h[ 6, 6] - 2.0*s1*( t1 - x9 ) ^ 4*x2*d2
+          h[ 3, 7] <- h[ 3, 7] + 2.0*s1*( t1 - x10 ) ^ 2*d3
+          h[ 7, 7] <- h[ 7, 7] - 2.0*s1*( t1 - x10 ) ^ 4*x3*d3
+          h[ 4, 8] <- h[ 4, 8] + 2.0*s1*( t1 - x11 ) ^ 2*d4
+          h[ 8, 8] <- h[ 8, 8] - 2.0*s1*( t1 - x11 ) ^ 4*x4*d4
+          h[ 2, 9] <- h[ 2, 9] - 4.0*s1*( t1 - x9 )*x6*d2
+          h[ 6, 9] <- h[ 6, 9] + 4.0*s1*( t1 - x9 )*x2*d2*( ( t1 - x9 ) ^ 2*x6 - 1.0 )
+          h[ 9, 9] <- h[ 9, 9] - 4.0*s1*x6*x2*d2*( 2.0*( t1 - x9 ) ^ 2*x6 - 1.0 )
+          h[ 3,10] <- h[ 3,10] - 4.0*s1*( t1 - x10 )*x7*d3
+          h[ 7,10] <- h[ 7,10] + 4.0*s1*x3*( t1 - x10 )*d3*( ( t1 - x10 ) ^ 2*x7 - 1.0 )
+          h[10,10] <- h[10,10] - 4.0*s1*x7*x3*d3*( 2.0*( t1 - x10 ) ^ 2*x7 - 1.0 )
+          h[ 4,11] <- h[ 4,11] - 4.0*s1*( t1 - x11 )*x8*d4
+          h[ 8,11] <- h[ 8,11] + 4.0*s1*x4*( t1 - x11 )*d4*( ( t1 - x11 ) ^ 2*x8 - 1.0 )
+          h[11,11] <- h[11,11] - 4.0*s1*x8*x4*d4*( 2.0*( t1 - x11 ) ^ 2*x8 - 1.0 )
+       }
+      for (j in 1:10) {
+        for (k in (j+1):11) {
+          h[k,j] <- h[j,k]        
+        }
+      }
+      h
     },
     fg = function(par) {
       x1 <- par[1]

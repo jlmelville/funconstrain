@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,12 +34,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' More', J. J., & Cosnard, M. Y. (1979).
 #' Numerical solution of nonlinear equations.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{5}(1), 64-85.
-#' \url{https://doi.org/10.1145/355815.355820}
+#' \doi{doi.org/10.1145/355815.355820}
 #'
 #' @examples
 #' d_ie <- disc_ie()
@@ -119,6 +121,71 @@ disc_ie <- function() {
         }
       }
       grad
+    },
+    he = function(x) { 
+       n <- length(x)
+       w1 <- rep(0, n)
+       w2 <- rep(0, n+1)
+       gvec <- rep(0,n)
+       h <- matrix(0.0, nrow=n, ncol=n)
+#       for (j in 1:n){
+#          for (i in 1:j) {
+#             h[i,j] <- 0.0
+#          }
+#       }
+       
+       d1 <- 1.0/(n + 1.0)
+       w1[1]          <- d1*( x[1] + d1 + 1.0 )^3
+       w2[n]   <- ( 1.0 - n*d1 )*( x[n] + n*d1 + 1.0 )^3
+       w2[n+1] <- 0.0
+       for (i in 2:n) {
+          t1 <- i*d1
+          t2 <- (n-i+1)*d1
+          w1[i]            <- w1[i-1] + t1*( x[i] + t1 + 1.0)^3
+          w2[n-i+1] <- w2[n-i+2] + ( 1.0 - t2 )*( x[n-i+1] + t2 + 1.0 )^3
+       }
+
+       for (i in 1:n){
+#          cat("i:",i)
+          t1 <- i*d1
+          t  <- x[i] + 0.5*d1*( ( 1.0 - t1 )*w1[i] + t1*w2[i+1] )
+
+          for (j in 1:i) {
+#             cat(" j:",j)
+             t2 <- j*d1
+             gvec[j] <- 1.5*d1*( 1.0 - t1 )*t2*( x[j] + t2 + 1.0 )^2
+
+             h[j,j] <- h[j,j] + 2.0*t*( 3.0*d1*( 1.0 - t1 )*t2*( x[j] + t2 + 1.0 ) )
+          }
+
+          gvec[i] <- gvec[i] + 1.0
+
+#          cat("new j loop\n")
+          if (i < 8) {
+            for (j in (i+1):n) {
+#               cat(" j:",j)
+               t2 <- j*d1
+               gvec[j] <- 1.5*d1*t1*( 1.0 - t2 )*( x[j] + t2 + 1.0 )^2
+               h[j,j] <- h[j,j] + 2.0*t*( 3.0*d1*t1*(1.0 - t2)*(x[j] + t2 + 1.0))
+            }
+          }
+#          cat("new k loop\n")
+          for (k in 1:n) {
+#             cat(" k:",j)
+             for (j in 1:k) {
+#             cat(" j:",j)
+                h[j,k] <- h[j,k] + 2.0*gvec[j]*gvec[k]
+             }
+#             cat("\n")
+          }
+       }
+
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,12 +34,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Broyden, C. G. (1971).
 #' The convergence of an algorithm for solving sparse nonlinear systems.
 #' \emph{Mathematics of Computation}, \emph{25}(114), 285-294.
-#' \url{https://doi.org/10.1090/S0025-5718-1971-0297122-5}
+#' \doi{doi.org/10.1090/S0025-5718-1971-0297122-5}
 #'
 #' @examples
 #' btri <- broyden_band()
@@ -98,6 +100,54 @@ broyden_band <- function() {
 
       grad
     },
+    he = function(x) {
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)
+
+       for (i in 1:n) {
+          s1 <- 0.0
+          if (i > 1) { # needed for R
+            for (j in max(1,i-5):(i-1)){
+              s1 <- s1 + x[j]*( 1.0 + x[j] )
+            }
+          }
+          if ( i < n ) { s1 <- s1 + x[i+1]*( 1.0 + x[i+1] ) }
+          
+          t <- x[i]*( 2.0 + 5.0*x[i]^2 ) + 1.0 - s1
+          d1 <- 2.0 + 15.0*x[i]^2
+
+          if (i > 1) { # needed for R
+            for (j in (max(1,i-5):(i-1))){
+              d2 <- - 1.0 - 2.0*x[j]
+              h[j,j] <- h[j,j] + 2.0*( d2^2 - 2.0*t )
+              if ((j+1) < i) { # needed for R
+                for (l in ((j+1):(i-1))) {
+                   h[j,l] <- h[j,l] + 2.0*d2*( - 1.0 - 2.0*x[l] )
+                }
+              }
+              h[j,i] <- h[j,i] + 2.0*d1*d2
+              if ( i < n ) {
+                 h[j,i+1] <- h[j,i+1] + 2.0*d2*( - 1.0 - 2.0*x[i+1] )
+              }
+            }
+          } # end if i>1
+
+          h[i,i] <- h[i,i] + 2.0*( 30.0*t*x[i] + d1^2 )
+          if ( i < n ) {
+             d2 <- - 1.0 - 2.0*x[i+1]
+             h[i  ,i+1] <- h[i  ,i+1] + 2.0*d1*d2
+             h[i+1,i+1] <- h[i+1,i+1] + 2.0*( d2^2 - 2.0*t )
+          }
+       }
+
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
+    },
+
     fg = function(par) {
       n <- length(par)
       if (n < 1) {

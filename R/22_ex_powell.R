@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,7 +34,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Spedicato, E. (1975).
 #' \emph{Computational experience with quasi-Newton algorithms for minimization
@@ -105,6 +107,40 @@ ex_powell <- function() {
         grad[z] <- grad[z] - 10 * pyz - 40 * pwz3
       }
       grad
+    },
+    he = function(x) {
+       n <- length(x)
+       if (n %% 4 != 0) {
+         stop("Extended Powell: n must be a multiple of 4")
+       }
+       h <- matrix(0.0, nrow=n, ncol=n)
+       qn <- n / 4
+       for (j4 in 1:qn) {
+          j <- 4*j4 - 3
+          t2 <- x[j+1] - 2.0*x[j+2]
+          t3 <- x[j] - x[j+3]
+          s1 <- 12.0*t2 ^ 2
+          s2 <- 120.0*t3 ^ 2
+
+          h[j  ,j  ] <- 2.0 + s2
+          h[j  ,j+1] <- 2.0*10.0
+          h[j+1,j+1] <- 2.0e+2 + s1
+
+          h[j  ,j+2] <- 0.0
+          h[j+1,j+2] <- -2.0*s1
+          h[j+2,j+2] <- 10.0 + 4.0*s1
+
+          h[j  ,j+3] <- -s2
+          h[j+1,j+3] <- 0.0
+          h[j+2,j+3] <- -10.0
+          h[j+3,j+3] <- 10.0 + s2
+       }
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)

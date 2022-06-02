@@ -19,6 +19,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -28,7 +30,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Brown, K. M., & Dennis, J. E. (1971).
 #' \emph{New computational algorithms for minimizing a sum of squares of
@@ -83,6 +85,39 @@ brown_den <- function(m = 20) {
         sum(rf4),
         sum(rf4 * sinti)
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      x4 <- par[4]
+      h <- matrix(0.0, ncol=4, nrow=4)
+      for (i in 1:m) {
+        d1 <- i/5.0
+        d2 <- sin( d1 )
+        t1 <- x1 + d1*x2 - exp( d1 )
+        t2 <- x3 + d2*x4 - cos( d1 )
+        t <- 8.0 * t1 * t2
+        s1 <- 12.0*t1 ^ 2 + 4.0*t2 ^ 2
+        s2 <- 12.0*t2 ^ 2 + 4.0*t1 ^ 2
+        h[1,1] <- h[1,1] + s1
+        h[1,2] <- h[1,2] + s1*d1
+        h[2,2] <- h[2,2] + s1*d1 ^ 2
+        h[1,3] <- h[1,3] + t
+        h[2,3] <- h[2,3] + t*d1
+        h[3,3] <- h[3,3] + s2
+        h[1,4] <- h[1,4] + t*d2
+        h[2,4] <- h[2,4] + t*d1*d2
+        h[3,4] <- h[3,4] + s2*d2
+        h[4,4] <- h[4,4] + s2*d2 ^ 2
+      }
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h[4,1] <- h[1,4]
+      h[4,2] <- h[2,4]
+      h[4,3] <- h[3,4]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

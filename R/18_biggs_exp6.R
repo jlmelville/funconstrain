@@ -23,6 +23,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,7 +34,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Biggs, M. C. (1971).
 #' Minimization algorithms making use of non-quadratic properties of the
@@ -100,6 +102,78 @@ biggs_exp6 <- function(m = 13) {
         -sum(tfi2 * f65),
          sum(fi2 * f5)
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      x4 <- par[4]
+      x5 <- par[5]
+      x6 <- par[6]
+      h <- matrix(0.0, ncol=6, nrow=6)
+
+      for (i in 1:m) {
+          d1 <- i/10.0
+          d2 <- exp( - d1 ) - 5.0*exp( - 10.0*d1 ) + 3.0*exp( - 4.0*d1 )
+          s1 <- exp( - d1*x1 )
+          s2 <- exp( - d1*x2 )
+          s3 <- exp( - d1*x5 )
+          t <- x3*s1 - x4*s2 + x6*s3 - d2
+          d2 <- d1 ^ 2
+          s1s2 <- s1 * s2
+          s1s3 <- s1 * s3
+          s2s3 <- s2 * s3
+          h[1,1] <- h[1,1] + d2*s1*( t + x3*s1 )
+          h[1,2] <- h[1,2] - d2*s1s2
+          h[2,2] <- h[2,2] - d2*s2*( t - x4*s2 )
+          h[1,3] <- h[1,3] - d1*s1*( t + x3*s1 )
+          h[2,3] <- h[2,3] + d1*s1s2
+          h[3,3] <- h[3,3] + s1 ^ 2
+          h[1,4] <- h[1,4] + d1*s1s2
+          h[2,4] <- h[2,4] + d1*s2*( t - x4*s2 )
+          h[3,4] <- h[3,4] - s1s2
+          h[4,4] <- h[4,4] + s2 ^ 2
+          h[1,5] <- h[1,5] + d2*s1s3
+          h[2,5] <- h[2,5] - d2*s2s3
+          h[3,5] <- h[3,5] - d1*s1s3
+          h[4,5] <- h[4,5] + d1*s2s3
+          h[5,5] <- h[5,5] + d2*s3*( t + x6*s3 )
+          h[1,6] <- h[1,6] - d1*s1s3
+          h[2,6] <- h[2,6] + d1*s2s3
+          h[3,6] <- h[3,6] + s1s3
+          h[4,6] <- h[4,6] - s2s3
+          h[5,6] <- h[5,6] - d1*s3*( t + x6*s3 )
+          h[6,6] <- h[6,6] + s3 ^ 2
+       }
+       h[1,1] <- x3*h[1,1]
+       h[2,2] <- x4*h[2,2]
+       h[5,5] <- x6*h[5,5]
+       h[1,2] <- x3*x4*h[1,2]
+       h[2,3] <- x4*h[2,3]
+       h[1,4] <- x3*h[1,4]
+       h[1,5] <- x3*x6*h[1,5]
+       h[2,5] <- x4*x6*h[2,5]
+       h[3,5] <- x6*h[3,5]
+       h[4,5] <- x6*h[4,5]
+       h[1,6] <- x3*h[1,6]
+       h[2,6] <- x4*h[2,6]
+       h <- 2.0 * h
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h[4,1] <- h[1,4]
+      h[4,2] <- h[2,4]
+      h[4,3] <- h[3,4]
+      h[5,1] <- h[1,5]
+      h[5,2] <- h[2,5]
+      h[5,3] <- h[3,5]
+      h[5,4] <- h[4,5]
+      h[6,1] <- h[1,6]
+      h[6,2] <- h[2,6]
+      h[6,3] <- h[3,6]
+      h[6,4] <- h[4,6]
+      h[6,5] <- h[5,6]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

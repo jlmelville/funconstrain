@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,12 +34,12 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Broyden, C. G. (1965).
 #' A class of methods for solving nonlinear simultaneous equations.
 #' \emph{Mathematics of computation}, \emph{19}(92), 577-593.
-#' \url{https://doi.org/10.2307/2003941}
+#' \doi{doi.org/10.2307/2003941}
 #'
 #' @examples
 #' btri <- broyden_tri()
@@ -79,6 +81,42 @@ broyden_tri <- function() {
 
       grad
     },
+    he = function(x) { 
+       n <- length(x)
+       h <- matrix(0.0, nrow=n, ncol=n)
+#       ! For i <- 1
+       t  <- ( 3.0 - 2.0*x[1] )*x[1] - 2.0*x[2] + 1.0
+       t1 <- 3.0 - 4.0*x[1]
+       h[1,1] <-   2.0*( t1 ^ 2 - 4.0*t )
+       h[1,2] <- - 4.0*t1
+       h[2,2] <-   8.0
+
+       for (i in 2:(n-1)) {
+          t  <- ( 3.0 - 2.0*x[i] )*x[i] - x[i-1] - 2.0*x[i+1] + 1.0
+          t1 <- 3.0 - 4.0*x[i]
+          h[i-1,i-1] <- h[i-1,i-1] + 2.0
+          h[i-1,i  ] <- h[i-1,i  ] - 2.0*t1
+          h[i,  i  ] <- h[i,  i  ] + 2.0*( t1 ^ 2 - 4.0*t )
+          h[i-1,i+1] <- h[i-1,i+1] + 4.0
+          h[i  ,i+1] <- h[i  ,i+1] - 4.0*t1
+          h[i+1,i+1] <- h[i+1,i+1] + 8.0
+       }
+
+#       ! For i <- n
+       t  <- ( 3.0 - 2.0*x[n] )*x[n] - x[n-1] + 1.0
+       t1 <- 3.0 - 4.0*x[n]
+       h[n-1,n-1] <- h[n-1, n-1] + 2.0
+       h[n-1,  n] <- h[n-1, n  ] - 2.0*t1
+       h[  n,  n] <- h[ n,  n  ] + 2.0*( t1 ^ 2 - 4.0*t )
+
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
+    },
+
     fg = function(par) {
       n <- length(par)
       if (n < 1) {

@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -26,7 +28,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Powell, M. J. D. (1970).
 #' A hybrid method for nonlinear equations.
@@ -45,6 +47,7 @@
 #' @export
 powell_bs <- function() {
   list(
+    m = NA,
     fn = function(par) {
       x <- par[1]
       y <- par[2]
@@ -64,6 +67,18 @@ powell_bs <- function() {
           y * a - exp(-x) * b,
           x * a - exp(-y) * b
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+       h <- matrix(NA, nrow=2, ncol=2)
+       t1 <- 1.0e+04*x1*x2 - 1
+       t2 <- exp( - x1 ) + exp( - x2 ) - 1.0001
+       h[1,1] <- 2.0*( 1.0e+8*x2 ^ 2 + t2*exp( - x1 ) + exp( - x1 ) ^ 2 )
+       h[1,2] <- 2.0*( t1*1.0e+04 + 1.0e+8*x1*x2 + exp( - x1 - x2 ) )
+       h[2,2] <- 2.0*( 1.0e+8*x1 ^ 2 + t2*exp( - x2 ) + exp( - x2 ) ^ 2 )
+       h[2,1] <- h[1,2]
+       h
     },
     fg = function(par) {
       x <- par[1]

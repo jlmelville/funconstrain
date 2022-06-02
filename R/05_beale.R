@@ -17,6 +17,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -26,7 +28,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Beale, E. M. L. (1958).
 #' \emph{On an iterative method for finding a local minimum of a function of more
@@ -45,6 +47,7 @@
 #' @export
 beale <- function() {
   list(
+    m = NA,
     fn = function(par) {
       x <- par[1]
       y <- par[2]
@@ -72,6 +75,20 @@ beale <- function() {
         2 * (y - 1) * f1 + 2 * (yy - 1) * f2 + 2 * (yyy - 1) * f3,
         2 * x * f1 + 4 * x * y * f2 + 6 * x * yy * f3
       )
+    },
+    he = function(par) {
+      x1 <- par[1]
+      x2 <- par[2]
+      h <- matrix(0.0, nrow=2, ncol=2)
+      y5 <- c(1.5, 2.25, 2.625) 
+      for (i in 1:3) { # fixed m at 3
+         t1 <- y5[i] - x1*( 1.0 - x2 ^ i )
+          h[1,1] <- h[1,1] + 2.0*( x2 ^ i - 1.0 ) ^ 2
+          h[1,2] <- h[1,2] + 2.0*( t1*i*x2 ^ (i-1) + i*x1*x2 ^ (i-1)*( x2 ^ i - 1.0 ) )
+          h[2,2] <- h[2,2] + 2.0*( t1*( i - 1 )*i*x1*x2 ^ ( i - 2 ) + ( i*x1*x2 ^ ( i - 1 ) ) ^ 2 )
+          h[2,1] <- h[1,2]
+      }
+      h
     },
     fg = function(par) {
       x <- par[1]

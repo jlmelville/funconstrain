@@ -25,6 +25,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -34,7 +36,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' Meyer, R. R. (1970).
 #' Theoretical and computational aspects of nonlinear regression.
@@ -45,7 +47,7 @@
 #' Meyer, R. R., & Roth, P. M. (1972).
 #' Modified damped least squares: an algorithm for non-linear estimation.
 #' \emph{IMA Journal of Applied Mathematics}, \emph{9}(2), 218-233.
-#' \url{https://doi.org/10.1093/imamat/9.2.218}
+#' \doi{doi.org/10.1093/imamat/9.2.218}
 #'
 #' @examples
 #' fun <- meyer()
@@ -87,6 +89,37 @@ meyer <- function() {
       dy <- sum((x1 * ef2) / tix3)
       dz <- -sum((x1 * x2 * ef2) / tix3s)
       c(dx, dy, dz)
+    },
+    he = function(par) {
+#      y10 <- c(34780.0, 28610.0, 23650.0, 19630.0, 16370.0, 13720.0, 11540.0, 9744.0,
+#           8261.0, 7030.0, 6005.0, 5147.0, 4427.0, 3820.0, 3307.0, 2872.0)
+      x1 <- par[1]
+      x2 <- par[2]
+      x3 <- par[3]
+      h <- matrix(0.0, ncol=3, nrow=3)
+      for (i in 1:m) {
+        d1 <- 4.5e+01 + 5.0*i
+        d2 <- d1 + x3
+        if ( d2 != 0.0 ) {
+          t1 <- exp( x2 / d2 )
+          t2 <- x1*t1 - y[i]
+          s1 <- t2 + t1*x1
+          h[1,1] <- h[1,1] + 2.0*t1 ^ 2
+          h[1,2] <- h[1,2] + 2.0*s1*t1/d2
+          h[2,2] <- h[2,2] + 2.0*t1*s1*x1/d2 ^ 2
+          h[1,3] <- h[1,3] - 2.0*t1*s1*x2/d2 ^ 2
+          h[2,3] <- h[2,3] - 2.0*t1*x1/d2 ^ 2*( t2 + s1*x2/d2 )
+          h[3,3] <- h[3,3] + 2.0*t1*x1*x2/d2 ^ 3*( 2.0*t2 + s1*x2/d2 )
+        } else {
+          h <- matrix(0.0, ncol=3, nrow=3)
+          # flag <- - 3
+          return()
+        } 
+      } # end loop
+      h[2,1] <- h[1,2]
+      h[3,1] <- h[1,3]
+      h[3,2] <- h[2,3]
+      h
     },
     fg = function(par) {
       x1 <- par[1]

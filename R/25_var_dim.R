@@ -22,6 +22,8 @@
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
 #'   given input parameter vector.
+#'   \item \code{he} If available, the hessian matrix (second derivatives)
+#'   of the function w.r.t. the parameters at the given values.
 #'   \item \code{fg} A function which, given the parameter vector, calculates
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
@@ -32,7 +34,7 @@
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \url{https://doi.org/10.1145/355934.355936}
+#' \doi{doi.org/10.1145/355934.355936}
 #'
 #' @examples
 #' vdim <- var_dim()
@@ -85,6 +87,29 @@ var_dim <- function() {
       grad <- grad + 1:n * (fn1_2 + fn13_4)
 
       grad
+    },
+    he = function(par) { # quite big discrepancy in n, n from numeric approx.
+       n <- length(par)
+       h <- matrix(0.0, nrow=n, ncol=n)
+       t1 <- 0.0
+       for (j in 1:n) {
+          t1 <- t1 + j*( par[j]-1.0 )
+       }
+       t <- 1.0 + 6.0*t1^2 # 
+       for (j in 1:n) {
+          h[j,j] <- 2.0 + 2.0 * t * j^2
+          if (j > 1) {
+            for (k in 1:(j-1)) {
+               h[k,j] <- 2.0*t*j*k
+            }
+          }
+       }
+       for (j in 1:(n-1)) { # symmetrize
+         for (k in (j+1):n) {
+           h[k,j] <- h[j,k]        
+         }
+       }
+       h
     },
     fg = function(par) {
       n <- length(par)
