@@ -165,6 +165,8 @@ disc_bv <- function() {
         stop("Discrete Boundary Value: n must be positive")
       }
       (1:n / n + 1) * ((1:n / n + 1) - 1)
-    }
+    },
+    fmin = 0,
+    xmin = c(-0.07502213, -0.1319762, -0.1648488, -0.1646647, -0.1174177) # n=5 case
   )
 }

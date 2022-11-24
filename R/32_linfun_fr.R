@@ -19,6 +19,7 @@
 #'   equal to or greater than \code{n}.
 #' @return A list containing:
 #' \itemize{
+#'   \item \code{m} The number of functions to sum (default is 100)
 #'   \item \code{fn} Objective function which calculates the value given input
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
@@ -134,5 +135,7 @@ linfun_fr <- function(m = 100) {
       }
       rep(1, n)
     }
-  )
+  ),
+  fmin = m - n,
+  xmin = rep(-1, n) # need to get m and n ?? Probably need functions
 }

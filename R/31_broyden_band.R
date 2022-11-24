@@ -180,6 +180,8 @@ broyden_band <- function() {
         stop("Broyden Banded: n must be positive")
       }
       rep(-1, n)
-    }
+    },
+    fmin = 0,
+    xmin = c(-0.4283029, -0.4765965, -0.5196377, -0.5588620, -0.5588620) # n = 5 case
   )
 }

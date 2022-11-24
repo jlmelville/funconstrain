@@ -144,6 +144,8 @@ broyden_tri <- function() {
         stop("Broyden Tridiagonal: n must be positive")
       }
       rep(-1, n)
-    }
+    },
+    fmin = 0,
+    xmin = c(-0.5648284, -0.6662737, -0.6609170, -0.5950500, -0.4162011) # n = 5 case
   )
 }
