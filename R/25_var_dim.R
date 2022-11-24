@@ -147,6 +147,8 @@ var_dim <- function() {
         stop("Variably Dimensioned: n must be positive")
       }
       1 - (1:n) / n
-    }
+    },
+    fmin = 0,
+    xmin = rep(1,n)
   )
 }

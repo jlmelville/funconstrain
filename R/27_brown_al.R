@@ -165,6 +165,8 @@ brown_al <- function() {
         stop("Brown Almost-Linear: n must be positive")
       }
       rep(0.5, n)
-    }
+    },
+    fmin = 0, 
+    xmin = rep(1,n) # MANY OTHERS
   )
 }

@@ -188,6 +188,8 @@ ex_powell <- function() {
         stop("Extended Powell: n must be a multiple of 4")
       }
       rep(c(3, -1, 0, 1), n / 4)
-    }
+    },
+    fmin = 0,
+    xmin = rep(0,n)
   )
 }

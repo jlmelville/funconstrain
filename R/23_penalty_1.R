@@ -145,6 +145,8 @@ penalty_1 <- function() {
         stop("Penalty Function I: n must be positive")
       }
       1:n
-    }
+    },
+    fmin = 2.24997e-5, 
+    xmin = c(0.2500075, 0.2500075, 0.2500075, 0.2500075) # n=4 case
   )
 }

@@ -209,6 +209,8 @@ penalty_2 <- function() {
         stop("Penalty Function II: n must be positive")
       }
       rep(0.5, n)
-    }
+    },
+    fmin = 9.376293e-6,
+    xmin = c(0.1999993, 0.19131669, 0.48010149, 0.5188454) # n=4 case
   )
 }

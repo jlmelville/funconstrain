@@ -149,6 +149,8 @@ ex_rosen <- function() {
         stop("Extended Rosenbrock: n must be even")
       }
       rep(c(-1.2, 1), n / 2)
-    }
+    },
+    fmin = 0,
+    xmin = rep(1,n)
   )
 }

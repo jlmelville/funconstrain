@@ -140,7 +140,9 @@ trigon <- function() {
         stop("Trigonometric: n must be positive")
       }
       rep(1 / n, n)
-    }
+    },
+    fmin = 0,
+    xmin = rep(0,n) # MANY OTHERS!!
   )
 }
 

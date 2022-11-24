@@ -200,11 +200,14 @@ watson <- function() {
         gr = grad
       )
     },
-    x0 = function(n = 15) {
+#    x0 = function(n = 15) {
+    x0 = function(n = 6) { # Modified JN 2022-11-24 to n=6
       if (!(2 <= n && n <= 31)) {
         stop("Watson: n must be between 2-31")
       }
       rep(0, n)
-    }
+    },
+    fmin = 2.28767e-3,
+    xmin = c(-0.01572509, 1.0124349, -0.232991626, 1.26043009, -1.51372892, 0.9929964)
   )
 }
