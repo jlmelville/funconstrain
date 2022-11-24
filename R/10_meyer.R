@@ -31,6 +31,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -145,6 +147,8 @@ meyer <- function() {
         gr = grad
       )
     },
-    x0 = c(0.02, 4000, 250)
+    x0 = c(0.02, 4000, 250),
+    fmin =  = 87.9458,
+    xmin = c(0.0056, 6181.4, 345.2) # Meyer and Roth (1972) APPROX!!!
   )
 }
