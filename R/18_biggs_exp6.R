@@ -212,6 +212,9 @@ biggs_exp6 <- function(m = 13) {
         gr = grad
       )
     },
-    x0 = c(1, 2, 1, 1, 1, 1)
+    x0 = c(1, 2, 1, 1, 1, 1),
+    fmin = 0,
+    xmin = c(4, 10, 3, 5, 1, 1)
+    # WARNING: There are other minima.
   )
 }

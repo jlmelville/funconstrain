@@ -145,6 +145,8 @@ box_3d <- function(m = 20) {
         gr = grad
       )
     },
-    x0 = c(0, 10, 20)
+    x0 = c(0, 10, 20),
+    fmin = 0, 
+    xmin = rep(NA,3) # See documentation for multiple minima points.
   )
 }
