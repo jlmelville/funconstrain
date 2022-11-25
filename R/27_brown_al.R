@@ -167,6 +167,6 @@ brown_al <- function() {
       rep(0.5, n)
     },
     fmin = 0, 
-    xmin = rep(1,n) # MANY OTHERS
+    xmin = rep(1,4) # n=4 example. MANY OTHERS
   )
 }

@@ -149,6 +149,6 @@ var_dim <- function() {
       1 - (1:n) / n
     },
     fmin = 0,
-    xmin = rep(1,n)
+    xmin = rep(1,6) # n=6 example
   )
 }

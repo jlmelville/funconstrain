@@ -142,7 +142,7 @@ trigon <- function() {
       rep(1 / n, n)
     },
     fmin = 0,
-    xmin = rep(0,n) # MANY OTHERS!!
+    xmin = rep(0,4) # n=4 example. MANY OTHERS!!
   )
 }
 

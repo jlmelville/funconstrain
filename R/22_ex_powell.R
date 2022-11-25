@@ -190,6 +190,6 @@ ex_powell <- function() {
       rep(c(3, -1, 0, 1), n / 4)
     },
     fmin = 0,
-    xmin = rep(0,n)
+    xmin = rep(0,4) # n=4 example
   )
 }

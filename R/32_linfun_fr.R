@@ -134,8 +134,8 @@ linfun_fr <- function(m = 100) {
         stop("Linear Function - Full Rank: m must be >= n")
       }
       rep(1, n)
-    }
-  ),
-  fmin = m - n,
-  xmin = rep(-1, n) # need to get m and n ?? Probably need functions
+    },
+  fmin = 96, # m - n for example m=100, n=4
+  xmin = rep(-1, 4) # need to get m and n. m=100, n=4 example
+ )
 }
