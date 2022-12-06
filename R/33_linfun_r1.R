@@ -22,6 +22,7 @@
 #'   equal to or greater than \code{n}.
 #' @return A list containing:
 #' \itemize{
+#'   \item \code{m} The number of functions to sum. Default is 100.
 #'   \item \code{fn} Objective function which calculates the value given input
 #'   parameter vector.
 #'   \item \code{gr} Gradient function which calculates the gradient vector
@@ -33,6 +34,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -130,6 +133,8 @@ linfun_r1 <- function(m = 100) {
         stop("Linear Function - Rank 1: m must be >= n")
       }
       rep(1, n)
-    }
+    },
+    fmin = 24.62687,
+    xmin = c(0.72754410, 0.4550882, 0.18263229, -0.08982361, -0.3622795) # n = 5 case
   )
 }

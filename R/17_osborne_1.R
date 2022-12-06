@@ -23,6 +23,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -157,6 +159,8 @@ osborne_1 <- function() {
         gr = grad
       )
     },
-    x0 = c(0.5, 1.5, -1, 0.01, 0.02)
+    x0 = c(0.5, 1.5, -1, 0.01, 0.02),
+    fmin = 5.464895e-5,
+    xmin = c(0.3754101, 1.935847, -1.4646871, 0.01286753, 0.02212270)
   )
 }

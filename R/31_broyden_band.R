@@ -29,6 +29,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -178,6 +180,8 @@ broyden_band <- function() {
         stop("Broyden Banded: n must be positive")
       }
       rep(-1, n)
-    }
+    },
+    fmin = 0,
+    xmin = c(-0.4283029, -0.4765965, -0.5196377, -0.5588620, -0.5588620) # n = 5 case
   )
 }

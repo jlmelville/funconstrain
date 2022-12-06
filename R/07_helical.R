@@ -23,6 +23,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -145,6 +147,8 @@ helical <- function() {
         gr = grad
       )
     },
-    x0 = c(-1, 0, 0)
+    x0 = c(-1, 0, 0),
+    fmin = 0, 
+    xmin = c(1, 0, 0)
   )
 }

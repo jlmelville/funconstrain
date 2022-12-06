@@ -24,6 +24,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -158,6 +160,8 @@ kow_osb <- function() {
         gr = grad
       )
     },
-    x0 = c(0.25, 0.39, 0.415, 0.39)
+    x0 = c(0.25, 0.39, 0.415, 0.39),
+    fmin =  3.07505e-4,
+    xmin = c(0.1928069, 0.1912823, 0.1230565, 0.1360623) # ??? MAY BE OTHERS
   )
 }

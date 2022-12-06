@@ -8,10 +8,10 @@
 #' \itemize{
 #'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
 #'   functions \code{m = 15}.
-#'   \item Minima: \code{f = 8.21487...e-3} and
-#'   \code{f = 17.4286} at \code{(0.8406, -Inf, -Inf)}.
+#'   \item Minima: \code{f = 8.214877e-3} at c(0.08241056, 1.133036, 2.343695)
+#'    Solvers terminate with \code{f} near 17 for parameter 1 in 0.84 to 0.89 approximately
+#'    and large negative values of the other two parameters.}.
 #' }
-#'
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{fn} Objective function which calculates the value given input
@@ -24,6 +24,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -153,6 +155,8 @@ bard <- function() {
         gr = grad
       )
     },
-    x0 = c(1, 1, 1)
+    x0 = c(1, 1, 1),
+    fmin = 8.214877e-3,
+    xmin = c(0.08241056, 1.133036, 2.343695)
   )
 }

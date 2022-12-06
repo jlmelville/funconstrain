@@ -31,6 +31,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -163,6 +165,8 @@ brown_al <- function() {
         stop("Brown Almost-Linear: n must be positive")
       }
       rep(0.5, n)
-    }
+    },
+    fmin = 0, 
+    xmin = rep(1,4) # n=4 example. MANY OTHERS
   )
 }

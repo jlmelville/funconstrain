@@ -29,6 +29,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -142,6 +144,8 @@ broyden_tri <- function() {
         stop("Broyden Tridiagonal: n must be positive")
       }
       rep(-1, n)
-    }
+    },
+    fmin = 0,
+    xmin = c(-0.5648284, -0.6662737, -0.6609170, -0.5950500, -0.4162011) # n = 5 case
   )
 }

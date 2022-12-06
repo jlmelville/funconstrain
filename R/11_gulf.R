@@ -33,6 +33,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -160,6 +162,8 @@ gulf <- function(m = 99) {
         gr = grad
       )
     },
-    x0 = c(5, 2.5, 0.15)
+    x0 = c(5, 2.5, 0.15),
+    fmin = 0,
+    xmin = c(50, 25, 1.5)
   )
 }

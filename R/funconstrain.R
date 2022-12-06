@@ -81,6 +81,8 @@
 #'   \code{m}, these have been chosen arbitrarily, but with the idea that if
 #'   you were to use these test functions in the order provided in the MGH
 #'   paper, the value of \code{n} increases from \code{2} to \code{50}.
+#'   \item \code{fmin} the reported minimum function value
+#'   \item \code{xmin} a numeric vector with the reported minimum parameters
 #' }
 #'
 #' It's much more straightforward than it sounds. See the 'Examples' section

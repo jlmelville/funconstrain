@@ -81,6 +81,8 @@ rosen <- function() {
         )
       )
     },
-    x0 = c(-1.2, 1)
+    x0 = c(-1.2, 1),
+    fmin = 0,
+    xmin = c(1, 1)
   )
 }
