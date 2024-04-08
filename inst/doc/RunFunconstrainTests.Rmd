@@ -31,7 +31,7 @@ It is extremely helpful to users to have examples and tests of function minimiza
 In many situations it is extremely easy to insert an error into code, so easy-to-apply
 tests allow for the discovery of such errors. There are a number of collections of
 test functions with many overlaps and minor differences. A well-established and
-well-documented set of such functions are those of  @More1981TU. These have been
+well-documented set of such functions are those of  @More1981TUO. These have been
 translated into R by James Melville in the R package
 `funconstrain` (https://github.com/jlmelville/funconstrain). While initially
 these provided the function and its gradient given a set of suitable input 
@@ -89,5 +89,75 @@ functions of `funconstrain`.
 
 ```{r, file='fufn.R'}
 ```
+
+## Calling fufn()
+
+While we can write our own driver for `fufn()`, I wanted to make the task extremely
+easy. Thus the script `fufnrun.R` is provided. This is set up to use a simple 
+text file to specify which test functions are to be applied to which solvers.
+Moreover, a "sink" function name can be specified to save the text output of the
+run. 
+
+### Test specification file RFO.txt
+
+Let us consider an example.
+
+```{text, file='RFO.txt'}
+```
+
+The lines of the above file provide the following information:
+
+- the first line is the name of the text file to use to save the output
+
+- line 2 says that test functions 1, 6, 7, 8, and 35 are to be used. Note that we
+can use the colon ":" when giving a contiguous range of function numbers. These
+numbers -- by referring back to the vector `funnam` at the top of function `fufn()` --
+specify functions "rosen", "jenn-samp", "helical", "bard" and "chebyquad". Using
+the function numbers. Appendix A lists the numbers and corresponding names.
+
+- line 3 gives an R character vector of the solver methods to be applied.
+
+` line 4 is TRUE if the experimental bounds constraints are to be applied.
+
+## Appendix A: function numbers and names
+
+```
+1       rosen 
+2       freud_roth 
+3       powell_bs 
+4       brown_bs 
+5       beale 
+6       jenn_samp 
+7       helical 
+8       bard 
+9       gauss 
+10      meyer 
+11      gulf 
+12      box_3d 
+13      powell_s 
+14      wood 
+15      kow_osb 
+16      brown_den 
+17      osborne_1 
+18      biggs_exp6 
+19      osborne_2 
+20      watson 
+21      ex_rosen 
+22      ex_powell 
+23      penalty_1 
+24      penalty_2 
+25      var_dim 
+26      trigon 
+27      brown_al 
+28      disc_bv 
+29      disc_ie 
+30      broyden_tri 
+31      broyden_band 
+32      linfun_fr 
+33      linfun_r1 
+34      linfun_r1z 
+35      chebyquad 
+```
+
 
 ## References
