@@ -1,0 +1,93 @@
+---
+title: "Running funconstrain tests in package optimx"
+author: "John C. Nash (profjcnash _at_ gmail.com)"
+date: "2024-04-08"
+output: pdf_document
+bibliography: Extend-optimx.bib
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Using and extending the optimx package}
+  %\VignetteEncoding{UTF-8}
+abstract:
+  The `funconstrain` package (https://github.com/jlmelville/funconstrain) provides
+  R users with a convenient tool to access the test functions of 
+  @More1981TUO. This vignette article describes a program to apply these test
+  functions to solvers in the `optimx` package (@p-optimx).
+---
+
+## Background
+
+Numerical optimization of functions of several, namely `n`, parameters is an important computational
+task. R (@Rcite) is a major platform for scientific and statistical calculations and
+has provided tools for numerical optimization and nonlinear least squares since its
+inception. These have been extended via a number of packages. In particular, the author
+has been heavily involved in this effort, and in collaboration with others has 
+provided the packate `optimx` which wraps a number of solvers to allow their 
+invocation by a common calling syntax. Note that *optimization* in R generally 
+means *function minimization*, possibly with bounds (or box) constraints on the
+function parameters.
+
+It is extremely helpful to users to have examples and tests of function minimization.
+In many situations it is extremely easy to insert an error into code, so easy-to-apply
+tests allow for the discovery of such errors. There are a number of collections of
+test functions with many overlaps and minor differences. A well-established and
+well-documented set of such functions are those of  @More1981TU. These have been
+translated into R by James Melville in the R package
+`funconstrain` (https://github.com/jlmelville/funconstrain). While initially
+these provided the function and its gradient given a set of suitable input 
+parameters, the present author added code to compute the Hessian for each test
+function. This allows Newton-like solvers to be applied. `funconstrain` also 
+provides suggested initial parameter vectors for each of the 35 test functions.
+However, where there are multiple input possibilities, just one is provided, for
+example when the test function has a variable number of parameters.
+
+What is then missing is the link between `funconstrain` and the tools in `optimx`,
+which this article aims to provide.
+
+## Function fufn()
+
+Most of the test functions in @More1981TU are sums of squares of nonlinear functions.
+While `n` is the number of parameters, we may have a different number of functions
+squared in the summation. Call this `m`. This may be altered to give different
+variations of a given function, so `m` must be provided. 
+
+Many of the solvers in `optimx` are capable of handling bounds constraints on 
+the `n` parameters. That is parameter `i` must satisfy
+
+`            lower[i] <= prm[i] <= upper[i] `
+
+where `prm` is the parameter vector and `lower` and `upper` are vectors of 
+numbers providing lower and upper bounds. Methods in `optimx` that can handle
+masks are listed in the character vector `bdmeth` returned by the 
+function `optimx::ctrldefault(n)`. Note that a number of parameters `n` must
+nominally be provided to `ctrldefault()` but generally `n` can be specified
+as 2 to get the default settings for `optimx. At time of writing
+
+`      bdmeth <- c("L-BFGS-B", "nlminb", "lbfgsb3c", "Rcgmin", "Rtnmin", "nvm",` \
+`                "Rvmmin", "bobyqa", "nmkb", "hjkb", "hjn", "snewtonm", "ncg",` \
+`                "slsqp", "tnewt", "nlnm", "snewtm", "spg")`
+
+
+If the upper and lower bound for a
+parameter are equal, we can say the parameter is **fixed** or **masked**. This
+may seem to be a silly option, since it essentially reduces the dimensionality
+of the problem. However, there are many situations where we have evidence that
+a parameter takes a particular (fixed) value, but know that we may wish to allow
+optimization over that parameter in later investigations. Masks allow us to 
+avoid having to rewrite the function, gradient and Hessian code. However, only
+a few optimization solvers handle masks. The function `optimx::ctrldefault()`
+returns a value `maskmeth` with a list of solvers that do handle the situation
+where lower and upper bounds coincide. At the time of writing this is specified 
+as
+
+`maskmeth <- c("Rcgmin", "nvm", "hjn", "ncg", "snewtonm", "nlminb", "L-BFGS-B") `
+
+With the above in mind, the function `fufn()` was written to access the test 
+functions of `funconstrain`.
+
+### The fufn.R code
+
+```{r, file='fufn.R'}
+```
+
+## References
