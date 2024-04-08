@@ -2,13 +2,11 @@ NEWS - funconstrain-hess
 
 TODOS
 
-
-2022-5-19
-     o added he() function to each case to provide the Hessian at given
-       parameters
-
-    
 2022-11-24
      o added fmin and xmin to result to give an example solution to each
        problem. Note that some problems have variable dimensions and inputs,
        or may have multiple minima.
+
+2022-5-19
+     o added he() function to each case to provide the Hessian at given
+       parameters
