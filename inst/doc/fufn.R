@@ -1,4 +1,4 @@
-fufn <- function(n=NULL, fnum=NULL){
+fufn <- function(fnum=NULL){
   # return list with tfn=function, tgr=gradient given fn number and n
   if (is.null(fnum)) stop("ffn needs a function number fnum")
   if ((fnum < 1) || (fnum > 35)) stop("fnum must be in [1, 35]")

@@ -119,6 +119,15 @@ the function numbers. Appendix A lists the numbers and corresponding names.
 
 ` line 4 is TRUE if the experimental bounds constraints are to be applied.
 
+### A driver program for fufn()
+
+The following driver program will run the tests specified by RFO.txt:
+
+```{r, file='fufnrun.R', eval=TRUE}
+```
+
+
+
 ## Appendix A: function numbers and names
 
 ```
