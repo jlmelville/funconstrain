@@ -130,6 +130,65 @@ The following driver program will run the tests specified by RFO.txt:
 ```{r, file='fufnrun.R', eval=TRUE}
 ```
 
+
+## Using the Hessian
+
+`funconstrain` can generate the Hessian function for the test problems. The following
+specification script will run all problems using three solvers capable of taking
+advantage of the Hessian.
+
+```
+testsink230410A.txt
+1:35
+c("nlm", "nlminb", "snewtm")
+FALSE
+```
+
+The classic WOOD test function returns results
+
+```
+Problem: wood 
+       p1 s1 p2 s2 p3 s3 p4 s4        value fevals gevals hevals conv kkt1 kkt2 xtime
+nlminb  1     1     1     1    6.637402e-29     55     44     44    0 TRUE TRUE 0.001
+snewtm  1     1     1     1    3.930599e-27     71     49     48    0 TRUE TRUE 0.004
+nlm     1     1     1     1    1.004941e-16    354    354    354    0 TRUE TRUE 0.005
+END : wood 
+```
+
+Here we see different performance of three methods. Method `snewtm` is a stabilized
+Newton method which is part of package `optimx`. While intended mainly as a didactic
+exercise, this solver has done well on this problem.
+
+### Bounded parameters
+
+We can also try the same problems with the experimental bounds constraints via
+the specification script 
+
+```
+testsink230410B.txt
+1:35
+c("nlm", "nlminb", "snewtm")
+TRUE
+```
+For the WOOD function, the results are now
+
+```
+Problem: wood 
+Non-bounds methods requested:[1] "nlm"
+         p1 s1   p2 s2   p3 s3   p4 s4   value fevals gevals hevals conv  kkt1 kkt2 xtime
+nlminb -0.9  U -0.9  U -0.9  U -0.9  U 707.199      7      6      6    0 FALSE TRUE 0.000
+snewtm -0.9  U -0.9  U -0.9  U -0.9  U 707.199      6      5      4    0 FALSE TRUE 0.001
+END : wood 
+```
+
+Note that method `nml` is not set up to handle bounds and is automatically dropped
+by function `opm()`. We also see that the solution found (in both cases) is at the
+upper bound on all parameters, which is indicated by the status (i.e., "s") columns
+of the output table.
+
+
+
+
 ## Appendix A: function numbers and names
 
 ```
@@ -173,6 +232,11 @@ The following driver program will run the tests specified by RFO.txt:
 ## Appendix B: the fufn.R code
 
 ```{r, file='fufn.R', eval=FALSE, echo=TRUE}
+```
+
+## Appendix C: the fufnrun.R driver code
+
+```{r, file='fufnrun.R', eval=FALSE, echo=TRUE}
 ```
 
 

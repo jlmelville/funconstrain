@@ -443,7 +443,7 @@ fufn <- function(fnum=NULL){
   }    
 # NOTE: bounds are experimental only
   mask <- rep(1L, n) # masks set to "free" (not masked)
-  val <- list(npar = n, fffn=tt$fn, ffgr=tt$gr, x0=xx0, lo=lo, up=up, 
+  val <- list(npar = n, fffn=tt$fn, ffgr=tt$gr, ffhe=tt$he, x0=xx0, lo=lo, up=up, 
               mask=mask, fname=fname, ameth=ameth)
 #  cat("val:"); print(val); tmp<-readline('exit ffn')
   val

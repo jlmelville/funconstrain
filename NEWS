@@ -8,6 +8,8 @@ TODOS
      o added inst/doc/Examples/ with program to apply the package optimx
        solvers to functions from funconstrain.
      o added optimx to Suggests in DESCRIPTION
+     o Example RunFunconstrainTests.Rmd output has been compacted with
+	tools::compactPDF("RunFunconstrainTests.pdf", gs_quality="ebook")
 
 
 2022-11-24
