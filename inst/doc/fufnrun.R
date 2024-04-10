@@ -21,6 +21,13 @@ txt<-paste("probc<-c(",lin2,")","")
 tryparse<-eval(parse(text=txt))
 # ?? should we check it worked?
 cat("Problem numbers:\n"); print(probc)
+print(unique(probc))
+if (length(unique(probc)) < length(probc)) {
+   cat("Duplicated problem numbers, simplifying\n")
+   probc <- unique(probc)
+}
+probc<-sort(probc)
+cat("Final problem numbers:\n"); print(probc)
 # check loop
 for (iprob in probc){ # loop over problems
   if ( (iprob < 1) || (iprob > 35) ) {
@@ -33,7 +40,11 @@ cat("Methods:\n")
 cat(meths,"\n")
 methvec<-paste("methc<-c(",meths,")","")
 tryparse<-eval(parse(text=methvec))
-# cat("methods in list form:"); print(methc)
+if (length(unique(methc)) < length(methc)) {
+  cat("Duplicated methods, simplifying\n")
+  methc <- unique(methc)
+}
+cat("methods in list form:"); print(methc)
 tbounds<-readLines(mycon, n=1)
 have.bounds<-FALSE
 if (tbounds == "TRUE") have.bounds<-TRUE

@@ -85,18 +85,17 @@ as
 With the above in mind, the function `fufn()` was written to access the test 
 functions of `funconstrain`.
 
-### The fufn.R code
-
-```{r, file='fufn.R'}
-```
-
 ## Calling fufn()
+
+```{r fufnload, file='fufn.R', echo=FALSE, eval=TRUE}
+```
 
 While we can write our own driver for `fufn()`, I wanted to make the task extremely
 easy. Thus the script `fufnrun.R` is provided. This is set up to use a simple 
-text file to specify which test functions are to be applied to which solvers.
-Moreover, a "sink" function name can be specified to save the text output of the
-run. 
+text file, `RFO.txt`, to specify which test functions are to be applied 
+to which solvers. Moreover, a "sink" file name can be specified to save 
+the text output of the run. Note that the specification file is always called
+`RFO.txt` with the present incarnation of the `fufnrun.R` program.
 
 ### Test specification file RFO.txt
 
@@ -107,16 +106,21 @@ Let us consider an example.
 
 The lines of the above file provide the following information:
 
-- the first line is the name of the text file to use to save the output
+- the first line is the name of the text file to use to save the output via 
+  `sink()`.
 
 - line 2 says that test functions 1, 6, 7, 8, and 35 are to be used. Note that we
 can use the colon ":" when giving a contiguous range of function numbers. These
 numbers -- by referring back to the vector `funnam` at the top of function `fufn()` --
 specify functions "rosen", "jenn-samp", "helical", "bard" and "chebyquad". Using
-the function numbers. Appendix A lists the numbers and corresponding names.
+the function numbers. Appendix A lists the numbers and corresponding names. The
+specification `1:35` uses all test functions. The program removes duplicate
+problem numbers and sorts the list in ascending order.
 
 - line 3 gives an R character vector of the solver methods to be applied.
-
+  At the time of writing, there is no check for duplicate entries in the
+  vector.
+  
 ` line 4 is TRUE if the experimental bounds constraints are to be applied.
 
 ### A driver program for fufn()
@@ -167,6 +171,12 @@ The following driver program will run the tests specified by RFO.txt:
 34      linfun_r1z 
 35      chebyquad 
 ```
+
+## Appendix B: the fufn.R code
+
+```{r, file='fufn.R', eval=FALSE, echo=TRUE}
+```
+
 
 
 ## References
