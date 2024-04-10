@@ -2,6 +2,14 @@ NEWS - funconstrain-hess
 
 TODOS
 
+     o none at 2024-04-09
+
+2024-04-09
+     o added inst/doc/Examples/ with program to apply the package optimx
+       solvers to functions from funconstrain.
+     o added optimx to Suggests in DESCRIPTION
+
+
 2022-11-24
      o added fmin and xmin to result to give an example solution to each
        problem. Note that some problems have variable dimensions and inputs,

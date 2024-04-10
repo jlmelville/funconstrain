@@ -130,8 +130,6 @@ The following driver program will run the tests specified by RFO.txt:
 ```{r, file='fufnrun.R', eval=TRUE}
 ```
 
-
-
 ## Appendix A: function numbers and names
 
 ```
