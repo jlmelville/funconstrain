@@ -53,7 +53,7 @@
 #' res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), exros$fn, exros$gr,
 #'                       method = "L-BFGS-B")
 #' @export
-ex_rosen <- function(n=8) {
+ex_rosen <- function() {
   list(
     fn = function(par) {
       n <- length(par)
