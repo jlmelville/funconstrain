@@ -29,6 +29,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -186,6 +188,8 @@ ex_powell <- function() {
         stop("Extended Powell: n must be a multiple of 4")
       }
       rep(c(3, -1, 0, 1), n / 4)
-    }
+    },
+    fmin = 0,
+    xmin = rep(0,4) # n=4 example
   )
 }

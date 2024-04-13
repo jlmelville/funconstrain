@@ -29,6 +29,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -52,19 +54,16 @@
 #'                       method = "L-BFGS-B")
 #' @export
 ex_rosen <- function() {
-
   list(
     fn = function(par) {
       n <- length(par)
       if (n %% 2 != 0) {
         stop("Extended Rosenbrock: n must be even")
       }
-
       fsum <- 0
       for (i in 1:(n / 2)) {
         p2 <- 2 * i
         p1 <- p2 - 1
-
         f_p1 <- 10 * (par[p2] - par[p1] ^ 2)
         f_p2 <- 1 - par[p1]
         fsum <- fsum + f_p1 * f_p1 + f_p2 * f_p2
@@ -77,13 +76,11 @@ ex_rosen <- function() {
       if (n %% 2 != 0) {
         stop("Extended Rosenbrock: n must be even")
       }
-
       grad <- rep(0, n)
       for (i in 1:(n / 2)) {
         p2 <- 2 * i
         p1 <- p2 - 1
         xx <- par[p1] * par[p1]
-
         yx <- par[p2] - xx
         f_p1 <- 10 * yx
         f_p2 <- 1 - par[p1]
@@ -91,7 +88,6 @@ ex_rosen <- function() {
         grad[p1] <- grad[p1] - 400 * par[p1] * yx - 2 * f_p2
         grad[p2] <- grad[p2] + 200 * yx
       }
-
       grad
     },
     he = function(x) {
@@ -136,17 +132,18 @@ ex_rosen <- function() {
         grad[p1] <- grad[p1] - 400 * par[p1] * yx - 2 * f_p2
         grad[p2] <- grad[p2] + 200 * yx
       }
-
       list(
         fn = fsum,
         gr = grad
       )
     },
-    x0 = function(n = 20) {
+    x0 = function(n = 8) {
       if (n %% 2 != 0) {
         stop("Extended Rosenbrock: n must be even")
       }
       rep(c(-1.2, 1), n / 2)
-    }
+    },
+    fmin = 0,
+    xmin = rep(1,8) # n=8 example
   )
 }

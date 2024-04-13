@@ -29,6 +29,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -125,6 +127,8 @@ jenn_samp <- function(m = 10) {
         gr = grad
       )
     },
-    x0 = c(0.3, 0.4)
+    x0 = c(0.3, 0.4),
+    fmin = 124.362,
+    xmin = c(0.2578, 0.2578) # for m = 10 (Caution!)
   )
 }

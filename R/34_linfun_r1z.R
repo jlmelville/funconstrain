@@ -33,6 +33,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -155,6 +157,8 @@ linfun_r1z <- function(m = 100) {
              " m must be >= n")
       }
       rep(1, n)
-    }
+    },
+    fmin = 26.12690,
+    xmin = c(1.0000000, 0.380360581, 7.054087e-02, -0.23927884, 1.0000000) # n = 5 case
   )
 }

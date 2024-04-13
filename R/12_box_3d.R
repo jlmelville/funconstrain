@@ -26,6 +26,8 @@
 #'   both the objective value and gradient, returning a list with members
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Standard starting point.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -143,6 +145,8 @@ box_3d <- function(m = 20) {
         gr = grad
       )
     },
-    x0 = c(0, 10, 20)
+    x0 = c(0, 10, 20),
+    fmin = 0, 
+    xmin = rep(NA,3) # See documentation for multiple minima points.
   )
 }

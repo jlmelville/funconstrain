@@ -32,6 +32,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -267,6 +269,9 @@ chebyquad <- function() {
       }
 
       1:n / (n + 1)
-    }
+    },
+    fmin = 3.516874e-3,
+    xmin = c( 0.04315276, 0.9568472, 0.2663287, 0.1930908, 0.5000000,
+       0.8069092, 0.5000000, 0.7336713) # n = 8
   )
 }

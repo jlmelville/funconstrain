@@ -30,6 +30,8 @@
 #'   \code{fn} and \code{gr}, respectively.
 #'   \item \code{x0} Function returning the standard starting point, given
 #'   \code{n}, the number of variables desired.
+#'   \item \code{fmin} reported minimum
+#'   \item \code{xmin} parameters at reported minimum
 #' }
 #' @references
 #' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -143,6 +145,8 @@ penalty_1 <- function() {
         stop("Penalty Function I: n must be positive")
       }
       1:n
-    }
+    },
+    fmin = 2.24997e-5, 
+    xmin = c(0.2500075, 0.2500075, 0.2500075, 0.2500075) # n=4 case
   )
 }
