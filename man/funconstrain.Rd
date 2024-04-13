@@ -2,6 +2,7 @@
 % Please edit documentation in R/funconstrain.R
 \docType{package}
 \name{funconstrain}
+\alias{funconstrain-package}
 \alias{funconstrain}
 \title{funconstrain: Test functions for unconstrained minimization.}
 \description{
@@ -92,6 +93,8 @@ The return value is a list containing:
   \code{m}, these have been chosen arbitrarily, but with the idea that if
   you were to use these test functions in the order provided in the MGH
   paper, the value of \code{n} increases from \code{2} to \code{50}.
+  \item \code{fmin} the reported minimum function value
+  \item \code{xmin} a numeric vector with the reported minimum parameters
 }
 
 It's much more straightforward than it sounds. See the 'Examples' section
@@ -216,4 +219,21 @@ More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
 \doi{doi.org/10.1145/355934.355936}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/jlmelville/funconstrain}
+  \item Report bugs at \url{https://github.com/jlmelville/funconstrain/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: James Melville \email{jlmelville@gmail.com}
+
+Other contributors:
+\itemize{
+  \item John C Nash \email{nashjc@uottawa.ca} [contributor]
+}
+
 }

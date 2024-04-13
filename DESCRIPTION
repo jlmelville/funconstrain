@@ -12,7 +12,14 @@ Description: Functions for testing unconstrained numerical optimization, taken
     optimization software.'
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.2.0
-Suggests: testthat, optimx
+RoxygenNote: 7.3.1
+Suggests: 
+    testthat,
+    optimx,
+    knitr,
+    rmarkdown,
+    lbfgs,
+    lbfgsb3c
 URL: https://github.com/jlmelville/funconstrain
 BugReports: https://github.com/jlmelville/funconstrain/issues
+VignetteBuilder: knitr
