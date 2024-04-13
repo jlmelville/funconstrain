@@ -13,6 +13,7 @@ equal to or greater than \code{n}.}
 \value{
 A list containing:
 \itemize{
+  \item \code{m} The number of functions to sum (default is 100)
   \item \code{fn} Objective function which calculates the value given input
   parameter vector.
   \item \code{gr} Gradient function which calculates the gradient vector
@@ -24,6 +25,8 @@ A list containing:
   \code{fn} and \code{gr}, respectively.
   \item \code{x0} Function returning the standard starting point, given
   \code{n}, the number of variables desired.
+  \item \code{fmin} reported minimum
+  \item \code{xmin} parameters at reported minimum
 }
 }
 \description{

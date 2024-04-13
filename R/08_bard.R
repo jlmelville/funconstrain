@@ -10,7 +10,7 @@
 #'   functions \code{m = 15}.
 #'   \item Minima: \code{f = 8.214877e-3} at c(0.08241056, 1.133036, 2.343695)
 #'    Solvers terminate with \code{f} near 17 for parameter 1 in 0.84 to 0.89 approximately
-#'    and large negative values of the other two parameters.}.
+#'    and large negative values of the other two parameters.
 #' }
 #' @return A list containing:
 #' \itemize{
@@ -90,7 +90,7 @@ bard <- function() {
       grad
     },
     he = function(par) {
-       y8 <- c(0.14, 0.18, 0.22, 0.25, 0.29, 0.32, 0.35, 0.39, 0.37, 
+       y8 <- c(0.14, 0.18, 0.22, 0.25, 0.29, 0.32, 0.35, 0.39, 0.37,
           0.58, 0.73, 0.96, 1.34, 2.10, 4.39 )
 
       x1 <- par[1]
@@ -114,7 +114,7 @@ bard <- function() {
              h[1,3] <- h[1,3] - 2.0*t2*d3
              h[2,3] <- h[2,3] + 2.0*s2*d2*d3
              h[3,3] <- h[3,3] + 2.0*s2*d3 ^ 2
-             
+
          } else {
              h[1:n, 1,] <- .Machine$double.xmax
              # flag <- - 3

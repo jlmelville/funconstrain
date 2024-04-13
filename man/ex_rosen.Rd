@@ -20,6 +20,8 @@ A list containing:
   \code{fn} and \code{gr}, respectively.
   \item \code{x0} Function returning the standard starting point, given
   \code{n}, the number of variables desired.
+  \item \code{fmin} reported minimum
+  \item \code{xmin} parameters at reported minimum
 }
 }
 \description{

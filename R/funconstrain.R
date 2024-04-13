@@ -204,6 +204,5 @@
 #' $x0(n = 5), fn = lf_m20$fn, gr =
 #' lf_m10$gr, method = "L-BFGS-B")
 #'
-#' @docType package
 #' @name funconstrain
-NULL
+"_PACKAGE"
