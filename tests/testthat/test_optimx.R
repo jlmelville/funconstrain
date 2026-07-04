@@ -38,7 +38,11 @@ test_that("fufn and fufnrun report missing optimx clearly", {
     .package = "funconstrain"
   )
 
-  expect_error(fufn(1), "optimx package is required, please install it", fixed = TRUE)
+  expect_error(
+    fufn(1),
+    "optimx package is required, please install it",
+    fixed = TRUE
+  )
   expect_error(
     fufnrun("does-not-exist.txt"),
     "optimx package is required, please install it",
@@ -53,7 +57,18 @@ test_that("fufn returns optimx-ready data for a problem", {
 
   expect_named(
     tfun,
-    c("npar", "fffn", "ffgr", "ffhe", "x0", "lo", "up", "mask", "fname", "ameth")
+    c(
+      "npar",
+      "fffn",
+      "ffgr",
+      "ffhe",
+      "x0",
+      "lo",
+      "up",
+      "mask",
+      "fname",
+      "ameth"
+    )
   )
   expect_equal(tfun$npar, 2)
   expect_identical(tfun$fname, "rosen")
@@ -72,12 +87,15 @@ test_that("fufnrun closes file and sink resources on parser errors", {
   writeLines(c(sink_file, "36", 'c("L-BFGS-B")', "FALSE"), rfo)
 
   start_sinks <- sink.number()
-  on.exit({
-    while (sink.number() > start_sinks) {
-      sink()
-    }
-    close_file_connections(rfo)
-  }, add = TRUE)
+  on.exit(
+    {
+      while (sink.number() > start_sinks) {
+        sink()
+      }
+      close_file_connections(rfo)
+    },
+    add = TRUE
+  )
 
   err <- tryCatch(fufnrun(rfo), error = identity)
   leaked_connections <- open_file_connections(rfo)
@@ -88,7 +106,11 @@ test_that("fufnrun closes file and sink resources on parser errors", {
   }
 
   expect_s3_class(err, "error")
-  expect_match(conditionMessage(err), "Problem number out of range", fixed = TRUE)
+  expect_match(
+    conditionMessage(err),
+    "Problem number out of range",
+    fixed = TRUE
+  )
   expect_identical(leaked_connections, integer())
   expect_equal(leaked_sink_depth, start_sinks)
 })
@@ -101,12 +123,15 @@ test_that("fufnrun closes file and sink resources on normal completion", {
   writeLines(c(sink_file, "1", 'c("L-BFGS-B")', "FALSE"), rfo)
 
   start_sinks <- sink.number()
-  on.exit({
-    while (sink.number() > start_sinks) {
-      sink()
-    }
-    close_file_connections(rfo)
-  }, add = TRUE)
+  on.exit(
+    {
+      while (sink.number() > start_sinks) {
+        sink()
+      }
+      close_file_connections(rfo)
+    },
+    add = TRUE
+  )
 
   expect_no_error(suppressWarnings(fufnrun(rfo)))
 

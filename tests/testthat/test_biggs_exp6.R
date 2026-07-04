@@ -29,8 +29,12 @@ test_that("Function value is correct at stated minima", {
 # Which minimum is found seems to be dependent on m and the type of minimizer
 # used, so may not be a good idea for a unit test in the long run
 test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(par = testfun$x0, fn = testfun$fn, gr = testfun$gr,
-                      method = "L-BFGS-B")
+  res <- stats::optim(
+    par = testfun$x0,
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "L-BFGS-B"
+  )
   expect_equal(res$par, min_x, tolerance = 1e-6)
   expect_equal(res$value, min_fx)
 })

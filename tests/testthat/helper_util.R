@@ -1,11 +1,10 @@
 gfd <- function(par, fn, rel_eps = sqrt(.Machine$double.eps)) {
   g <- rep(0, length(par))
-  for (i in 1:length(par)) {
+  for (i in seq_along(par)) {
     oldx <- par[i]
     if (oldx != 0) {
       eps <- oldx * rel_eps
-    }
-    else {
+    } else {
       eps <- 1e-3
     }
     par[i] <- oldx + eps

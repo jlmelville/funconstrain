@@ -18,9 +18,13 @@ test_that("Function value is correct at stated minima", {
 })
 test_that("Optimizer can reach minimum from x0", {
   # bizarrely, a memory = 1 does a really good job!
-  res <- stats::optim(par = testfun$x0, fn = testfun$fn, gr = testfun$gr,
-                      method = "L-BFGS-B", control = list(maxit = 1000, lmm = 1,
-                                                          factr = 1e-6))
+  res <- stats::optim(
+    par = testfun$x0,
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "L-BFGS-B",
+    control = list(maxit = 1000, lmm = 1, factr = 1e-6)
+  )
   expect_equal(res$par, min_x, tolerance = 1e-3)
   expect_equal(res$value, 0)
 })

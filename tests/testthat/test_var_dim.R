@@ -18,9 +18,13 @@ test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x12), min_fx12, tolerance = 1e-6)
 })
 test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(par = testfun$x0(12), fn = testfun$fn, gr = testfun$gr,
-                      method = "BFGS", control = list(maxit = 1000))
+  res <- stats::optim(
+    par = testfun$x0(12),
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "BFGS",
+    control = list(maxit = 1000)
+  )
   expect_equal(res$par, min_x12, tolerance = 1e-4)
   expect_equal(res$value, min_fx12, tolerance = 1e-6)
-
 })

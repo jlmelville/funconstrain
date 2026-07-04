@@ -1,6 +1,16 @@
 testfun <- broyden_band()
-min_x10 <- c(-0.4283029, -0.4765964, -0.5196525, -0.5580993, -0.5925062,
-             -0.6245037, -0.6232395, -0.6213938, -0.6204536, -0.5864693)
+min_x10 <- c(
+  -0.4283029,
+  -0.4765964,
+  -0.5196525,
+  -0.5580993,
+  -0.5925062,
+  -0.6245037,
+  -0.6232395,
+  -0.6213938,
+  -0.6204536,
+  -0.5864693
+)
 min_fx10 <- 0
 
 test_that("Analytical and finite difference gradients match at x0", {
@@ -20,8 +30,12 @@ test_that("Function value is correct at stated minima", {
 })
 
 test_that("Optimizer can reach minimum", {
-  res <- stats::optim(par = testfun$x0(10), fn = testfun$fn, gr = testfun$gr,
-                      method = "L-BFGS-B")
+  res <- stats::optim(
+    par = testfun$x0(10),
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "L-BFGS-B"
+  )
   expect_equal(res$par, min_x10, tolerance = 1e-6)
   expect_equal(res$value, min_fx10, tolerance = 1e-6)
 })

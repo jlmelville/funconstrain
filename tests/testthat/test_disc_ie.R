@@ -1,6 +1,16 @@
 testfun <- disc_ie()
-min_x10 <- c(-0.04316498, -0.08157716, -0.11448571, -0.14097358, -0.15990870,
-             -0.16987720, -0.16908998, -0.15524954, -0.12535589, -0.07541653)
+min_x10 <- c(
+  -0.04316498,
+  -0.08157716,
+  -0.11448571,
+  -0.14097358,
+  -0.15990870,
+  -0.16987720,
+  -0.16908998,
+  -0.15524954,
+  -0.12535589,
+  -0.07541653
+)
 min_fx10 <- 0
 
 test_that("Analytical and finite difference gradients match at x0", {
@@ -20,8 +30,12 @@ test_that("Function value is correct at stated minima", {
 })
 
 test_that("Optimizer can reach minimum", {
-  res <- stats::optim(par = testfun$x0(10), fn = testfun$fn, gr = testfun$gr,
-                      method = "BFGS")
+  res <- stats::optim(
+    par = testfun$x0(10),
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "BFGS"
+  )
   expect_equal(res$par, min_x10, tolerance = 1e-6)
   expect_equal(res$value, min_fx10, tolerance = 1e-6)
 })

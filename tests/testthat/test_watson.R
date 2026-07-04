@@ -1,16 +1,41 @@
 testfun <- watson()
-min_x <- c(-0.01573919, 1.01241881, -0.23273987, 1.25964331, -1.51285698,
-           0.99265101)
+min_x <- c(
+  -0.01573919,
+  1.01241881,
+  -0.23273987,
+  1.25964331,
+  -1.51285698,
+  0.99265101
+)
 min_fx <- 0.002287674
 
-min_x9 <- c(-1.554337e-05,  9.997932e-01,  1.460705e-02,  1.478749e-01,
-             9.943048e-01, -2.603397e+00,  4.087345e+00, -3.133179e+00,
-             1.050054e+00)
+min_x9 <- c(
+  -1.554337e-05,
+  9.997932e-01,
+  1.460705e-02,
+  1.478749e-01,
+  9.943048e-01,
+  -2.603397e+00,
+  4.087345e+00,
+  -3.133179e+00,
+  1.050054e+00
+)
 min_fx9 <- 1.39976e-6 # Couldn't get this low 1.3999e-6
 
-min_x12 <- c(-1.586076e-07,  1.000015e+00, -1.028239e-03,  3.457001e-01,
-            -5.631347e-02,  2.263312e-01,  5.575928e-02, -2.931759e-01,
-            2.301305e-01, 3.888203e-01, -5.884314e-01,  2.495999e-01)
+min_x12 <- c(
+  -1.586076e-07,
+  1.000015e+00,
+  -1.028239e-03,
+  3.457001e-01,
+  -5.631347e-02,
+  2.263312e-01,
+  5.575928e-02,
+  -2.931759e-01,
+  2.301305e-01,
+  3.888203e-01,
+  -5.884314e-01,
+  2.495999e-01
+)
 min_fx12 <- 4.72238e-10 # Couldn't get this low: 1.0295e-8
 
 test_that("Analytical and finite difference gradients match at x0", {
@@ -35,8 +60,12 @@ test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x12), min_fx12)
 })
 test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(par = testfun$x0(6), fn = testfun$fn, gr = testfun$gr,
-                      method = "L-BFGS-B")
+  res <- stats::optim(
+    par = testfun$x0(6),
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "L-BFGS-B"
+  )
   expect_equal(res$par, min_x, tolerance = 1e-5)
   expect_equal(res$value, min_fx)
 })

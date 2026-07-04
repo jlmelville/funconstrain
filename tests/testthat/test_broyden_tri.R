@@ -1,6 +1,16 @@
 testfun <- broyden_tri()
-min_x10 <- c(-0.5707221, -0.6818070, -0.7022101, -0.7055106, -0.7049062,
-             -0.7014966, -0.6918893, -0.6657965, -0.5960351, -0.4164123)
+min_x10 <- c(
+  -0.5707221,
+  -0.6818070,
+  -0.7022101,
+  -0.7055106,
+  -0.7049062,
+  -0.7014966,
+  -0.6918893,
+  -0.6657965,
+  -0.5960351,
+  -0.4164123
+)
 min_fx10 <- 0
 
 test_that("Analytical and finite difference gradients match at x0", {
@@ -20,8 +30,12 @@ test_that("Function value is correct at stated minima", {
 })
 
 test_that("Optimizer can reach minimum", {
-  res <- stats::optim(par = testfun$x0(10), fn = testfun$fn, gr = testfun$gr,
-                      method = "L-BFGS-B")
+  res <- stats::optim(
+    par = testfun$x0(10),
+    fn = testfun$fn,
+    gr = testfun$gr,
+    method = "L-BFGS-B"
+  )
   expect_equal(res$par, min_x10, tolerance = 1e-6)
   expect_equal(res$value, min_fx10, tolerance = 1e-6)
 })

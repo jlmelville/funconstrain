@@ -1,6 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.lintr$
 ^_pkgdown\.yml$
+^air\.toml$
 ^README\.md$
 ^man-roxygen$
 ^docs$
