@@ -1,0 +1,9 @@
+url: https://jlmelville.github.io/funconstrain/
+template:
+  bootstrap: 5
+
+articles:
+- title: Guides
+  contents:
+  - articles/optimx-bridge
+  - RunFunconstrainTests

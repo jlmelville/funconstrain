@@ -1,6 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^_pkgdown\.yml$
 ^README\.md$
 ^man-roxygen$
+^docs$
+^pkgdown$
+^vignettes/articles$
 ^doc$
 ^Meta$
