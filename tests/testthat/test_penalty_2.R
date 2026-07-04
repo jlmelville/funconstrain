@@ -1,4 +1,3 @@
-context("Penalty II")
 testfun <- penalty_2()
 min_x4 <- c(0.1999993, 0.1913145, 0.4800895, 0.5188700)
 min_fx4 <- 9.37629e-06
@@ -18,23 +17,23 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$gr, testfun$gr(x0))
 })
 test_that("Gradient is zero at stated minima", {
-  expect_equal(testfun$gr(min_x4), rep(0, 4), tol = 1e-6)
-  expect_equal(testfun$gr(min_x10), rep(0, 10), tol = 1e-6)
+  expect_equal(testfun$gr(min_x4), rep(0, 4), tolerance = 1e-6)
+  expect_equal(testfun$gr(min_x10), rep(0, 10), tolerance = 1e-6)
 })
 test_that("Function value is correct at stated minima", {
-  expect_equal(testfun$fn(min_x4), min_fx4, tol = 1e-6)
-  expect_equal(testfun$fn(min_x10), min_fx10, tol = 1e-6)
+  expect_equal(testfun$fn(min_x4), min_fx4, tolerance = 1e-6)
+  expect_equal(testfun$fn(min_x10), min_fx10, tolerance = 1e-6)
 })
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(par = testfun$x0(4), fn = testfun$fn, gr = testfun$gr,
                       method = "L-BFGS-B", control = list(maxit = 1000,
                                                           factr = 1e-1))
-  expect_equal(res$par, min_x4, tol = 1e-4)
-  expect_equal(res$value, min_fx4, tol = 1e-6) # NOTE:220519 get fn not orig
+  expect_equal(res$par, min_x4, tolerance = 1e-4)
+  expect_equal(res$value, min_fx4, tolerance = 1e-6) # NOTE:220519 get fn not orig
 
   res <- stats::optim(par = testfun$x0(10), fn = testfun$fn, gr = testfun$gr,
                       method = "L-BFGS-B", control = list(maxit = 1000,
                                                           factr = 1e-1))
-  expect_equal(res$par, min_x10, tol = 1e-3)
+  expect_equal(res$par, min_x10, tolerance = 1e-3)
   expect_equal(res$value, min_fx10)
 })

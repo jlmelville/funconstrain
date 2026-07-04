@@ -1,4 +1,3 @@
-context("Extended Rosenbrock")
 testfun <- ex_rosen()
 min_x <- rep(1, 12)
 min_fx <- 0
@@ -21,6 +20,6 @@ test_that("Function value is correct at stated minima", {
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(par = testfun$x0(12), fn = testfun$fn, gr = testfun$gr,
                       method = "L-BFGS-B")
-  expect_equal(res$par, min_x, tol = 1e-5)
+  expect_equal(res$par, min_x, tolerance = 1e-5)
   expect_equal(res$value, min_fx)
 })

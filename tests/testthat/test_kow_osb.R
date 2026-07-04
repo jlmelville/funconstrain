@@ -1,4 +1,3 @@
-context("Kowalik and Osborne")
 testfun <- kow_osb()
 min_x <- c(0.1928, 0.1914, 0.1231, 0.1361) # only gets to 3.05706e-4
 min_fx <- 3.07505e-4
@@ -17,7 +16,7 @@ test_that("f, g, and fg match at x0", {
 })
 test_that("Gradient is zero at stated minima", {
   gr0 <- testfun$gr(min_x)
-  expect_equal(gr0, rep(0, 4), tol = 1e-5)
+  expect_equal(gr0, rep(0, 4), tolerance = 1e-5)
   expect_equal(testfun$gr(min_x2), rep(0, 4))
 })
 test_that("Function value is correct at stated minima", {
@@ -28,6 +27,6 @@ test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(par = testfun$x0, fn = testfun$fn, gr = testfun$gr,
                       method = "BFGS",
                       control = list(reltol = 1e-6, abstol = 1e-6))
-  expect_equal(res$par, min_x, tol = 1e-4)
+  expect_equal(res$par, min_x, tolerance = 1e-4)
   expect_equal(res$value, min_fx)
 })

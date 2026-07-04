@@ -1,4 +1,3 @@
-context("Wood")
 testfun <- wood()
 min_x <- rep(1, 4)
 min_fx <- 0
@@ -20,6 +19,6 @@ test_that("Function value is correct at stated minima", {
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(par = testfun$x0, fn = testfun$fn, gr = testfun$gr,
                       method = "BFGS")
-  expect_equal(res$par, min_x, tol = 1e-6)
+  expect_equal(res$par, min_x, tolerance = 1e-6)
   expect_equal(res$value, min_fx)
 })

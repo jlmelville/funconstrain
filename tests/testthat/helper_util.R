@@ -27,9 +27,13 @@ make_gfd <- function(fn, rel_eps = sqrt(.Machine$double.eps)) {
 }
 
 # test analytical gradient equals finite difference gradient at par
-expect_gfd <- function(testfun, par, tol = 1e-6) {
+expect_gfd <- function(testfun, par, tolerance = 1e-6, tol = NULL) {
+  if (!is.null(tol)) {
+    tolerance <- tol
+  }
+
   fd <- make_gfd(testfun$fn)(par)
   an <- testfun$gr(par)
 
-  expect_equal(fd, an, tol = tol)
+  expect_equal(fd, an, tolerance = tolerance)
 }

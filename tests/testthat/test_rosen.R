@@ -1,5 +1,3 @@
-context("Rosenbrock")
-
 testfun <- rosen()
 test_that("Analytical and finite difference gradients match at x0", {
   expect_gfd(testfun, testfun$x0)

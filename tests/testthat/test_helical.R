@@ -1,8 +1,6 @@
-context("Helical Valley")
-
 testfun <- helical()
 test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0, tol = 1e-3)
+  expect_gfd(testfun, testfun$x0, tolerance = 1e-3)
 })
 test_that("f, g, and fg match at x0", {
   fg <- testfun$fg(testfun$x0)

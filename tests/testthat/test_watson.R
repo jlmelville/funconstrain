@@ -1,4 +1,3 @@
-context("Watson")
 testfun <- watson()
 min_x <- c(-0.01573919, 1.01241881, -0.23273987, 1.25964331, -1.51285698,
            0.99265101)
@@ -26,9 +25,9 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$gr, testfun$gr(x0))
 })
 test_that("Gradient is zero at stated minima", {
-  expect_equal(testfun$gr(min_x), rep(0, 6), tol = 1e-4)
-  expect_equal(testfun$gr(min_x9), rep(0, 9), tol = 1e-4)
-  expect_equal(testfun$gr(min_x12), rep(0, 12), tol = 1e-4)
+  expect_equal(testfun$gr(min_x), rep(0, 6), tolerance = 1e-4)
+  expect_equal(testfun$gr(min_x9), rep(0, 9), tolerance = 1e-4)
+  expect_equal(testfun$gr(min_x12), rep(0, 12), tolerance = 1e-4)
 })
 test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x), min_fx)
@@ -38,6 +37,6 @@ test_that("Function value is correct at stated minima", {
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(par = testfun$x0(6), fn = testfun$fn, gr = testfun$gr,
                       method = "L-BFGS-B")
-  expect_equal(res$par, min_x, tol = 1e-5)
+  expect_equal(res$par, min_x, tolerance = 1e-5)
   expect_equal(res$value, min_fx)
 })
