@@ -52,21 +52,21 @@ powell_bs <- function() {
       b <- 2 * (exp(-x) + exp(-y) - 1.0001)
 
       c(
-          y * a - exp(-x) * b,
-          x * a - exp(-y) * b
+        y * a - exp(-x) * b,
+        x * a - exp(-y) * b
       )
     },
     he = function(par) {
       x1 <- par[1]
       x2 <- par[2]
-       h <- matrix(NA, nrow=2, ncol=2)
-       t1 <- 1.0e+04*x1*x2 - 1
-       t2 <- exp( - x1 ) + exp( - x2 ) - 1.0001
-       h[1,1] <- 2.0*( 1.0e+8*x2 ^ 2 + t2*exp( - x1 ) + exp( - x1 ) ^ 2 )
-       h[1,2] <- 2.0*( t1*1.0e+04 + 1.0e+8*x1*x2 + exp( - x1 - x2 ) )
-       h[2,2] <- 2.0*( 1.0e+8*x1 ^ 2 + t2*exp( - x2 ) + exp( - x2 ) ^ 2 )
-       h[2,1] <- h[1,2]
-       h
+      h <- matrix(NA, nrow = 2, ncol = 2)
+      t1 <- 1.0e+04 * x1 * x2 - 1
+      t2 <- exp(-x1) + exp(-x2) - 1.0001
+      h[1, 1] <- 2.0 * (1.0e+8 * x2^2 + t2 * exp(-x1) + exp(-x1)^2)
+      h[1, 2] <- 2.0 * (t1 * 1.0e+04 + 1.0e+8 * x1 * x2 + exp(-x1 - x2))
+      h[2, 2] <- 2.0 * (1.0e+8 * x1^2 + t2 * exp(-x2) + exp(-x2)^2)
+      h[2, 1] <- h[1, 2]
+      h
     },
     fg = function(par) {
       x <- par[1]
@@ -89,5 +89,5 @@ powell_bs <- function() {
     x0 = c(0, 1),
     fmin = 0,
     xmin = c(1.098e-5, 9.106)
-   )
+  )
 }

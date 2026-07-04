@@ -75,28 +75,30 @@ var_dim <- function() {
 
       grad
     },
-    he = function(par) { # quite big discrepancy in n, n from numeric approx.
-       n <- length(par)
-       h <- matrix(0.0, nrow=n, ncol=n)
-       t1 <- 0.0
-       for (j in 1:n) {
-          t1 <- t1 + j*( par[j]-1.0 )
-       }
-       t <- 1.0 + 6.0*t1^2 # 
-       for (j in 1:n) {
-          h[j,j] <- 2.0 + 2.0 * t * j^2
-          if (j > 1) {
-            for (k in 1:(j-1)) {
-               h[k,j] <- 2.0*t*j*k
-            }
+    he = function(par) {
+      # quite big discrepancy in n, n from numeric approx.
+      n <- length(par)
+      h <- matrix(0.0, nrow = n, ncol = n)
+      t1 <- 0.0
+      for (j in 1:n) {
+        t1 <- t1 + j * (par[j] - 1.0)
+      }
+      t <- 1.0 + 6.0 * t1^2 #
+      for (j in 1:n) {
+        h[j, j] <- 2.0 + 2.0 * t * j^2
+        if (j > 1) {
+          for (k in 1:(j - 1)) {
+            h[k, j] <- 2.0 * t * j * k
           }
-       }
-       for (j in 1:(n-1)) { # symmetrize
-         for (k in (j+1):n) {
-           h[k,j] <- h[j,k]        
-         }
-       }
-       h
+        }
+      }
+      for (j in 1:(n - 1)) {
+        # symmetrize
+        for (k in (j + 1):n) {
+          h[k, j] <- h[j, k]
+        }
+      }
+      h
     },
     fg = function(par) {
       n <- length(par)
@@ -134,6 +136,6 @@ var_dim <- function() {
       1 - (1:n) / n
     },
     fmin = 0,
-    xmin = rep(1,6) # n=6 example
+    xmin = rep(1, 6) # n=6 example
   )
 }

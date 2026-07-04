@@ -82,12 +82,12 @@ linfun_fr <- function(m = 100) {
       2 * fi - (m4 * (sum(fi) + (m - n) * fnm))
     },
     he = function(x) {
-       n <- length(x)
-       h <- matrix(0.0, nrow=n, ncol=n)
-       for (i in 1:n){
-         h[i, i] <- 2.0 # since quadratic
-       }
-       h
+      n <- length(x)
+      h <- matrix(0.0, nrow = n, ncol = n)
+      for (i in 1:n) {
+        h[i, i] <- 2.0 # since quadratic
+      }
+      h
     },
     fg = function(par) {
       n <- length(par)
@@ -119,7 +119,7 @@ linfun_fr <- function(m = 100) {
       }
       rep(1, n)
     },
-  fmin = 96, # m - n for example m=100, n=4
-  xmin = rep(-1, 4) # need to get m and n. m=100, n=4 example
- )
+    fmin = 96, # m - n for example m=100, n=4
+    xmin = rep(-1, 4) # need to get m and n. m=100, n=4 example
+  )
 }

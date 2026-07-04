@@ -64,8 +64,8 @@ gulf <- function(m = 99) {
       x3 <- par[3]
 
       ti <- 1:m * 0.01
-      y <- 25 + (-50 * log(ti)) ^ p66
-      fi <- exp(-(abs(x2 - y) ^ x3) / x1) - ti
+      y <- 25 + (-50 * log(ti))^p66
+      fi <- exp(-(abs(x2 - y)^x3) / x1) - ti
       sum(fi * fi)
     },
     gr = function(par) {
@@ -74,11 +74,11 @@ gulf <- function(m = 99) {
       x3 <- par[3]
 
       ti <- 1:m * 0.01
-      y <- 25 + (-50 * log(ti)) ^ p66
+      y <- 25 + (-50 * log(ti))^p66
 
       x2y <- x2 - y
       ax2y <- abs(x2y)
-      x2yz <- ax2y ^ x3
+      x2yz <- ax2y^x3
       e <- exp(-x2yz / x1)
       fi <- e - ti
       efxyz2 <- 2 * e * fi * x2yz
@@ -93,33 +93,33 @@ gulf <- function(m = 99) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
-      h <- matrix(0.0, ncol=3, nrow=3)
+      h <- matrix(0.0, ncol = 3, nrow = 3)
       d1 <- p66
       for (i in 1:m) {
-          arg <- 0.01*i
-          r <- ( -50.0*log( arg ) ) ^ d1 + 25.0 - x2
-          t1 <- abs( r ) ^ x3/x1
-          t2 <- exp( -t1 )
-          t3 <- t1*t2*( t1*t2 + ( t1 - 1.0 )*( t2 - arg ) )
-          t <- t1*t2*( t2 - arg )
-          logr <- log( abs( r ) )
-          h[1,1] <- h[1,1] + t3 - t
-          h[1,2] <- h[1,2] + t3/r
-          h[2,2] <- h[2,2] + ( t + x3*t3 )/r ^ 2
-          h[1,3] <- h[1,3] - t3*logr
-          h[2,3] <- h[2,3] + (t-x3*t3*logr)/r
-          h[3,3] <- h[3,3] + t3*logr ^ 2
-       }
+        arg <- 0.01 * i
+        r <- (-50.0 * log(arg))^d1 + 25.0 - x2
+        t1 <- abs(r)^x3 / x1
+        t2 <- exp(-t1)
+        t3 <- t1 * t2 * (t1 * t2 + (t1 - 1.0) * (t2 - arg))
+        t <- t1 * t2 * (t2 - arg)
+        logr <- log(abs(r))
+        h[1, 1] <- h[1, 1] + t3 - t
+        h[1, 2] <- h[1, 2] + t3 / r
+        h[2, 2] <- h[2, 2] + (t + x3 * t3) / r^2
+        h[1, 3] <- h[1, 3] - t3 * logr
+        h[2, 3] <- h[2, 3] + (t - x3 * t3 * logr) / r
+        h[3, 3] <- h[3, 3] + t3 * logr^2
+      }
 
-       h[1,1] <- h[1,1] / x1 ^ 2
-       h[1,2] <- h[1,2]*x3/x1
-       h[2,2] <- h[2,2]*x3
-       h[1,3] <- h[1,3] / x1
-       h <- 2.0 * h
-       h[2,1] <- h[1,2]
-       h[3,1] <- h[1,3]
-       h[3,2] <- h[2,3]
-       h
+      h[1, 1] <- h[1, 1] / x1^2
+      h[1, 2] <- h[1, 2] * x3 / x1
+      h[2, 2] <- h[2, 2] * x3
+      h[1, 3] <- h[1, 3] / x1
+      h <- 2.0 * h
+      h[2, 1] <- h[1, 2]
+      h[3, 1] <- h[1, 3]
+      h[3, 2] <- h[2, 3]
+      h
     },
     fg = function(par) {
       x1 <- par[1]
@@ -127,11 +127,11 @@ gulf <- function(m = 99) {
       x3 <- par[3]
 
       ti <- 1:m * 0.01
-      y <- 25 + (-50 * log(ti)) ^ p66
+      y <- 25 + (-50 * log(ti))^p66
 
       x2y <- x2 - y
       ax2y <- abs(x2y)
-      x2yz <- ax2y ^ x3
+      x2yz <- ax2y^x3
       e <- exp(-x2yz / x1)
       fi <- e - ti
       efxyz2 <- 2 * e * fi * x2yz

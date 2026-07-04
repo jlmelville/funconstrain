@@ -49,7 +49,7 @@ ex_rosen <- function() {
       for (i in 1:(n / 2)) {
         p2 <- 2 * i
         p1 <- p2 - 1
-        f_p1 <- 10 * (par[p2] - par[p1] ^ 2)
+        f_p1 <- 10 * (par[p2] - par[p1]^2)
         f_p2 <- 1 - par[p1]
         fsum <- fsum + f_p1 * f_p1 + f_p2 * f_p2
       }
@@ -76,24 +76,25 @@ ex_rosen <- function() {
       grad
     },
     he = function(x) {
-       n <- length(x)
-       if (n %% 2 != 0) {
-         stop("Extended Rosenbrock: n must be even")
-       }
-       h <- matrix(0.0, nrow=n, ncol=n)
-       halfn <- n / 2    
-       for (jh in 1:halfn) {
-          j <- 2*jh - 1 # issue because Fortran used do j = 1, n, 2
-          h[j  ,j  ] <- 1.2e+3*x[j] ^ 2 - 4.0e+2*x[j+1] + 2.0
-          h[j  ,j+1] <- -4.0e+2*x[j]
-          h[j+1,j+1] <- 2.0e+2
-       }
-       for (j in 1:(n-1)) { # symmetrize
-         for (k in (j+1):n) {
-           h[k,j] <- h[j,k]        
-         }
-       }
-       h
+      n <- length(x)
+      if (n %% 2 != 0) {
+        stop("Extended Rosenbrock: n must be even")
+      }
+      h <- matrix(0.0, nrow = n, ncol = n)
+      halfn <- n / 2
+      for (jh in 1:halfn) {
+        j <- 2 * jh - 1 # issue because Fortran used do j = 1, n, 2
+        h[j, j] <- 1.2e+3 * x[j]^2 - 4.0e+2 * x[j + 1] + 2.0
+        h[j, j + 1] <- -4.0e+2 * x[j]
+        h[j + 1, j + 1] <- 2.0e+2
+      }
+      for (j in 1:(n - 1)) {
+        # symmetrize
+        for (k in (j + 1):n) {
+          h[k, j] <- h[j, k]
+        }
+      }
+      h
     },
     fg = function(par) {
       n <- length(par)
@@ -129,6 +130,6 @@ ex_rosen <- function() {
       rep(c(-1.2, 1), n / 2)
     },
     fmin = 0,
-    xmin = rep(1,8) # n=8 example
+    xmin = rep(1, 8) # n=8 example
   )
 }

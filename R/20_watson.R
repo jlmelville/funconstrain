@@ -54,8 +54,8 @@ watson <- function() {
         fa <- 0
         fb <- 0
 
-        tij2 <- ti ^ (0:(n - 2))
-        tij1 <- ti ^ (0:(n - 1))
+        tij2 <- ti^(0:(n - 2))
+        tij1 <- ti^(0:(n - 1))
 
         fa <- sum(1:(n - 1) * par[2:n] * tij2)
         fb <- sum(par * tij1)
@@ -64,7 +64,7 @@ watson <- function() {
         fsum <- fsum + fi * fi
       }
       f30 <- par[1]
-      f31 <- par[2] - par[1] ^ 2 - 1
+      f31 <- par[2] - par[1]^2 - 1
 
       fsum + f30 * f30 + f31 * f31
     },
@@ -80,8 +80,8 @@ watson <- function() {
         fa <- 0
         fb <- 0
 
-        tij2 <- ti ^ (-1:(n - 2))
-        tij1 <- ti ^ (0:(n - 1))
+        tij2 <- ti^(-1:(n - 2))
+        tij1 <- ti^(0:(n - 1))
 
         fa <- sum(1:(n - 1) * par[2:n] * tij2[2:length(tij2)])
         fb <- sum(par * tij1)
@@ -90,54 +90,53 @@ watson <- function() {
         fi2 <- 2 * fi
 
         grad <- grad + fi2 * (0:(n - 1) * tij2 - 2 * fb * tij1)
-
       }
-      f31 <- par[2] - par[1] ^ 2 - 1
+      f31 <- par[2] - par[1]^2 - 1
 
       grad[1] <- grad[1] + 2 * par[1]
       grad[1] <- grad[1] - 4 * par[1] * f31
       grad[2] <- grad[2] + 2 * f31
 
       grad
-
     },
-    he = function(x) { 
+    he = function(x) {
       n <- length(x)
-      h <- matrix(0.0, ncol=n, nrow=n)
+      h <- matrix(0.0, ncol = n, nrow = n)
       for (i in 1:29) {
-          d1 <- i/29.0
-          d2 <- 1.0
-          s1 <- 0.0
-          s2 <- x[1]
-          for (j in 2:n) {
-             s1 <- s1 + (j-1)*d2*x[j]
-             d2 <- d1*d2
-             s2 <- s2 + d2*x[j]
+        d1 <- i / 29.0
+        d2 <- 1.0
+        s1 <- 0.0
+        s2 <- x[1]
+        for (j in 2:n) {
+          s1 <- s1 + (j - 1) * d2 * x[j]
+          d2 <- d1 * d2
+          s2 <- s2 + d2 * x[j]
+        }
+        t <- 2.0 * (s1 - s2^2 - 1.0) * d1^2
+        s3 <- 2.0 * d1 * s2
+        d2 <- 1.0 / d1
+        for (j in 1:n) {
+          t1 <- (j - 1) - s3
+          h[j, j] <- h[j, j] + (t1^2 - t) * d2^2
+          d3 <- 1.0 / d1
+          if (j > 1) {
+            for (k in 1:(j - 1)) {
+              h[k, j] <- h[k, j] + (t1 * ((k - 1) - s3) - t) * d2 * d3
+              d3 <- d1 * d3
+            }
           }
-          t <- 2.0*( s1 - s2^2 - 1.0 )*d1^2
-          s3 <- 2.0*d1*s2
-          d2 <- 1.0/d1
-          for (j in 1:n) {
-             t1 <- (j-1) - s3
-             h[j,j] <- h[j,j] + ( t1^2 - t ) * d2^2
-             d3 <- 1.0/d1
-             if (j > 1) {
-               for (k in 1:(j-1)) {
-                  h[k,j] <- h[k,j] + ( t1*( (k-1) - s3 ) - t )*d2*d3
-                  d3 <- d1*d3
-               }
-             }
-             d2 <- d1*d2
-          }
-       }
-       t3 <- x[2] - x[1]^2 - 1.0
-       h[1,1] <- h[1,1] + 1.0 - 2.0*( t3 - 2.0*x[1]^2 )
-       h[2,2] <- h[2,2] + 1.0
-       h[1,2] <- h[1,2] - 2.0*x[1]
+          d2 <- d1 * d2
+        }
+      }
+      t3 <- x[2] - x[1]^2 - 1.0
+      h[1, 1] <- h[1, 1] + 1.0 - 2.0 * (t3 - 2.0 * x[1]^2)
+      h[2, 2] <- h[2, 2] + 1.0
+      h[1, 2] <- h[1, 2] - 2.0 * x[1]
 
-      for (j in 1:(n-1)) { # symmetrize
-        for (k in (j+1):n) {
-          h[k,j] <- h[j,k]        
+      for (j in 1:(n - 1)) {
+        # symmetrize
+        for (k in (j + 1):n) {
+          h[k, j] <- h[j, k]
         }
       }
       h <- 2.0 * h
@@ -152,14 +151,13 @@ watson <- function() {
       fsum <- 0
       grad <- rep(0, n)
       for (i in 1:29) {
-
         ti <- i / 29
 
         fa <- 0
         fb <- 0
 
-        tij2 <- ti ^ (-1:(n - 2))
-        tij1 <- ti ^ (0:(n - 1))
+        tij2 <- ti^(-1:(n - 2))
+        tij1 <- ti^(0:(n - 1))
 
         fa <- sum(1:(n - 1) * par[2:n] * tij2[2:length(tij2)])
         fb <- sum(par * tij1)
@@ -169,10 +167,9 @@ watson <- function() {
 
         fsum <- fsum + fi * fi
         grad <- grad + fi2 * (0:(n - 1) * tij2 - 2 * fb * tij1)
-
       }
       f30 <- par[1]
-      f31 <- par[2] - par[1] ^ 2 - 1
+      f31 <- par[2] - par[1]^2 - 1
 
       fsum <- fsum + f30 * f30 + f31 * f31
 
@@ -185,14 +182,22 @@ watson <- function() {
         gr = grad
       )
     },
-#    x0 = function(n = 15) {
-    x0 = function(n = 6) { # Modified JN 2022-11-24 to n=6
+    #    x0 = function(n = 15) {
+    x0 = function(n = 6) {
+      # Modified JN 2022-11-24 to n=6
       if (!(2 <= n && n <= 31)) {
         stop("Watson: n must be between 2-31")
       }
       rep(0, n)
     },
     fmin = 2.28767e-3,
-    xmin = c(-0.01572509, 1.0124349, -0.232991626, 1.26043009, -1.51372892, 0.9929964)
+    xmin = c(
+      -0.01572509,
+      1.0124349,
+      -0.232991626,
+      1.26043009,
+      -1.51372892,
+      0.9929964
+    )
   )
 }

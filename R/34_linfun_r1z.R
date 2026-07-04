@@ -50,12 +50,16 @@ linfun_r1z <- function(m = 100) {
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             "n must be positive")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          "n must be positive"
+        )
       }
       if (m < n) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             " m must be >= n")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          " m must be >= n"
+        )
       }
       sum_jx <- sum(2:(n - 1) * par[2:(n - 1)])
       fi <- 0:(m - 1) * sum_jx - 1
@@ -65,12 +69,16 @@ linfun_r1z <- function(m = 100) {
     gr = function(par) {
       n <- length(par)
       if (n < 1) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             "n must be positive")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          "n must be positive"
+        )
       }
       if (m < n) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             " m must be >= n")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          " m must be >= n"
+        )
       }
       sum_jx <- sum(2:(n - 1) * par[2:(n - 1)])
       fi <- 0:(m - 1) * sum_jx - 1
@@ -82,41 +90,45 @@ linfun_r1z <- function(m = 100) {
       grad
     },
     he = function(x) {
-       n <- length(x)
-       h <- matrix(0.0, nrow=n, ncol=n)
-       s1 <- 0.0
-       for (i in 2:(m-1)) {
-          s1 <- s1 + (i-1)^2
-       }
-       s1 <- 2.0*s1
-       
-       for (j in 1:n) {
-          for (i in 1:j) {
-             if ( (i == 1) || (i == n) || (j == 1) || (j == n) ){
-                h[i,j] <- 0.0
-             } else {
-                h[i,j] <- i*j*s1
-             }
+      n <- length(x)
+      h <- matrix(0.0, nrow = n, ncol = n)
+      s1 <- 0.0
+      for (i in 2:(m - 1)) {
+        s1 <- s1 + (i - 1)^2
+      }
+      s1 <- 2.0 * s1
+
+      for (j in 1:n) {
+        for (i in 1:j) {
+          if ((i == 1) || (i == n) || (j == 1) || (j == n)) {
+            h[i, j] <- 0.0
+          } else {
+            h[i, j] <- i * j * s1
           }
-       }
+        }
+      }
 
-
-       for (j in 1:(n-1)) { # symmetrize
-         for (k in (j+1):n) {
-           h[k,j] <- h[j,k]        
-         }
-       }
-       h
+      for (j in 1:(n - 1)) {
+        # symmetrize
+        for (k in (j + 1):n) {
+          h[k, j] <- h[j, k]
+        }
+      }
+      h
     },
     fg = function(par) {
       n <- length(par)
       if (n < 1) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             "n must be positive")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          "n must be positive"
+        )
       }
       if (m < n) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             " m must be >= n")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          " m must be >= n"
+        )
       }
       sum_jx <- sum(2:(n - 1) * par[2:(n - 1)])
       fi <- 0:(m - 1) * sum_jx - 1
@@ -134,12 +146,16 @@ linfun_r1z <- function(m = 100) {
     },
     x0 = function(n = 45) {
       if (n < 1) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             "n must be positive")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          "n must be positive"
+        )
       }
       if (m < n) {
-        stop("Linear Function - Rank 1 with Zero Columns and Rows:",
-             " m must be >= n")
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          " m must be >= n"
+        )
       }
       rep(1, n)
     },

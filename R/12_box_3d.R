@@ -82,25 +82,25 @@ box_3d <- function(m = 20) {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
-      h <- matrix(0.0, ncol=3, nrow=3)
+      h <- matrix(0.0, ncol = 3, nrow = 3)
 
       for (i in 1:m) {
-        d1 <- 0.1*i
-        t1 <- exp( - d1*x1 )
-        t2 <- exp( - d1*x2 )
-        t3 <- exp( - 10.0*d1 )
-        t4 <- exp( - d1 )
-         s1 <- t1 - t2 - x3*( t4 - t3 )
-         h[1,1] <- h[1,1] + 2.0*t1*d1 ^ 2*( s1 + t1 )
-         h[1,2] <- h[1,2] - 2.0*t1*t2*d1 ^ 2
-         h[2,2] <- h[2,2] + 2.0*t2*d1 ^ 2*( t2 - s1 )
-         h[1,3] <- h[1,3] - 2.0*d1*t1*( t3 - t4 )
-         h[2,3] <- h[2,3] + 2.0*d1*t2*( t3 - t4 )
-         h[3,3] <- h[3,3] + 2.0*( t3 - t4 ) ^ 2
+        d1 <- 0.1 * i
+        t1 <- exp(-d1 * x1)
+        t2 <- exp(-d1 * x2)
+        t3 <- exp(-10.0 * d1)
+        t4 <- exp(-d1)
+        s1 <- t1 - t2 - x3 * (t4 - t3)
+        h[1, 1] <- h[1, 1] + 2.0 * t1 * d1^2 * (s1 + t1)
+        h[1, 2] <- h[1, 2] - 2.0 * t1 * t2 * d1^2
+        h[2, 2] <- h[2, 2] + 2.0 * t2 * d1^2 * (t2 - s1)
+        h[1, 3] <- h[1, 3] - 2.0 * d1 * t1 * (t3 - t4)
+        h[2, 3] <- h[2, 3] + 2.0 * d1 * t2 * (t3 - t4)
+        h[3, 3] <- h[3, 3] + 2.0 * (t3 - t4)^2
       }
-      h[2,1] <- h[1,2]
-      h[3,1] <- h[1,3]
-      h[3,2] <- h[2,3]
+      h[2, 1] <- h[1, 2]
+      h[3, 1] <- h[1, 3]
+      h[3, 2] <- h[2, 3]
       h
     },
     fg = function(par) {
@@ -132,7 +132,7 @@ box_3d <- function(m = 20) {
       )
     },
     x0 = c(0, 10, 20),
-    fmin = 0, 
-    xmin = rep(NA,3) # See documentation for multiple minima points.
+    fmin = 0,
+    xmin = rep(NA, 3) # See documentation for multiple minima points.
   )
 }

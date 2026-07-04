@@ -45,7 +45,7 @@
 #' @export
 linfun_r1 <- function(m = 100) {
   list(
-    m = m, 
+    m = m,
     fn = function(par) {
       n <- length(par)
       if (n < 1) {
@@ -70,27 +70,28 @@ linfun_r1 <- function(m = 100) {
       fi <- 1:m * sum_jx - 1
       2 * 1:n * sum(1:m * fi)
     },
-    he = function(x) { 
-       n <- length(x)
-       h <- matrix(0.0, nrow=n, ncol=n)
-       s1 <- 0.0
-       for (i in 1:m) {
-          s1 <- s1 + i^2
-       }
-       s1 <- 2.0*s1
-       
-       for (j in 1:n) {
-          for (i in 1:j) {
-             h[i,j] <- i*j*s1
-          }
-       }
+    he = function(x) {
+      n <- length(x)
+      h <- matrix(0.0, nrow = n, ncol = n)
+      s1 <- 0.0
+      for (i in 1:m) {
+        s1 <- s1 + i^2
+      }
+      s1 <- 2.0 * s1
 
-       for (j in 1:(n-1)) { # symmetrize
-         for (k in (j+1):n) {
-           h[k,j] <- h[j,k]        
-         }
-       }
-       h
+      for (j in 1:n) {
+        for (i in 1:j) {
+          h[i, j] <- i * j * s1
+        }
+      }
+
+      for (j in 1:(n - 1)) {
+        # symmetrize
+        for (k in (j + 1):n) {
+          h[k, j] <- h[j, k]
+        }
+      }
+      h
     },
     fg = function(par) {
       n <- length(par)

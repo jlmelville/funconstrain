@@ -55,7 +55,6 @@ trigon <- function() {
       cos_sum <- sum(cos(par))
       fi <- n - cos_sum + 1:n * (1 - cos(par)) - sin(par)
       sum(fi * fi)
-
     },
     gr = function(par) {
       n <- length(par)
@@ -69,38 +68,44 @@ trigon <- function() {
 
       2 * (fi * (1:n * sinx - cosx) + sinx * sum(fi))
     },
-    he = function(par) { 
-       n <- length(par)
-       h <- matrix(0.0, nrow=n, ncol=n)
+    he = function(par) {
+      n <- length(par)
+      h <- matrix(0.0, nrow = n, ncol = n)
 
-       s1 <- 0.0
-       for (j in 1:n) {
-          h[j,j] <- sin( par[j] )
-          s1 <- s1 + cos( par[j] )
-       }
-       s2 <- 0.0
-       for (j in 1:n) {
-          th <- cos( par[j] )
-          t <- ( n+j ) - h[j,j] - s1 - j*th
-          s2 <- s2 + t
-          if (j > 1) {
-            for (k in (1:(j-1))){
-              h[k,j] <- 2.0*(sin(par[k])*(( n+j+k )*h[j,j]-th) - h[j,j]*cos(par[k]) )
-            }
+      s1 <- 0.0
+      for (j in 1:n) {
+        h[j, j] <- sin(par[j])
+        s1 <- s1 + cos(par[j])
+      }
+      s2 <- 0.0
+      for (j in 1:n) {
+        th <- cos(par[j])
+        t <- (n + j) - h[j, j] - s1 - j * th
+        s2 <- s2 + t
+        if (j > 1) {
+          for (k in (1:(j - 1))) {
+            h[k, j] <- 2.0 *
+              (sin(par[k]) *
+                ((n + j + k) * h[j, j] - th) -
+                h[j, j] * cos(par[k]))
           }
-          h[j,j] <- (j*(j+2)+n)*h[j,j]^2 + 
-               th*(th-(2*j+2)*h[j,j]) + t*(j*th + h[j,j] )
-       }
+        }
+        h[j, j] <- (j * (j + 2) + n) *
+          h[j, j]^2 +
+          th * (th - (2 * j + 2) * h[j, j]) +
+          t * (j * th + h[j, j])
+      }
 
-       for (j in 1:n) {
-          h[j,j] <- 2.0*( h[j,j] + cos(par[j])*s2 )
-       }
-       for (j in 1:(n-1)) { # symmetrize
-         for (k in (j+1):n) {
-           h[k,j] <- h[j,k]        
-         }
-       }
-       h
+      for (j in 1:n) {
+        h[j, j] <- 2.0 * (h[j, j] + cos(par[j]) * s2)
+      }
+      for (j in 1:(n - 1)) {
+        # symmetrize
+        for (k in (j + 1):n) {
+          h[k, j] <- h[j, k]
+        }
+      }
+      h
     },
     fg = function(par) {
       n <- length(par)
@@ -127,7 +132,6 @@ trigon <- function() {
       rep(1 / n, n)
     },
     fmin = 0,
-    xmin = rep(0,4) # n=4 example. MANY OTHERS!!
+    xmin = rep(0, 4) # n=4 example. MANY OTHERS!!
   )
 }
-

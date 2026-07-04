@@ -54,12 +54,12 @@ brown_bs <- function() {
     he = function(par) {
       x1 <- par[1]
       x2 <- par[2]
-       h <- matrix(NA, nrow=2, ncol=2)
-       h[1,1] <- 2.0*( 1.0 + x2 ^ 2 )
-       h[1,2] <- 4.0*( x1*x2 - 1.0 )
-       h[2,2] <- 2.0*( 1.0 + x1 ^ 2 )
-       h[2,1] <- h[1,2]
-       h
+      h <- matrix(NA, nrow = 2, ncol = 2)
+      h[1, 1] <- 2.0 * (1.0 + x2^2)
+      h[1, 2] <- 4.0 * (x1 * x2 - 1.0)
+      h[2, 2] <- 2.0 * (1.0 + x1^2)
+      h[2, 1] <- h[1, 2]
+      h
     },
     fg = function(par) {
       x <- par[1]
@@ -79,6 +79,6 @@ brown_bs <- function() {
     },
     x0 = c(1, 1),
     fmin = 0,
-    xmin = c(1e6, 2e-6) 
+    xmin = c(1e6, 2e-6)
   )
 }

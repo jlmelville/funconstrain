@@ -80,16 +80,16 @@ jenn_samp <- function(m = 10) {
     he = function(par) {
       x1 <- par[1]
       x2 <- par[2]
-      h <- matrix(0.0, nrow=2, ncol=2)
+      h <- matrix(0.0, nrow = 2, ncol = 2)
       for (i in 1:m) {
-        d1 <- exp( i*x1 )
-        d2 <- exp( i*x2 )
-        t1 <- 2.0 + 2.0*i - ( d1 + d2 )
-        h[1,1] <- h[1,1] + 2.0*( (i*d1) ^ 2 - t1*i ^ 2*d1 )
-        h[1,2] <- h[1,2] + 2.0*i ^ 2*d1*d2
-        h[2,2] <- h[2,2] + 2.0*( (i*d2) ^ 2 - t1*i ^ 2*d2 )
+        d1 <- exp(i * x1)
+        d2 <- exp(i * x2)
+        t1 <- 2.0 + 2.0 * i - (d1 + d2)
+        h[1, 1] <- h[1, 1] + 2.0 * ((i * d1)^2 - t1 * i^2 * d1)
+        h[1, 2] <- h[1, 2] + 2.0 * i^2 * d1 * d2
+        h[2, 2] <- h[2, 2] + 2.0 * ((i * d2)^2 - t1 * i^2 * d2)
       }
-      h[2,1] <- h[1,2]
+      h[2, 1] <- h[1, 2]
       h
     },
     fg = function(par) {

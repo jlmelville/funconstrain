@@ -2,4 +2,3 @@
 line-width = 80
 indent-width = 2
 indent-style = "space"
-exclude = ["R/", "vignettes/RunFunconstrainTests.Rmd"]

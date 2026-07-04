@@ -592,18 +592,24 @@ fufnrun <- function(filename = "RFO.txt") {
 
   mycon <- file(filename, open = "r", blocking = TRUE)
   mycon_open <- TRUE
-  on.exit({
-    if (mycon_open) {
-      close(mycon)
-    }
-  }, add = TRUE)
+  on.exit(
+    {
+      if (mycon_open) {
+        close(mycon)
+      }
+    },
+    add = TRUE
+  )
 
   sink_open <- FALSE
-  on.exit({
-    if (sink_open) {
-      sink()
-    }
-  }, add = TRUE)
+  on.exit(
+    {
+      if (sink_open) {
+        sink()
+      }
+    },
+    add = TRUE
+  )
 
   sfname <- readLines(mycon, n = 1)
   if (length(sfname) == 0) {
@@ -651,7 +657,10 @@ fufnrun <- function(filename = "RFO.txt") {
   for (package in c("lbfgs", "lbfgsb3c")) {
     if (package %in% methc) {
       if (!requireNamespace(package, quietly = TRUE)) {
-        stop(paste(package, "package is required, please install it"), call. = FALSE)
+        stop(
+          paste(package, "package is required, please install it"),
+          call. = FALSE
+        )
       }
     }
   }
@@ -756,8 +765,7 @@ parse_methods <- function(input) {
     return(character())
   }
   string_list <- regmatches(input, matches)[[1]]
-  res <- sapply(string_list, function(x)
-    substr(x, 2, nchar(x) - 1))
+  res <- sapply(string_list, function(x) substr(x, 2, nchar(x) - 1))
   names(res) <- NULL
   res
 }
