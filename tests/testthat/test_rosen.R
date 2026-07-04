@@ -7,6 +7,9 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$fn, testfun$fn(testfun$x0))
   expect_equal(fg$gr, testfun$gr(testfun$x0))
 })
+test_that("Hessian is correct at x0", {
+  expect_equal(testfun$he(testfun$x0), matrix(c(1330, 480, 480, 200), 2))
+})
 test_that("Gradient is zero at stated minima", {
   expect_equal(testfun$gr(c(1, 1)), c(0, 0))
 })

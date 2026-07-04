@@ -119,7 +119,7 @@ kow_osb <- function() {
           } else {
              h<-matrix(.Machine$double.eps, nrow=4, ncol=4)
              # flag <- - 3
-             return()
+             return(h)
           } 
       }
       h[2,1] <- h[1,2]

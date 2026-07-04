@@ -115,7 +115,7 @@ meyer <- function() {
         } else {
           h <- matrix(0.0, ncol=3, nrow=3)
           # flag <- - 3
-          return()
+          return(h)
         } 
       } # end loop
       h[2,1] <- h[1,2]

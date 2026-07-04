@@ -116,9 +116,9 @@ bard <- function() {
              h[3,3] <- h[3,3] + 2.0*s2*d3 ^ 2
 
          } else {
-             h[1:n, 1,] <- .Machine$double.xmax
+             h[1:n, 1:n] <- .Machine$double.xmax
              # flag <- - 3
-             return()
+             return(h)
          }
       } # end loop
       h[2,1] <- h[1,2]
@@ -148,7 +148,6 @@ bard <- function() {
         grad[2] <- grad[2] + f2 * u * v / aa
         grad[3] <- grad[3] + f2 * u * w / aa
       }
-      grad
 
       list(
         fn = fsum,

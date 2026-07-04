@@ -7,6 +7,12 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$fn, testfun$fn(testfun$x0))
   expect_equal(fg$gr, testfun$gr(testfun$x0))
 })
+test_that("Hessian singular branch returns maximum sentinel matrix", {
+  expect_equal(
+    testfun$he(c(1, 0, 0)),
+    matrix(.Machine$double.xmax, nrow = 3, ncol = 3)
+  )
+})
 test_that("Gradient is zero at stated minima", {
   gr0 <- testfun$gr(c(0.08241, 1.13304, 2.34370))
   expect_equal(gr0, c(0, 0, 0), tolerance = 1e-4)
