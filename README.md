@@ -1,5 +1,8 @@
 # funconstrain
 
+[![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/jlmelville/funconstrain/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/test-coverage.yaml)
+
 An R Package of Functions for Testing Unconstrained Numerical Optimization.
 
 `funconstrain` is a pure R implementation of the 35 test functions in the paper
