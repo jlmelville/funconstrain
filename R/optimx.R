@@ -14,6 +14,7 @@ fufn <- function(fnum) {
   if ((fnum < 1) || (fnum > 35)) {
     stop("fnum must be in [1, 35]")
   }
+  require_optimx()
   #  cat("entering ffn, fnum=",fnum,"\n")
   # select function
   funnam <-
@@ -587,17 +588,30 @@ fufnrun <- function(filename = "RFO.txt") {
   # fufnrun.R -- J C Nash 2024-4-8
   ## ?? fixing kkt
   # RFO.txt is input file
-  if (!requireNamespace("optimx", quietly = TRUE)) {
-    stop("optimx package is required, please install it", call. = FALSE)
-  }
+  require_optimx()
 
   mycon <- file(filename, open = "r", blocking = TRUE)
+  mycon_open <- TRUE
+  on.exit({
+    if (mycon_open) {
+      close(mycon)
+    }
+  }, add = TRUE)
+
+  sink_open <- FALSE
+  on.exit({
+    if (sink_open) {
+      sink()
+    }
+  }, add = TRUE)
+
   sfname <- readLines(mycon, n = 1)
   if (length(sfname) == 0) {
     cat("no sink file\n")
   } else {
     cat("opening sink file ", sfname, "\n")
     sink(sfname, split = TRUE)
+    sink_open <- TRUE
   } # open sink file
   cat("sink file name=", sfname, "\n")
 
@@ -655,6 +669,7 @@ fufnrun <- function(filename = "RFO.txt") {
   }
   cat("have.bounds:", have.bounds, "\n")
   close(mycon)
+  mycon_open <- FALSE
   for (iprob in probc) {
     # loop over problems
     tfun <- fufn(fnum = iprob)
@@ -684,7 +699,7 @@ fufnrun <- function(filename = "RFO.txt") {
         lower = lo,
         upper = up,
         method = methc,
-        contro = list(trace = 0)
+        control = list(trace = 0)
       )
     } else {
       t21 <-
@@ -694,13 +709,26 @@ fufnrun <- function(filename = "RFO.txt") {
           tgr,
           hess = the,
           method = methc,
-          contro = list(trace = 0)
+          control = list(trace = 0)
         )
     }
     print(summary(t21, order = 'value', par.select = 1:min(nx0, 5)))
     cat("END :", tfun$fname, "\n\n")
   }
-  sink()
+  if (sink_open) {
+    sink()
+    sink_open <- FALSE
+  }
+}
+
+optimx_available <- function() {
+  requireNamespace("optimx", quietly = TRUE)
+}
+
+require_optimx <- function() {
+  if (!optimx_available()) {
+    stop("optimx package is required, please install it", call. = FALSE)
+  }
 }
 
 # converts e.g. 1:3 -> 1, 2, 3
@@ -724,10 +752,12 @@ parse_test_integers <- function(test_fun_str) {
 # without going through eval
 parse_methods <- function(input) {
   matches <- gregexpr('"(.*?)"', input, perl = TRUE)
+  if (matches[[1]][1] == -1) {
+    return(character())
+  }
   string_list <- regmatches(input, matches)[[1]]
   res <- sapply(string_list, function(x)
     substr(x, 2, nchar(x) - 1))
   names(res) <- NULL
   res
 }
-
