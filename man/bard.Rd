@@ -7,35 +7,41 @@
 bard()
 }
 \value{
-A list containing:
+A list containing the core problem contract:
 \itemize{
-  \item \code{fn} Objective function which calculates the value given input
-  parameter vector.
-  \item \code{gr} Gradient function which calculates the gradient vector
-  given input parameter vector.
-  \item \code{he} If available, the hessian matrix (second derivatives)
-  of the function w.r.t. the parameters at the given values.
-  \item \code{fg} A function which, given the parameter vector, calculates
-  both the objective value and gradient, returning a list with members
-  \code{fn} and \code{gr}, respectively.
-  \item \code{x0} Standard starting point.
-  \item \code{fmin} reported minimum
-  \item \code{xmin} parameters at reported minimum
+\item \code{fn}: Objective function. It takes a numeric parameter vector and returns
+the scalar objective value.
+\item \code{gr}: Gradient function. It takes a numeric parameter vector and returns
+the gradient vector.
+\item \code{he}: Hessian function. It takes a numeric parameter vector and returns the
+Hessian matrix of second derivatives.
+\item \code{fg}: Combined objective and gradient function. It takes a numeric
+parameter vector and returns a list with members \code{fn} and \code{gr}.
+\item \code{x0}: Suggested starting point. For fixed-dimension problems this is a
+numeric vector; for variable-dimension problems this is a function that
+returns a numeric vector for a requested \code{n}.
+\item \code{fmin}: Reported minimum objective value.
+\item \code{xmin}: Numeric vector at a reported minimum.
 }
+
+Some factories also include \code{m}, a metadata field for the number of summand
+functions. It is absent for most factories, \code{NA} for several legacy fixed
+problems, and numeric for \code{linfun_fr()}, \code{linfun_r1()}, \code{linfun_r1z()}, and
+\code{trigon()}. It is not part of the core return contract needed by optimizers.
 }
 \description{
-Test function 8 from the More', Garbow and Hillstrom paper.
+Test function 8 from the Moré, Garbow and Hillstrom paper.
 }
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
 
 \itemize{
-  \item Dimensions: Number of parameters \code{n = 3}, number of summand
-  functions \code{m = 15}.
-  \item Minima: \code{f = 8.214877e-3} at c(0.08241056, 1.133036, 2.343695)
-   Solvers terminate with \code{f} near 17 for parameter 1 in 0.84 to 0.89 approximately
-   and large negative values of the other two parameters.
+\item Dimensions: Number of parameters \code{n = 3}, number of summand
+functions \code{m = 15}.
+\item Minima: \code{f = 8.214877e-3} at c(0.08241056, 1.133036, 2.343695)
+Solvers terminate with \code{f} near 17 for parameter 1 in 0.84 to 0.89 approximately
+and large negative values of the other two parameters.
 }
 }
 \examples{
@@ -48,14 +54,14 @@ res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
 res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 }
 \references{
-More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
+Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{doi.org/10.1145/355934.355936}
+\doi{10.1145/355934.355936}
 
 Bard, Y. (1970).
 Comparison of gradient methods for the solution of nonlinear parameter
 estimation problems.
 \emph{SIAM Journal on Numerical Analysis}, \emph{7}(1), 157-186.
-\doi{dx.doi.org/10.1137/0707011}
+\doi{10.1137/0707011}
 }

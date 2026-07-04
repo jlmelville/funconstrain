@@ -1,6 +1,6 @@
 #' Rosenbrock Function
 #'
-#' Test function 1 from the More', Garbow and Hillstrom paper.
+#' Test function 1 from the Moré, Garbow and Hillstrom paper.
 #'
 #' The objective function is the sum of \code{m} functions, each of \code{n}
 #' parameters.
@@ -11,27 +11,17 @@
 #'   \item Minima: \code{f = 0} at \code{(1, 1)}
 #' }
 #'
-#' @return A list containing:
-#' \itemize{
-#'   \item \code{fn} Objective function which calculates the value given input
-#'   parameter vector.
-#'   \item \code{gr} Gradient function which calculates the gradient vector
-#'   given input parameter vector.
-#'   \item \code{fg} A function which, given the parameter vector, calculates
-#'   both the objective value and gradient, returning a list with members
-#'   \code{fn} and \code{gr}, respectively.
-#'   \item \code{x0} Standard starting point.
-#' }
+#' @template factory-return
 #' @references
-#' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
+#' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{doi.org/10.1145/355934.355936}
+#' \doi{10.1145/355934.355936}
 #'
 #' Rosenbrock, H. (1960).
 #' An automatic method for finding the greatest or least value of a function.
 #' \emph{The Computer Journal}, \emph{3}(3), 175-184.
-#' \doi{doi.org/10.1093/comjnl/3.3.175}
+#' \doi{10.1093/comjnl/3.3.175}
 #'
 #' @examples
 #' fun <- rosen()

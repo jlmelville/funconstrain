@@ -1,6 +1,6 @@
 #' Freudenstein and Roth Function
 #'
-#' Test function 2 from the More', Garbow and Hillstrom paper.
+#' Test function 2 from the Moré, Garbow and Hillstrom paper.
 #'
 #' The objective function is the sum of \code{m} functions, each of \code{n}
 #' parameters.
@@ -12,29 +12,17 @@
 #'   \code{f = 48.9842...} at \code{(11.41..., -0.8968...)}
 #' }
 #'
-#' @return A list containing:
-#' \itemize{
-#'   \item \code{fn} Objective function which calculates the value given input
-#'   parameter vector.
-#'   \item \code{gr} Gradient function which calculates the gradient vector
-#'   given input parameter vector.
-#'   \item \code{he} If available, the hessian matrix (second derivatives)
-#'   of the function w.r.t. the parameters at the given values.
-#'   \item \code{fg} A function which, given the parameter vector, calculates
-#'   both the objective value and gradient, returning a list with members
-#'   \code{fn} and \code{gr}, respectively.
-#'   \item \code{x0} Standard starting point.
-#' }
+#' @template factory-return
 #' @references
-#' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
+#' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{doi.org/10.1145/355934.355936}
+#' \doi{10.1145/355934.355936}
 #'
 #' Freudenstein, F., & Roth, B. (1963).
 #' Numerical solution of systems of nonlinear equations.
 #' \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
-#' \doi{doi.org/10.1145/321186.321200}
+#' \doi{10.1145/321186.321200}
 #'
 #' @examples
 #' fun <- freud_roth()

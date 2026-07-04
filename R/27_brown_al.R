@@ -1,6 +1,6 @@
 #' Brown Almost-Linear Function
 #'
-#' Test function 27 from the More', Garbow and Hillstrom paper.
+#' Test function 27 from the Moré, Garbow and Hillstrom paper.
 #'
 #' The objective function is the sum of \code{m} functions, each of \code{n}
 #' parameters.
@@ -18,40 +18,25 @@
 #' the parameter vector passed to the objective and gradient functions that this
 #' function creates. See the 'Examples' section.
 #'
-#' @return A list containing:
-#' \itemize{
-#'   \item \code{fn} Objective function which calculates the value given input
-#'   parameter vector.
-#'   \item \code{gr} Gradient function which calculates the gradient vector
-#'   given input parameter vector.
-#'   \item \code{he} If available, the hessian matrix (second derivatives)
-#'   of the function w.r.t. the parameters at the given values.
-#'   \item \code{fg} A function which, given the parameter vector, calculates
-#'   both the objective value and gradient, returning a list with members
-#'   \code{fn} and \code{gr}, respectively.
-#'   \item \code{x0} Function returning the standard starting point, given
-#'   \code{n}, the number of variables desired.
-#'   \item \code{fmin} reported minimum
-#'   \item \code{xmin} parameters at reported minimum
-#' }
+#' @template factory-return
 #' @references
-#' More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
+#' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
 #' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{doi.org/10.1145/355934.355936}
+#' \doi{10.1145/355934.355936}
 #'
 #' Brown, K. M. (1969).
 #' A quadratically convergent Newton-like method based upon Gaussian
 #' elimination.
 #' \emph{SIAM Journal on Numerical Analysis}, \emph{6}(4), 560-569.
-#' \doi{dx.doi.org/10.1137/0706051}
+#' \doi{10.1137/0706051}
 #'
 #' @examples
 #' bal <- brown_al()
 #' # 6 variable problem using the standard starting point
 #' x0_6 <- bal$x0(6)
 #' res_6 <- stats::optim(x0_6, bal$fn, bal$gr, method = "L-BFGS-B")
-#' # Standing starting point with 8 variables
+#' # Standard starting point with 8 variables
 #' res_8 <- stats::optim(bal$x0(8), bal$fn, bal$gr, method = "L-BFGS-B")
 #' # Create your own 4 variable starting point
 #' res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), bal$fn, bal$gr,

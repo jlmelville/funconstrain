@@ -11,37 +11,43 @@ biggs_exp6(m = 13)
 equal to or greater than 6.}
 }
 \value{
-A list containing:
+A list containing the core problem contract:
 \itemize{
-  \item \code{fn} Objective function which calculates the value given input
-  parameter vector.
-  \item \code{gr} Gradient function which calculates the gradient vector
-  given input parameter vector.
-  \item \code{he} If available, the hessian matrix (second derivatives)
-  of the function w.r.t. the parameters at the given values.
-  \item \code{fg} A function which, given the parameter vector, calculates
-  both the objective value and gradient, returning a list with members
-  \code{fn} and \code{gr}, respectively.
-  \item \code{x0} Standard starting point.
-  \item \code{fmin} reported minimum
-  \item \code{xmin} parameters at reported minimum
+\item \code{fn}: Objective function. It takes a numeric parameter vector and returns
+the scalar objective value.
+\item \code{gr}: Gradient function. It takes a numeric parameter vector and returns
+the gradient vector.
+\item \code{he}: Hessian function. It takes a numeric parameter vector and returns the
+Hessian matrix of second derivatives.
+\item \code{fg}: Combined objective and gradient function. It takes a numeric
+parameter vector and returns a list with members \code{fn} and \code{gr}.
+\item \code{x0}: Suggested starting point. For fixed-dimension problems this is a
+numeric vector; for variable-dimension problems this is a function that
+returns a numeric vector for a requested \code{n}.
+\item \code{fmin}: Reported minimum objective value.
+\item \code{xmin}: Numeric vector at a reported minimum.
 }
+
+Some factories also include \code{m}, a metadata field for the number of summand
+functions. It is absent for most factories, \code{NA} for several legacy fixed
+problems, and numeric for \code{linfun_fr()}, \code{linfun_r1()}, \code{linfun_r1z()}, and
+\code{trigon()}. It is not part of the core return contract needed by optimizers.
 }
 \description{
-Test function 18 from the More', Garbow and Hillstrom paper.
+Test function 18 from the Moré, Garbow and Hillstrom paper.
 }
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
 
 \itemize{
-  \item Dimensions: Number of parameters \code{n = 6}, number of summand
-  functions \code{m >= n}.
-  \item Minima: \code{f = 5.65565...e-3} if \code{m = 13};
-  not reported in the MGH (1981) paper is \code{(f = 0)} at
-  \code{c(1, 10, 1, 5, 4, 3)} and \code{c(4, 10, 3, 5, 1, 1)}
-  (and probably others) for all \code{m} (probably: I stopped testing after
-  \code{m = 1000}).
+\item Dimensions: Number of parameters \code{n = 6}, number of summand
+functions \code{m >= n}.
+\item Minima: \code{f = 5.65565...e-3} if \code{m = 13};
+not reported in the MGH (1981) paper is \code{(f = 0)} at
+\code{c(1, 10, 1, 5, 4, 3)} and \code{c(4, 10, 3, 5, 1, 1)}
+(and probably others) for all \code{m} (probably: I stopped testing after
+\code{m = 1000}).
 }
 }
 \examples{
@@ -58,10 +64,10 @@ fun20 <- biggs_exp6(m = 20)
 res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 }
 \references{
-More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
+Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{doi.org/10.1145/355934.355936}
+\doi{10.1145/355934.355936}
 
 Biggs, M. C. (1971).
 Minimization algorithms making use of non-quadratic properties of the

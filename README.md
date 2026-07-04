@@ -26,18 +26,17 @@ package?funconstrain
 ## Examples
 
 It's pretty simple. You call a function named after the test problem at hand,
-and get back a list. That list contains: a function that implements the 
-objective function; a function that implements the gradient; a function that
-calculates the objective and the gradient in one go (if your fancy optimization
-routine supports that); and a suggested starting point, which is also a function
-if the test problem supports different dimensionalities, and is a plain numeric
-vector otherwise.
+and get back a list. That list contains functions that implement the objective,
+gradient, Hessian, and combined objective-plus-gradient calculation; a suggested
+starting point, which is also a function if the test problem supports different
+dimensionalities and is a plain numeric vector otherwise; and reported `fmin`
+and `xmin` values from the source material.
 
 ```R
 # The famous Rosenbrock function is a problem with two parameters
 rbrock <- rosen()
 
-# rbrock is a list containing function (fn), gradient (gr) and starting point (x0, a 2D numeric vector)
+# rbrock is a list containing fn, gr, he, fg, x0, fmin, and xmin
 # Pass them to an optimization method:
 res <- stats::optim(par = rbrock$x0, fn = rbrock$fn, gr = rbrock$gr, method = "L-BFGS-B")
 # Or feel free to ignore the suggested starting point and use your own:
@@ -72,6 +71,8 @@ There are unit tests for each test problem which ensure that:
 
 * The analytical gradients match finite difference estimates at the suggested
 starting point.
+* The Hessians have the expected shape and symmetry at the suggested starting
+point.
 * If the location of a minima was given in the paper, that the analytical
 gradient is close to zero at that location.
 * If the location of a minima was given in the paper, that the objective
@@ -92,7 +93,7 @@ clarity and potentially fast vectorized computations (I have not done any
 profiling). But I consciously eschewed the use of  `apply` `sweep` or other 
 cleverness. 
 
-I think I have elided the most gratuitious inefficiencies, such as unnecessary
+I think I have elided the most gratuitous inefficiencies, such as unnecessary
 recomputation of values inside loops.
 
 ## See also

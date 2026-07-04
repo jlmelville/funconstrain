@@ -7,32 +7,40 @@
 freud_roth()
 }
 \value{
-A list containing:
+A list containing the core problem contract:
 \itemize{
-  \item \code{fn} Objective function which calculates the value given input
-  parameter vector.
-  \item \code{gr} Gradient function which calculates the gradient vector
-  given input parameter vector.
-  \item \code{he} If available, the hessian matrix (second derivatives)
-  of the function w.r.t. the parameters at the given values.
-  \item \code{fg} A function which, given the parameter vector, calculates
-  both the objective value and gradient, returning a list with members
-  \code{fn} and \code{gr}, respectively.
-  \item \code{x0} Standard starting point.
+\item \code{fn}: Objective function. It takes a numeric parameter vector and returns
+the scalar objective value.
+\item \code{gr}: Gradient function. It takes a numeric parameter vector and returns
+the gradient vector.
+\item \code{he}: Hessian function. It takes a numeric parameter vector and returns the
+Hessian matrix of second derivatives.
+\item \code{fg}: Combined objective and gradient function. It takes a numeric
+parameter vector and returns a list with members \code{fn} and \code{gr}.
+\item \code{x0}: Suggested starting point. For fixed-dimension problems this is a
+numeric vector; for variable-dimension problems this is a function that
+returns a numeric vector for a requested \code{n}.
+\item \code{fmin}: Reported minimum objective value.
+\item \code{xmin}: Numeric vector at a reported minimum.
 }
+
+Some factories also include \code{m}, a metadata field for the number of summand
+functions. It is absent for most factories, \code{NA} for several legacy fixed
+problems, and numeric for \code{linfun_fr()}, \code{linfun_r1()}, \code{linfun_r1z()}, and
+\code{trigon()}. It is not part of the core return contract needed by optimizers.
 }
 \description{
-Test function 2 from the More', Garbow and Hillstrom paper.
+Test function 2 from the Moré, Garbow and Hillstrom paper.
 }
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
 
 \itemize{
-  \item Dimensions: Number of parameters \code{n = 2}, number of summand
-  functions \code{m = 2}.
-  \item Minima: \code{f = 0} at \code{(5, 4)},
-  \code{f = 48.9842...} at \code{(11.41..., -0.8968...)}
+\item Dimensions: Number of parameters \code{n = 2}, number of summand
+functions \code{m = 2}.
+\item Minima: \code{f = 0} at \code{(5, 4)},
+\code{f = 48.9842...} at \code{(11.41..., -0.8968...)}
 }
 }
 \examples{
@@ -45,13 +53,13 @@ res_x0 <- stats::optim(par = x0, fn = fun$fn, gr = fun$gr, method =
 res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 }
 \references{
-More', J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
+Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{doi.org/10.1145/355934.355936}
+\doi{10.1145/355934.355936}
 
 Freudenstein, F., & Roth, B. (1963).
 Numerical solution of systems of nonlinear equations.
 \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
-\doi{doi.org/10.1145/321186.321200}
+\doi{10.1145/321186.321200}
 }
