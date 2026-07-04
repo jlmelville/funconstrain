@@ -1,7 +1,7 @@
 Package: funconstrain
 Type: Package
 Title: Functions for Testing Unconstrained Numerical Optimization
-Version: 0.0.0.9004
+Version: 0.1.0
 Date: 2024-04-09
 Authors@R: c( person(given = "James", family = "Melville", email = "jlmelville@gmail.com",
                     role = c("aut", "cre") ), 
