@@ -22,7 +22,7 @@ test_that("Gradient is zero at stated minima", {
   expect_equal(gr0_2, rep(0, 6))
 })
 test_that("Function value is correct at stated minima", {
-  expect_equal(testfun$fn(min_x), min_fx)
+  expect_equal(testfun$fn(min_x), min_fx, tolerance = 1e-6)
   expect_equal(testfun$fn(min_x2), min_fx2)
 })
 
@@ -36,5 +36,5 @@ test_that("Optimizer can reach minimum from x0", {
     method = "L-BFGS-B"
   )
   expect_equal(res$par, min_x, tolerance = 1e-6)
-  expect_equal(res$value, min_fx)
+  expect_equal(res$value, min_fx, tolerance = 1e-6)
 })

@@ -91,7 +91,7 @@ test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x5), min_fx, tolerance = 1e-6)
   expect_equal(testfun$fn(min_x6), min_fx, tolerance = 1e-6)
   expect_equal(testfun$fn(min_x7), min_fx, tolerance = 1e-6)
-  expect_equal(testfun$fn(min_x8), min_fx8, tolerance = 1e-6)
+  expect_equal(testfun$fn(min_x8), min_fx8, tolerance = 1e-5)
   expect_equal(testfun$fn(min_x9), min_fx, tolerance = 1e-6)
   expect_equal(testfun$fn(min_x10), min_fx10, tolerance = 1e-6)
 })

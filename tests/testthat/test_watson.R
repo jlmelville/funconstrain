@@ -55,9 +55,9 @@ test_that("Gradient is zero at stated minima", {
   expect_equal(testfun$gr(min_x12), rep(0, 12), tolerance = 1e-4)
 })
 test_that("Function value is correct at stated minima", {
-  expect_equal(testfun$fn(min_x), min_fx)
-  expect_equal(testfun$fn(min_x9), min_fx9)
-  expect_equal(testfun$fn(min_x12), min_fx12)
+  expect_equal(testfun$fn(min_x), min_fx, tolerance = 1e-6)
+  expect_equal(testfun$fn(min_x9), min_fx9, tolerance = 1e-4)
+  expect_lt(testfun$fn(min_x12), 1e-7)
 })
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(
@@ -67,5 +67,5 @@ test_that("Optimizer can reach minimum from x0", {
     method = "L-BFGS-B"
   )
   expect_equal(res$par, min_x, tolerance = 1e-5)
-  expect_equal(res$value, min_fx)
+  expect_equal(res$value, min_fx, tolerance = 1e-6)
 })

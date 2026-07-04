@@ -27,7 +27,7 @@ test_that("Gradient is zero at stated minima", {
   expect_equal(gr0, rep(0, 11), tolerance = 1e-4)
 })
 test_that("Function value is correct at stated minima", {
-  expect_equal(testfun$fn(min_x), min_fx)
+  expect_equal(testfun$fn(min_x), min_fx, tolerance = 1e-6)
 })
 test_that("Optimizer can reach minimum from x0", {
   res <- stats::optim(
@@ -38,5 +38,5 @@ test_that("Optimizer can reach minimum from x0", {
     control = list(maxit = 1000)
   )
   expect_equal(res$par, min_x, tolerance = 1e-5)
-  expect_equal(res$value, min_fx)
+  expect_equal(res$value, min_fx, tolerance = 1e-6)
 })

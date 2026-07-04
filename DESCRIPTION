@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Suggests: 
-    testthat,
+    testthat (>= 3.0.0),
     optimx,
     knitr,
     rmarkdown,
@@ -28,3 +28,4 @@ BugReports: https://github.com/jlmelville/funconstrain/issues
 VignetteBuilder: knitr
 Config/Needs/website: pkgdown
 Config/roxygen2/version: 8.0.0
+Config/testthat/edition: 3
