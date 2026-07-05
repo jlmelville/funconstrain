@@ -1,7 +1,7 @@
 # funconstrain
 
 [![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/jlmelville/funconstrain/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/test-coverage.yaml)
+[![codecov](https://codecov.io/gh/jlmelville/funconstrain/branch/main/graph/badge.svg)](https://app.codecov.io/gh/jlmelville/funconstrain?branch=master)
 
 An R Package of Functions for Testing Unconstrained Numerical
 Optimization.
