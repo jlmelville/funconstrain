@@ -672,11 +672,11 @@ fufnrun <- function(filename = "RFO.txt") {
   cat("methods in list form:")
   print(methc)
   tbounds <- readLines(mycon, n = 1)
-  have.bounds <- FALSE
+  have_bounds <- FALSE
   if (tbounds == "TRUE") {
-    have.bounds <- TRUE
+    have_bounds <- TRUE
   }
-  cat("have.bounds:", have.bounds, "\n")
+  cat("have.bounds:", have_bounds, "\n")
   close(mycon)
   mycon_open <- FALSE
   for (iprob in probc) {
@@ -685,7 +685,7 @@ fufnrun <- function(filename = "RFO.txt") {
     # print(tfun)
     cat("Problem:", tfun$fname, "\n")
     x0 <- tfun$x0
-    if (have.bounds) {
+    if (have_bounds) {
       lo <- tfun$lo
       up <- tfun$up
     } else {
@@ -699,7 +699,7 @@ fufnrun <- function(filename = "RFO.txt") {
     nx0 <- length(x0)
     #   cat("about to call opm\n")
 
-    if (have.bounds) {
+    if (have_bounds) {
       t21 <- optimx::opm(
         x0,
         tfn,
