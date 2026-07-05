@@ -3,7 +3,8 @@ title: "Running funconstrain tests in package optimx"
 author: "John C. Nash (profjcnash _at_ gmail.com)"
 date: "2024-04-08"
 output:
-  pdf_document
+  pdf_document:
+    citation_package: natbib
 bibliography: Extend-optimx.bib
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
