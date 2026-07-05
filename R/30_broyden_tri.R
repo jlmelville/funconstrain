@@ -2,16 +2,14 @@
 #'
 #' Test function 30 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n} variable, number of summand
-#'   functions \code{m = n}.
-#'   \item Minima: \code{f = 0}.
-#' }
+#' - Dimensions: Number of parameters `n` variable, number of summand
+#'   functions `m = n`.
+#' - Minima: `f = 0`.
 #'
-#' The number of parameters, \code{n}, in the objective function is not
+#' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of
 #' the parameter vector passed to the objective and gradient functions that this
 #' function creates. See the 'Examples' section.
@@ -20,13 +18,13 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Broyden, C. G. (1965).
 #' A class of methods for solving nonlinear simultaneous equations.
-#' \emph{Mathematics of computation}, \emph{19}(92), 577-593.
-#' \doi{10.2307/2003941}
+#' *Mathematics of computation*, *19*(92), 577-593.
+#' <https://doi.org/10.2307/2003941>
 #'
 #' @examples
 #' btri <- broyden_tri()

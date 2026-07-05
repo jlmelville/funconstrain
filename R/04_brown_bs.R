@@ -2,21 +2,19 @@
 #'
 #' Test function 4 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
-#'   functions \code{m = 3}.
-#'   \item Minima: \code{f = 0} at \code{(1e6, 2e-6) },
-#' }
+#' - Dimensions: Number of parameters `n = 2`, number of summand
+#'   functions `m = 3`.
+#' - Minima: `f = 0` at `(1e6, 2e-6) `,
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' @examples
 #' fun <- brown_bs()

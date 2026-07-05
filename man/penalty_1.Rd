@@ -35,12 +35,11 @@ Test function 23 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable, number of summand
 functions \code{m = n + 1}.
-\item Minima: \code{f = 2.24997...e-5} if \code{n = 4};
-\code{f = 7.08765...e-5} if \code{n = 10}.
+\item Minima: \verb{f = 2.24997...e-5} if \code{n = 4};
+\verb{f = 7.08765...e-5} if \code{n = 10}.
 }
 
 The number of parameters, \code{n}, in the objective function is not
@@ -63,7 +62,7 @@ res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), pen1$fn, pen1$gr,
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Gill, P. E., Murray, W., & Pitfield, R. A. (1972).
 \emph{The implementation of two revised quasi-Newton algorithms for

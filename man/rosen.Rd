@@ -35,11 +35,10 @@ Test function 1 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 2}, number of summand
 functions \code{m = 2}.
-\item Minima: \code{f = 0} at \code{(1, 1)}
+\item Minima: \code{f = 0} at \verb{(1, 1)}
 }
 }
 \examples{
@@ -55,10 +54,10 @@ res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Rosenbrock, H. (1960).
 An automatic method for finding the greatest or least value of a function.
 \emph{The Computer Journal}, \emph{3}(3), 175-184.
-\doi{10.1093/comjnl/3.3.175}
+\url{https://doi.org/10.1093/comjnl/3.3.175}
 }

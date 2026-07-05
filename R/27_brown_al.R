@@ -2,18 +2,16 @@
 #'
 #' Test function 27 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n} variable, number of summand
-#'   functions \code{m = n}.
-#'   \item Minima: \code{f = 0} at \code{(a, a, a, ..., a ^ (1 - n))}, where
-#'   \code{a} satisfies \code{n * a ^ n - (n + 1) * a ^ (n - 1) + 1 = 0};
-#'   \code{f = 1} at \code{c(0, 0, ..., n + 1)}.
-#' }
+#' - Dimensions: Number of parameters `n` variable, number of summand
+#'   functions `m = n`.
+#' - Minima: `f = 0` at `(a, a, a, ..., a ^ (1 - n))`, where
+#'   `a` satisfies `n * a ^ n - (n + 1) * a ^ (n - 1) + 1 = 0`;
+#'   `f = 1` at `c(0, 0, ..., n + 1)`.
 #'
-#' The number of parameters, \code{n}, in the objective function is not
+#' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of
 #' the parameter vector passed to the objective and gradient functions that this
 #' function creates. See the 'Examples' section.
@@ -22,14 +20,14 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Brown, K. M. (1969).
 #' A quadratically convergent Newton-like method based upon Gaussian
 #' elimination.
-#' \emph{SIAM Journal on Numerical Analysis}, \emph{6}(4), 560-569.
-#' \doi{10.1137/0706051}
+#' *SIAM Journal on Numerical Analysis*, *6*(4), 560-569.
+#' <https://doi.org/10.1137/0706051>
 #'
 #' @examples
 #' bal <- brown_al()

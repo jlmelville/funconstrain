@@ -2,18 +2,16 @@
 #'
 #' Test function 20 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{2 <= n <= 31}, number of
-#'   summand functions \code{m = 31}.
-#'   \item Minima: \code{f = 2.28767...e-3} if \code{n = 6};
-#'   \code{f = 1.39976...e-6} if \code{n = 9};
-#'   \code{f = 4.72238...e-10} if \code{n = 12}
-#' }
+#' - Dimensions: Number of parameters `2 <= n <= 31`, number of
+#'   summand functions `m = 31`.
+#' - Minima: `f = 2.28767...e-3` if `n = 6`;
+#'   `f = 1.39976...e-6` if `n = 9`;
+#'   `f = 4.72238...e-10` if `n = 12`
 #'
-#' The number of parameters, \code{n}, in the objective function is not
+#' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of
 #' the parameter vector passed to the objective and gradient functions that this
 #' function creates. See the 'Examples' section.
@@ -22,11 +20,11 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Kowalik, J. S., & Osborne, M. R. (1968).
-#' \emph{Methods for unconstrained optimization problems.}
+#' *Methods for unconstrained optimization problems.*
 #' New York, NY: Elsevier North-Holland.
 #' @examples
 #' wat <- watson()

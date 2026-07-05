@@ -39,12 +39,11 @@ Test function 34 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable, number of
 summand functions \code{m >= n}.
 \item Minima: \code{f = (m * m  + 3 * m - 6) / (2 * (2 * m - 3))} at any
-set of points \code{x[j]} with \code{j = 2, ..., n - 1} where the sum of
+set of points \code{x[j]} with \verb{j = 2, ..., n - 1} where the sum of
 \code{j * x[j] = 3 / (2 * m - 3)}.
 }
 
@@ -74,5 +73,5 @@ linr1z_m20$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 }

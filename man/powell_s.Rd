@@ -35,7 +35,6 @@ Test function 13 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 4}, number of summand
 functions \code{m = 4}.
@@ -56,11 +55,11 @@ res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Powell, M. J. D. (1962).
 An iterative method for finding stationary values of a function of several
 variables.
 \emph{The Computer Journal}, \emph{5}(2), 147-151.
-\doi{10.1093/comjnl/5.2.147}
+\url{https://doi.org/10.1093/comjnl/5.2.147}
 }

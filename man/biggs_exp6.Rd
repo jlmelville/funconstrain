@@ -39,11 +39,10 @@ Test function 18 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 6}, number of summand
 functions \code{m >= n}.
-\item Minima: \code{f = 5.65565...e-3} if \code{m = 13};
+\item Minima: \verb{f = 5.65565...e-3} if \code{m = 13};
 not reported in the MGH (1981) paper is \code{(f = 0)} at
 \code{c(1, 10, 1, 5, 4, 3)} and \code{c(4, 10, 3, 5, 1, 1)}
 (and probably others) for all \code{m} (probably: I stopped testing after
@@ -67,7 +66,7 @@ res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Biggs, M. C. (1971).
 Minimization algorithms making use of non-quadratic properties of the

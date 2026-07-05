@@ -35,7 +35,6 @@ Test function 21 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable but even, number
 of summand functions \code{m = n}.
@@ -62,7 +61,7 @@ res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), exros$fn, exros$gr,
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Spedicato, E. (1975).
 \emph{Computational experience with quasi-Newton algorithms for minimization

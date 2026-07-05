@@ -2,18 +2,16 @@
 #'
 #' Test function 6 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
-#'   functions \code{m >= n}.
-#'   \item Minima: \code{f = 124.362...} at \code{(x1 = x2 = 0.2578)} for
-#'   \code{m = 10},
-#' }
+#' - Dimensions: Number of parameters `n = 2`, number of summand
+#'   functions `m >= n`.
+#' - Minima: `f = 124.362...` at `(x1 = x2 = 0.2578)` for
+#'   `m = 10`,
 #'
-#' @note This test problem isn't really unconstrained. \code{x1} must take
-#' a value between \code{(-1, 1)}. Included for the sake of completeness.
+#' @note This test problem isn't really unconstrained. `x1` must take
+#' a value between `(-1, 1)`. Included for the sake of completeness.
 #'
 #' @param m Number of summand functions in the objective function. Should be
 #'   equal to or greater than 2.
@@ -21,12 +19,12 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Jennrich, R. I., & Sampson, P. F. (1968).
 #' Application of stepwise regression to non-linear estimation.
-#' \emph{Technometrics}, \emph{10}(1), 63-72.
+#' *Technometrics*, *10*(1), 63-72.
 #'
 #' @examples
 #' # Use m = 10 summand functions

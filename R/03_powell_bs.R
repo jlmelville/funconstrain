@@ -2,26 +2,24 @@
 #'
 #' Test function 3 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
-#'   functions \code{m = 2}.
-#'   \item Minima: \code{f = 0} at \code{(1.098... e-5, 9.106...) },
-#' }
+#' - Dimensions: Number of parameters `n = 2`, number of summand
+#'   functions `m = 2`.
+#' - Minima: `f = 0` at `(1.098... e-5, 9.106...) `,
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Powell, M. J. D. (1970).
 #' A hybrid method for nonlinear equations.
 #' In P. Rabinowitz (Ed.),
-#' \emph{Numerical Methods for Nonlinear Algebraic Equations} (pp87-114).
+#' *Numerical Methods for Nonlinear Algebraic Equations* (pp87-114).
 #' New York: Gordon & Breach.
 #'
 #' @examples

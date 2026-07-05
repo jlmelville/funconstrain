@@ -2,27 +2,25 @@
 #'
 #' Test function 13 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 4}, number of summand
-#'   functions \code{m = 4}.
-#'   \item Minima: \code{f = 0} at \code{rep(0, 4)}.
-#' }
+#' - Dimensions: Number of parameters `n = 4`, number of summand
+#'   functions `m = 4`.
+#' - Minima: `f = 0` at `rep(0, 4)`.
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Powell, M. J. D. (1962).
 #' An iterative method for finding stationary values of a function of several
 #' variables.
-#' \emph{The Computer Journal}, \emph{5}(2), 147-151.
-#' \doi{10.1093/comjnl/5.2.147}
+#' *The Computer Journal*, *5*(2), 147-151.
+#' <https://doi.org/10.1093/comjnl/5.2.147>
 #'
 #' @examples
 #' fun <- powell_s()

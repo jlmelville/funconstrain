@@ -39,17 +39,16 @@ Test function 6 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 2}, number of summand
 functions \code{m >= n}.
-\item Minima: \code{f = 124.362...} at \code{(x1 = x2 = 0.2578)} for
+\item Minima: \verb{f = 124.362...} at \code{(x1 = x2 = 0.2578)} for
 \code{m = 10},
 }
 }
 \note{
 This test problem isn't really unconstrained. \code{x1} must take
-a value between \code{(-1, 1)}. Included for the sake of completeness.
+a value between \verb{(-1, 1)}. Included for the sake of completeness.
 }
 \examples{
 # Use m = 10 summand functions
@@ -73,7 +72,7 @@ lower = -1, upper = 1)
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Jennrich, R. I., & Sampson, P. F. (1968).
 Application of stepwise regression to non-linear estimation.

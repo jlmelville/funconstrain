@@ -35,11 +35,10 @@ Test function 27 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable, number of summand
 functions \code{m = n}.
-\item Minima: \code{f = 0} at \code{(a, a, a, ..., a ^ (1 - n))}, where
+\item Minima: \code{f = 0} at \verb{(a, a, a, ..., a ^ (1 - n))}, where
 \code{a} satisfies \code{n * a ^ n - (n + 1) * a ^ (n - 1) + 1 = 0};
 \code{f = 1} at \code{c(0, 0, ..., n + 1)}.
 }
@@ -64,11 +63,11 @@ res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), bal$fn, bal$gr,
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Brown, K. M. (1969).
 A quadratically convergent Newton-like method based upon Gaussian
 elimination.
 \emph{SIAM Journal on Numerical Analysis}, \emph{6}(4), 560-569.
-\doi{10.1137/0706051}
+\url{https://doi.org/10.1137/0706051}
 }

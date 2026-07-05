@@ -2,17 +2,15 @@
 #'
 #' Test function 23 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n} variable, number of summand
-#'   functions \code{m = n + 1}.
-#'   \item Minima: \code{f = 2.24997...e-5} if \code{n = 4};
-#'   \code{f = 7.08765...e-5} if \code{n = 10}.
-#' }
+#' - Dimensions: Number of parameters `n` variable, number of summand
+#'   functions `m = n + 1`.
+#' - Minima: `f = 2.24997...e-5` if `n = 4`;
+#'   `f = 7.08765...e-5` if `n = 10`.
 #'
-#' The number of parameters, \code{n}, in the objective function is not
+#' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of
 #' the parameter vector passed to the objective and gradient functions that this
 #' function creates. See the 'Examples' section.
@@ -21,12 +19,12 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Gill, P. E., Murray, W., & Pitfield, R. A. (1972).
-#' \emph{The implementation of two revised quasi-Newton algorithms for
-#' unconstrained optimization} (Report NAC-11).
+#' *The implementation of two revised quasi-Newton algorithms for
+#' unconstrained optimization* (Report NAC-11).
 #' Teddington, London: National Physical Laboratory, Division of Numerical
 #' Analysis and Computing.
 #' @examples

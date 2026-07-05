@@ -2,21 +2,19 @@
 #'
 #' Test function 9 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
-#'   functions \code{m = 15}.
-#'   \item Minima: \code{f = 1.12793...e-8}.
-#' }
+#' - Dimensions: Number of parameters `n = 3`, number of summand
+#'   functions `m = 15`.
+#' - Minima: `f = 1.12793...e-8`.
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' @examples
 #' fun <- gauss()

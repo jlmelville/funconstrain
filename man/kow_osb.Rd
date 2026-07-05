@@ -35,12 +35,11 @@ Test function 15 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 4}, number of summand
 functions \code{m = 11}.
-\item Minima: \code{f = 3.07505...e-4};
-and \code{f = 1.02734...e-3} at \code{(Inf, -14.07..., -Inf, -Inf)}.
+\item Minima: \verb{f = 3.07505...e-4};
+and \verb{f = 1.02734...e-3} at \verb{(Inf, -14.07..., -Inf, -Inf)}.
 }
 }
 \examples{
@@ -57,7 +56,7 @@ res <- stats::optim(c(0.1, 0.2, 0.3, 0.4), fun$fn, fun$gr, method =
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Kowalik, J. S., & Osborne, M. R. (1968).
 \emph{Methods for unconstrained optimization problems.}

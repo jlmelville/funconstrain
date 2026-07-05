@@ -35,12 +35,11 @@ Test function 2 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 2}, number of summand
 functions \code{m = 2}.
-\item Minima: \code{f = 0} at \code{(5, 4)},
-\code{f = 48.9842...} at \code{(11.41..., -0.8968...)}
+\item Minima: \code{f = 0} at \verb{(5, 4)},
+\verb{f = 48.9842...} at \verb{(11.41..., -0.8968...)}
 }
 }
 \examples{
@@ -56,10 +55,10 @@ res <- stats::optim(c(0.1, 0.2), fun$fn, fun$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Freudenstein, F., & Roth, B. (1963).
 Numerical solution of systems of nonlinear equations.
 \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
-\doi{10.1145/321186.321200}
+\url{https://doi.org/10.1145/321186.321200}
 }

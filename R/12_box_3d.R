@@ -2,15 +2,13 @@
 #'
 #' Test function 12 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
-#'   functions \code{m >= n}.
-#'   \item Minima: \code{f = 0} at \code{(1, 10, 1), (10, 1, -1)} and
-#'     where \code{x1 = x2} and \code{x3 = 0}.
-#' }
+#' - Dimensions: Number of parameters `n = 3`, number of summand
+#'   functions `m >= n`.
+#' - Minima: `f = 0` at `(1, 10, 1), (10, 1, -1)` and
+#'     where `x1 = x2` and `x3 = 0`.
 #'
 #' @param m Number of summand functions in the objective function. Should be
 #'   equal to or greater than 3.
@@ -18,14 +16,14 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Box, M. J. (1966).
 #' A comparison of several current optimization methods, and the use of
 #' transformations in constrained problems.
-#' \emph{The Computer Journal}, \emph{9}(1), 67-77.
-#' \doi{10.1093/comjnl/9.1.67}
+#' *The Computer Journal*, *9*(1), 67-77.
+#' <https://doi.org/10.1093/comjnl/9.1.67>
 #'
 #' @examples
 #' # Use 10 summand functions

@@ -35,14 +35,12 @@ Test function 35 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable, number of
 summand functions \code{m = n}.
-\item Minima: \code{f = 0} for \code{m = n}, \code{1 <= n <= 7} and \code{n
-  = 9};
-\code{f = 3.51687...e-3} for \code{m = n = 8};
-\code{f = 6.50395...e-3} for \code{m = n = 10}.
+\item Minima: \code{f = 0} for \code{m = n}, \verb{1 <= n <= 7} and \code{n = 9};
+\verb{f = 3.51687...e-3} for \code{m = n = 8};
+\verb{f = 6.50395...e-3} for \code{m = n = 10}.
 }
 
 The number of parameters, \code{n}, in the objective function is not
@@ -65,10 +63,10 @@ res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), cheb$fn, cheb$gr, method =
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Fletcher, R. (1965).
 Function minimization without evaluating derivatives - a review.
 \emph{The Computer Journal}, \emph{8}(1), 33-41.
-\doi{10.1093/comjnl/8.1.33}
+\url{https://doi.org/10.1093/comjnl/8.1.33}
 }

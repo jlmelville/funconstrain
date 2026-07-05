@@ -14,5 +14,5 @@ This function provides formatted data about each of the functions in
 this package for ease of use with the \code{optimx} package.
 }
 \seealso{
-\code{\link{fufnrun}} to run optimx using this data.
+\code{\link[=fufnrun]{fufnrun()}} to run optimx using this data.
 }

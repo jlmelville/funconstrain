@@ -35,13 +35,12 @@ Test function 20 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
-\item Dimensions: Number of parameters \code{2 <= n <= 31}, number of
+\item Dimensions: Number of parameters \verb{2 <= n <= 31}, number of
 summand functions \code{m = 31}.
-\item Minima: \code{f = 2.28767...e-3} if \code{n = 6};
-\code{f = 1.39976...e-6} if \code{n = 9};
-\code{f = 4.72238...e-10} if \code{n = 12}
+\item Minima: \verb{f = 2.28767...e-3} if \code{n = 6};
+\verb{f = 1.39976...e-6} if \code{n = 9};
+\verb{f = 4.72238...e-10} if \code{n = 12}
 }
 
 The number of parameters, \code{n}, in the objective function is not
@@ -64,7 +63,7 @@ res_3 <- stats::optim(c(0.1, 0.2, 0.3), wat$fn, wat$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Kowalik, J. S., & Osborne, M. R. (1968).
 \emph{Methods for unconstrained optimization problems.}

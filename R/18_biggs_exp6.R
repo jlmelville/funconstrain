@@ -2,18 +2,16 @@
 #'
 #' Test function 18 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 6}, number of summand
-#'   functions \code{m >= n}.
-#'   \item Minima: \code{f = 5.65565...e-3} if \code{m = 13};
-#'   not reported in the MGH (1981) paper is \code{(f = 0)} at
-#'   \code{c(1, 10, 1, 5, 4, 3)} and \code{c(4, 10, 3, 5, 1, 1)}
-#'   (and probably others) for all \code{m} (probably: I stopped testing after
-#'   \code{m = 1000}).
-#' }
+#' - Dimensions: Number of parameters `n = 6`, number of summand
+#'   functions `m >= n`.
+#' - Minima: `f = 5.65565...e-3` if `m = 13`;
+#'   not reported in the MGH (1981) paper is `(f = 0)` at
+#'   `c(1, 10, 1, 5, 4, 3)` and `c(4, 10, 3, 5, 1, 1)`
+#'   (and probably others) for all `m` (probably: I stopped testing after
+#'   `m = 1000`).
 #'
 #' @param m Number of summand functions in the objective function. Should be
 #'   equal to or greater than 6.
@@ -21,13 +19,13 @@
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Biggs, M. C. (1971).
 #' Minimization algorithms making use of non-quadratic properties of the
 #' objective function.
-#' \emph{IMA Journal of Applied Mathematics}, \emph{8}(3), 315-327.
+#' *IMA Journal of Applied Mathematics*, *8*(3), 315-327.
 #'
 #' @examples
 #' fun <- biggs_exp6()

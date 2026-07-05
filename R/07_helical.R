@@ -2,25 +2,23 @@
 #'
 #' Test function 7 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 3}, number of summand
-#'   functions \code{m = 3}.
-#'   \item Minima: \code{f = 0} at \code{(1, 0, 0)}.
-#' }
+#' - Dimensions: Number of parameters `n = 3`, number of summand
+#'   functions `m = 3`.
+#' - Minima: `f = 0` at `(1, 0, 0)`.
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Fletcher, R., & Powell, M. J. (1963).
 #' A rapidly convergent descent method for minimization.
-#' \emph{The Computer Journal}, \emph{6}(2), 163-168.
+#' *The Computer Journal*, *6*(2), 163-168.
 #'
 #' @examples
 #' fun <- helical()

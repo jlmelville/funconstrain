@@ -39,11 +39,10 @@ Test function 12 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 3}, number of summand
 functions \code{m >= n}.
-\item Minima: \code{f = 0} at \code{(1, 10, 1), (10, 1, -1)} and
+\item Minima: \code{f = 0} at \verb{(1, 10, 1), (10, 1, -1)} and
 where \code{x1 = x2} and \code{x3 = 0}.
 }
 }
@@ -65,11 +64,11 @@ res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Box, M. J. (1966).
 A comparison of several current optimization methods, and the use of
 transformations in constrained problems.
 \emph{The Computer Journal}, \emph{9}(1), 67-77.
-\doi{10.1093/comjnl/9.1.67}
+\url{https://doi.org/10.1093/comjnl/9.1.67}
 }

@@ -2,25 +2,23 @@
 #'
 #' Test function 15 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 4}, number of summand
-#'   functions \code{m = 11}.
-#'   \item Minima: \code{f = 3.07505...e-4};
-#'   and \code{f = 1.02734...e-3} at \code{(Inf, -14.07..., -Inf, -Inf)}.
-#' }
+#' - Dimensions: Number of parameters `n = 4`, number of summand
+#'   functions `m = 11`.
+#' - Minima: `f = 3.07505...e-4`;
+#'   and `f = 1.02734...e-3` at `(Inf, -14.07..., -Inf, -Inf)`.
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Kowalik, J. S., & Osborne, M. R. (1968).
-#' \emph{Methods for unconstrained optimization problems.}
+#' *Methods for unconstrained optimization problems.*
 #' New York, NY: Elsevier North-Holland.
 #'
 #' @examples

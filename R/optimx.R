@@ -1,10 +1,10 @@
 #' Test Function Data for use with Optimx
 #'
 #' This function provides formatted data about each of the functions in
-#' this package for ease of use with the \code{optimx} package.
+#' this package for ease of use with the `optimx` package.
 #'
 #' @param fnum Function number (1-35) to return data for.
-#' @seealso \code{\link{fufnrun}} to run optimx using this data.
+#' @seealso [fufnrun()] to run optimx using this data.
 #' @export
 fufn <- function(fnum) {
   # return list with tfn=function, tgr=gradient given fn number and n

@@ -35,13 +35,12 @@ Test function 10 from the Moré, Garbow and Hillstrom paper.
 \details{
 The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
-
 \itemize{
 \item Dimensions: Number of parameters \code{n = 3}, number of summand
 functions \code{m = 16}.
-\item Minima: the MGH (1981) only provides the optimal value, with \code{f
-  = 87.9458...}. Meyer and Roth (1972) give the optimal parameter values as
-\code{(0.0056, 6181.4, 345.2)}, with \code{f = 88}.
+\item Minima: the MGH (1981) only provides the optimal value, with
+\verb{f = 87.9458...}. Meyer and Roth (1972) give the optimal parameter values as
+\verb{(0.0056, 6181.4, 345.2)}, with \code{f = 88}.
 }
 }
 \note{
@@ -63,7 +62,7 @@ res <- stats::optim(c(0.1, 0.2, 0.3), fun$fn, fun$gr, method = "L-BFGS-B")
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 Testing unconstrained optimization software.
 \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-\doi{10.1145/355934.355936}
+\url{https://doi.org/10.1145/355934.355936}
 
 Meyer, R. R. (1970).
 Theoretical and computational aspects of nonlinear regression.
@@ -74,5 +73,5 @@ New York: Academic Press.
 Meyer, R. R., & Roth, P. M. (1972).
 Modified damped least squares: an algorithm for non-linear estimation.
 \emph{IMA Journal of Applied Mathematics}, \emph{9}(2), 218-233.
-\doi{10.1093/imamat/9.2.218}
+\url{https://doi.org/10.1093/imamat/9.2.218}
 }

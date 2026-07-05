@@ -2,26 +2,24 @@
 #'
 #' Test function 17 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 5}, number of summand
-#'   functions \code{m = 33}.
-#'   \item Minima: \code{f = 5.46489...e-5}.
-#' }
+#' - Dimensions: Number of parameters `n = 5`, number of summand
+#'   functions `m = 33`.
+#' - Minima: `f = 5.46489...e-5`.
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Osborne, M. R. (1972).
 #' Some aspects of nonlinear least squares calculations.
 #' In F. A. Lootsma (Ed.),
-#' \emph{Numerical methods for nonlinear optimization} (pp. 171-189).
+#' *Numerical methods for nonlinear optimization* (pp. 171-189).
 #' New York, NY: Academic Press.
 #'
 #' @examples

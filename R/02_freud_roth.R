@@ -2,27 +2,25 @@
 #'
 #' Test function 2 from the Moré, Garbow and Hillstrom paper.
 #'
-#' The objective function is the sum of \code{m} functions, each of \code{n}
+#' The objective function is the sum of `m` functions, each of `n`
 #' parameters.
 #'
-#' \itemize{
-#'   \item Dimensions: Number of parameters \code{n = 2}, number of summand
-#'   functions \code{m = 2}.
-#'   \item Minima: \code{f = 0} at \code{(5, 4)},
-#'   \code{f = 48.9842...} at \code{(11.41..., -0.8968...)}
-#' }
+#' - Dimensions: Number of parameters `n = 2`, number of summand
+#'   functions `m = 2`.
+#' - Minima: `f = 0` at `(5, 4)`,
+#'   `f = 48.9842...` at `(11.41..., -0.8968...)`
 #'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
 #' Testing unconstrained optimization software.
-#' \emph{ACM Transactions on Mathematical Software (TOMS)}, \emph{7}(1), 17-41.
-#' \doi{10.1145/355934.355936}
+#' *ACM Transactions on Mathematical Software (TOMS)*, *7*(1), 17-41.
+#' <https://doi.org/10.1145/355934.355936>
 #'
 #' Freudenstein, F., & Roth, B. (1963).
 #' Numerical solution of systems of nonlinear equations.
-#' \emph{Journal of the ACM (JACM)}, \emph{10}(4), 550-556.
-#' \doi{10.1145/321186.321200}
+#' *Journal of the ACM (JACM)*, *10*(4), 550-556.
+#' <https://doi.org/10.1145/321186.321200>
 #'
 #' @examples
 #' fun <- freud_roth()
