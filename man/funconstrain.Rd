@@ -223,6 +223,7 @@ Testing unconstrained optimization software.
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://jlmelville.github.io/funconstrain/}
   \item \url{https://github.com/jlmelville/funconstrain}
   \item Report bugs at \url{https://github.com/jlmelville/funconstrain/issues}
 }
