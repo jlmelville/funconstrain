@@ -64,13 +64,11 @@ parameters.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Box, M. J. (1966). A comparison of several current optimization methods,
 and the use of transformations in constrained problems. *The Computer
-Journal*, *9*(1), 67-77.
-[doi:10.1093/comjnl/9.1.67](https://doi.org/10.1093/comjnl/9.1.67)
+Journal*, *9*(1), 67-77. <https://doi.org/10.1093/comjnl/9.1.67>
 
 ## Examples
 

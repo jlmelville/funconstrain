@@ -61,12 +61,11 @@ functions that this function creates. See the 'Examples' section.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Broyden, C. G. (1965). A class of methods for solving nonlinear
 simultaneous equations. *Mathematics of computation*, *19*(92), 577-593.
-[doi:10.2307/2003941](https://doi.org/10.2307/2003941)
+<https://doi.org/10.2307/2003941>
 
 ## Examples
 

@@ -61,13 +61,11 @@ functions that this function creates. See the 'Examples' section.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Broyden, C. G. (1971). The convergence of an algorithm for solving
 sparse nonlinear systems. *Mathematics of Computation*, *25*(114),
-285-294.
-[doi:10.1090/S0025-5718-1971-0297122-5](https://doi.org/10.1090/S0025-5718-1971-0297122-5)
+285-294. <https://doi.org/10.1090/S0025-5718-1971-0297122-5>
 
 ## Examples
 

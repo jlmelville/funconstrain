@@ -229,8 +229,7 @@ For details, see the specific function help text.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 ## See also
 

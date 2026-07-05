@@ -63,12 +63,11 @@ functions that this function creates. See the 'Examples' section.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Fletcher, R. (1965). Function minimization without evaluating
 derivatives - a review. *The Computer Journal*, *8*(1), 33-41.
-[doi:10.1093/comjnl/8.1.33](https://doi.org/10.1093/comjnl/8.1.33)
+<https://doi.org/10.1093/comjnl/8.1.33>
 
 ## Examples
 

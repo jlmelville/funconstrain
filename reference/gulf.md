@@ -71,14 +71,13 @@ the correct equation from these two sources without too much trouble.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Jamil, M., & Yang, X. S. (2013). A literature survey of benchmark
 functions for global optimisation problems. *International Journal of
 Mathematical Modelling and Numerical Optimisation*, *4*(2), 150-194.
-[doi:10.1504/IJMMNO.2013.055204](https://doi.org/10.1504/IJMMNO.2013.055204)
-[doi:arxiv.org/abs/1308.4008](https://doi.org/arxiv.org/abs/1308.4008)
+<https://doi.org/10.1504/IJMMNO.2013.055204>
+<https://arxiv.org/abs/1308.4008>
 
 ## Examples
 

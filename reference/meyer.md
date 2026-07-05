@@ -65,8 +65,7 @@ gradient norm termination conditions if using this test function.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Meyer, R. R. (1970). Theoretical and computational aspects of nonlinear
 regression. In J. B. Rosen, O. L. Mangasarian, and K. Ritter (Eds.)
@@ -74,8 +73,7 @@ regression. In J. B. Rosen, O. L. Mangasarian, and K. Ritter (Eds.)
 
 Meyer, R. R., & Roth, P. M. (1972). Modified damped least squares: an
 algorithm for non-linear estimation. *IMA Journal of Applied
-Mathematics*, *9*(2), 218-233.
-[doi:10.1093/imamat/9.2.218](https://doi.org/10.1093/imamat/9.2.218)
+Mathematics*, *9*(2), 218-233. <https://doi.org/10.1093/imamat/9.2.218>
 
 ## Examples
 

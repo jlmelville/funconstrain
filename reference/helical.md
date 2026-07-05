@@ -56,8 +56,7 @@ parameters.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Fletcher, R., & Powell, M. J. (1963). A rapidly convergent descent
 method for minimization. *The Computer Journal*, *6*(2), 163-168.

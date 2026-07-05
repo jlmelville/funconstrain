@@ -58,13 +58,11 @@ parameters.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Bard, Y. (1970). Comparison of gradient methods for the solution of
 nonlinear parameter estimation problems. *SIAM Journal on Numerical
-Analysis*, *7*(1), 157-186.
-[doi:10.1137/0707011](https://doi.org/10.1137/0707011)
+Analysis*, *7*(1), 157-186. <https://doi.org/10.1137/0707011>
 
 ## Examples
 

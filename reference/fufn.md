@@ -17,5 +17,5 @@ fufn(fnum)
 
 ## See also
 
-[`fufnrun`](https://jlmelville.github.io/funconstrain/reference/fufnrun.md)
+[`fufnrun()`](https://jlmelville.github.io/funconstrain/reference/fufnrun.md)
 to run optimx using this data.

@@ -63,12 +63,11 @@ functions that this function creates. See the 'Examples' section.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Brown, K. M. (1969). A quadratically convergent Newton-like method based
 upon Gaussian elimination. *SIAM Journal on Numerical Analysis*, *6*(4),
-560-569. [doi:10.1137/0706051](https://doi.org/10.1137/0706051)
+560-569. <https://doi.org/10.1137/0706051>
 
 ## Examples
 

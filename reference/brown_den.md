@@ -63,8 +63,7 @@ parameters.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Brown, K. M., & Dennis, J. E. (1971). *New computational algorithms for
 minimizing a sum of squares of nonlinear functions* (Report No. 71-6).

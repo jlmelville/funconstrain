@@ -56,13 +56,11 @@ parameters.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Powell, M. J. D. (1962). An iterative method for finding stationary
 values of a function of several variables. *The Computer Journal*,
-*5*(2), 147-151.
-[doi:10.1093/comjnl/5.2.147](https://doi.org/10.1093/comjnl/5.2.147)
+*5*(2), 147-151. <https://doi.org/10.1093/comjnl/5.2.147>
 
 ## Examples
 

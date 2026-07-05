@@ -51,7 +51,7 @@ parameters.
   functions `m = n`.
 
 - Minima: `f = 0` (at the same location as
-  [`disc_bv`](https://jlmelville.github.io/funconstrain/reference/disc_bv.md)).
+  [`disc_bv()`](https://jlmelville.github.io/funconstrain/reference/disc_bv.md)).
 
 The number of parameters, `n`, in the objective function is not
 specified when invoking this function. It is implicitly set by the
@@ -62,13 +62,11 @@ functions that this function creates. See the 'Examples' section.
 
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981). Testing
 unconstrained optimization software. *ACM Transactions on Mathematical
-Software (TOMS)*, *7*(1), 17-41.
-[doi:10.1145/355934.355936](https://doi.org/10.1145/355934.355936)
+Software (TOMS)*, *7*(1), 17-41. <https://doi.org/10.1145/355934.355936>
 
 Moré, J. J., & Cosnard, M. Y. (1979). Numerical solution of nonlinear
 equations. *ACM Transactions on Mathematical Software (TOMS)*, *5*(1),
-64-85.
-[doi:10.1145/355815.355820](https://doi.org/10.1145/355815.355820)
+64-85. <https://doi.org/10.1145/355815.355820>
 
 ## Examples
 
