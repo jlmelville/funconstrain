@@ -1,7 +1,7 @@
 # funconstrain
 
 [![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/jlmelville/funconstrain/branch/main/graph/badge.svg)](https://app.codecov.io/gh/jlmelville/funconstrain?branch=master)
+[![codecov](https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V)](https://codecov.io/gh/jlmelville/funconstrain)
 
 An R Package of Functions for Testing Unconstrained Numerical Optimization.
 
