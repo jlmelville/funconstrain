@@ -236,6 +236,8 @@ Software (TOMS)*, *7*(1), 17-41.
 
 Useful links:
 
+- <https://jlmelville.github.io/funconstrain/>
+
 - <https://github.com/jlmelville/funconstrain>
 
 - Report bugs at <https://github.com/jlmelville/funconstrain/issues>
