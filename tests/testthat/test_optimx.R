@@ -97,7 +97,9 @@ test_that("fufnrun closes file and sink resources on parser errors", {
     add = TRUE
   )
 
-  err <- tryCatch(fufnrun(rfo), error = identity)
+  capture.output(
+    err <- tryCatch(fufnrun(rfo), error = identity)
+  )
   leaked_connections <- open_file_connections(rfo)
   leaked_sink_depth <- sink.number()
   close_file_connections(rfo)
@@ -133,7 +135,9 @@ test_that("fufnrun closes file and sink resources on normal completion", {
     add = TRUE
   )
 
-  expect_no_error(suppressWarnings(fufnrun(rfo)))
+  expect_no_error(
+    capture.output(suppressWarnings(fufnrun(rfo)))
+  )
 
   expect_identical(open_file_connections(rfo), integer())
   expect_equal(sink.number(), start_sinks)
