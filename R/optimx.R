@@ -120,8 +120,8 @@ fufn <- function(fnum) {
       ## BAD -- reset 20240323
       #     lo <- rep((min(xx0)-0.1), n)
       #     up <- rep((max(xx0)+0.1), n)
-      lo <- -1e20
-      up <- -lo
+      lo <- rep(-1e20, n)
+      up <- rep(1e20, n)
       break
     }
 

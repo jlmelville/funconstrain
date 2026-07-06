@@ -113,6 +113,6 @@ jenn_samp <- function(m = 10) {
     },
     x0 = c(0.3, 0.4),
     fmin = 124.362,
-    xmin = c(0.2578, 0.2578) # for m = 10 (Caution!)
+    xmin = c(0.2578, 0.2578) # for m = 10 (approx.)
   )
 }

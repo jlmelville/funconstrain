@@ -148,7 +148,7 @@ disc_ie <- function() {
         gvec[i] <- gvec[i] + 1.0
 
         #          cat("new j loop\n")
-        if (i < 8) {
+        if (i < n) {
           for (j in (i + 1):n) {
             #               cat(" j:",j)
             t2 <- j * d1

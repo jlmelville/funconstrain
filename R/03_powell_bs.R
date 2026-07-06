@@ -86,6 +86,6 @@ powell_bs <- function() {
     },
     x0 = c(0, 1),
     fmin = 0,
-    xmin = c(1.098e-5, 9.106)
+    xmin = c(1.0982e-5, 9.1061)
   )
 }

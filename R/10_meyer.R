@@ -150,6 +150,6 @@ meyer <- function() {
     },
     x0 = c(0.02, 4000, 250),
     fmin = 87.9458,
-    xmin = c(0.0056, 6181.4, 345.2) # Meyer and Roth (1972) APPROX!!!
+    xmin = c(0.0056096, 6181.35, 345.2237) # Approximate.
   )
 }

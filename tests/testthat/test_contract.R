@@ -68,6 +68,31 @@ test_that("representative Hessians match finite differences of gradients", {
   }
 })
 
+test_that("reported xmin values evaluate to reported fmin values", {
+  for (name in problem_factory_names()) {
+    testfun <- get_problem_factory(name)()
+
+    if (anyNA(testfun$xmin)) {
+      next
+    }
+
+    actual <- testfun$fn(testfun$xmin)
+    tolerance <- max(1e-8, abs(testfun$fmin) * 1e-5)
+
+    expect_true(is.finite(actual), info = name)
+    expect_true(
+      abs(actual - testfun$fmin) <= tolerance,
+      info = paste(
+        name,
+        "fn(xmin) =",
+        format(actual, digits = 16),
+        "fmin =",
+        format(testfun$fmin, digits = 16)
+      )
+    )
+  }
+})
+
 test_that("current m metadata is recorded without making it a core field", {
   expected <- data.frame(
     factory = problem_factory_names(),

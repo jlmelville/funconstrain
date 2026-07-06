@@ -149,18 +149,20 @@ chebyquad <- function() {
         p1 <- 0.0
         p2 <- 0.0
         gvec[1] <- s2
-        for (i in 2:n) {
-          th <- 4.0 * t2 + t * s2 - s1
-          s1 <- s2
-          s2 <- th
-          th <- t * t2 - t1
-          t1 <- t2
-          t2 <- th
-          th <- 8.0 * s1 + t * p2 - p1
-          p1 <- p2
-          p2 <- th
-          gvec[i] <- s2
-          h[j, j] <- h[j, j] + fvec[i] * th + d1 * s2^2
+        if (n > 1) {
+          for (i in 2:n) {
+            th <- 4.0 * t2 + t * s2 - s1
+            s1 <- s2
+            s2 <- th
+            th <- t * t2 - t1
+            t1 <- t2
+            t2 <- th
+            th <- 8.0 * s1 + t * p2 - p1
+            p1 <- p2
+            p2 <- th
+            gvec[i] <- s2
+            h[j, j] <- h[j, j] + fvec[i] * th + d1 * s2^2
+          }
         }
         h[j, j] <- d2 * h[j, j]
         if (j > 1) {
@@ -186,10 +188,12 @@ chebyquad <- function() {
         } # end if
       }
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
