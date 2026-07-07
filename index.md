@@ -13,14 +13,12 @@ degrees) for testing unconstrained numerical optimization methods,
 e.g. those implementing the likes of steepest descent, Newton, BFGS,
 L-BFGS, conjugate gradient and so on.
 
-## Installing
+## Install
 
 ``` r
 
-# if needed, install devtools:
-# install.packages("devtools")
-devtools::install_github("jlmelville/funconstrain")
-library(funconstrain)
+# install.packages("pak")
+pak::pak("jlmelville/funconstrain")
 ```
 
 ## Documentation
@@ -41,6 +39,8 @@ vector otherwise; and reported `fmin` and `xmin` values from the source
 material.
 
 ``` r
+
+library(funconstrain)
 
 # The famous Rosenbrock function is a problem with two parameters
 rbrock <- rosen()

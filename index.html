@@ -54,13 +54,11 @@
 <p>An R Package of Functions for Testing Unconstrained Numerical Optimization.</p>
 <p><code>funconstrain</code> is a pure R implementation of the 35 test functions in the paper by <a href="https://doi.org/10.1145/355934.355936" class="external-link">Moré, Garbow, and Hillstrom</a> useful (to varying degrees) for testing unconstrained numerical optimization methods, e.g. those implementing the likes of steepest descent, Newton, BFGS, L-BFGS, conjugate gradient and so on.</p>
 <div class="section level2">
-<h2 id="installing">Installing<a class="anchor" aria-label="anchor" href="#installing"></a>
+<h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># if needed, install devtools:</span></span>
-<span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"jlmelville/funconstrain"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jlmelville.github.io/funconstrain/">funconstrain</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jlmelville/funconstrain"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
@@ -73,7 +71,9 @@
 </h2>
 <p>It’s pretty simple. You call a function named after the test problem at hand, and get back a list. That list contains functions that implement the objective, gradient, Hessian, and combined objective-plus-gradient calculation; a suggested starting point, which is also a function if the test problem supports different dimensionalities and is a plain numeric vector otherwise; and reported <code>fmin</code> and <code>xmin</code> values from the source material.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># The famous Rosenbrock function is a problem with two parameters</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jlmelville.github.io/funconstrain/">funconstrain</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The famous Rosenbrock function is a problem with two parameters</span></span>
 <span><span class="va">rbrock</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rosen.html">rosen</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># rbrock is a list containing fn, gr, he, fg, x0, fmin, and xmin</span></span>
