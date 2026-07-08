@@ -1,7 +1,7 @@
 # funconstrain
 
-[![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V)](https://codecov.io/gh/jlmelville/funconstrain)
+[R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
+[codecov](https://codecov.io/gh/jlmelville/funconstrain)
 
 An R Package of Functions for Testing Unconstrained Numerical
 Optimization.
@@ -78,6 +78,8 @@ also calculated analytical gradients for them. I did look to see if all
 35 problems were implemented in one place in R, but failed to find such
 a package.
 
+[John Nash](https://github.com/nashjc) contributed the Hessians.
+
 ## Are the functions correct?
 
 There are unit tests for each test problem which ensure that:
@@ -93,6 +95,9 @@ There are unit tests for each test problem which ensure that:
 - Running the L-BFGS or BFGS method as implemented in the
   [`stats::optim`](https://rdrr.io/r/stats/optim.html) function gets to
   the specified minimum.
+- *July 7 2026*: I verified the gradient and Hessian values at the test
+  locations via an independent implementation in PyTorch, comparing the
+  analytic results with the autodiff output.
 
 ## Is the implementation efficient?
 

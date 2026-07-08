@@ -50,7 +50,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="funconstrain">funconstrain<a class="anchor" aria-label="anchor" href="#funconstrain"></a>
 </h1></div>
-<p><a href="https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://codecov.io/gh/jlmelville/funconstrain" class="external-link"><img src="https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V" alt="codecov"></a></p>
+<p><a href="https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml" class="external-link">R-CMD-check</a> <a href="https://codecov.io/gh/jlmelville/funconstrain" class="external-link">codecov</a></p>
 <p>An R Package of Functions for Testing Unconstrained Numerical Optimization.</p>
 <p><code>funconstrain</code> is a pure R implementation of the 35 test functions in the paper by <a href="https://doi.org/10.1145/355934.355936" class="external-link">Moré, Garbow, and Hillstrom</a> useful (to varying degrees) for testing unconstrained numerical optimization methods, e.g. those implementing the likes of steepest descent, Newton, BFGS, L-BFGS, conjugate gradient and so on.</p>
 <div class="section level2">
@@ -98,6 +98,7 @@
 </h2>
 <p>For testing numerical optimization routines, the go-to set of test problems is <a href="https://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki" class="external-link">CUTEst</a>. However, if you aren’t compiling and linking to it directly, you’d have to write a parser for the SIF file format it uses. Neither of those possibilities appealed.</p>
 <p>Instead, I re-implemented the functions as provided in the paper and also calculated analytical gradients for them. I did look to see if all 35 problems were implemented in one place in R, but failed to find such a package.</p>
+<p><a href="https://github.com/nashjc" class="external-link">John Nash</a> contributed the Hessians.</p>
 </div>
 <div class="section level2">
 <h2 id="are-the-functions-correct">Are the functions correct?<a class="anchor" aria-label="anchor" href="#are-the-functions-correct"></a>
@@ -109,6 +110,8 @@
 <li>If the location of a minima was given in the paper, that the analytical gradient is close to zero at that location.</li>
 <li>If the location of a minima was given in the paper, that the objective function has the correct value at that location.</li>
 <li>Running the L-BFGS or BFGS method as implemented in the <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim</a></code> function gets to the specified minimum.</li>
+<li>
+<em>July 7 2026</em>: I verified the gradient and Hessian values at the test locations via an independent implementation in PyTorch, comparing the analytic results with the autodiff output.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -177,7 +180,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

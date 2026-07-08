@@ -33,4 +33,5 @@
 ### 2022-05-19
 
 - Added a `he()` function to each case to provide the Hessian at given
-  parameters.
+  parameters. Thank you to [John C. Nash](https://github.com/nashjc) for
+  the contribution.
