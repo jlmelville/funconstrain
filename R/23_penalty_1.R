@@ -43,10 +43,7 @@ penalty_1 <- function() {
   sqrta <- sqrt(a)
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Penalty Function I: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Penalty Function I")
       fsum <- 0
       fn1 <- 0
       for (i in 1:n) {
@@ -60,10 +57,7 @@ penalty_1 <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Penalty Function I: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Penalty Function I")
       grad <- rep(0, n)
       fn1 <- 0
 
@@ -77,7 +71,7 @@ penalty_1 <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Penalty Function I")
       h <- matrix(0.0, nrow = n, ncol = n)
       t1 <- -0.25
       for (j in 1:n) {
@@ -86,25 +80,26 @@ penalty_1 <- function() {
       d1 <- 2.0e-5
       th <- 4.0 * t1
       for (j in 1:n) {
-        for (k in 1:(j - 1)) {
-          h[k, j] <- 8.0 * x[j] * x[k]
+        if (j > 1) {
+          for (k in 1:(j - 1)) {
+            h[k, j] <- 8.0 * x[j] * x[k]
+          }
         }
         h[j, j] <- d1 + th + 8.0 * x[j]^2
         ## ! h[j,j) <- th + 8.0*x(j) ^ 2 - 1.0
       }
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Penalty Function I: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Penalty Function I")
 
       fn1 <- 0
       grad <- rep(0, n)
@@ -125,9 +120,7 @@ penalty_1 <- function() {
       )
     },
     x0 = function(n = 25) {
-      if (n < 1) {
-        stop("Penalty Function I: n must be positive")
-      }
+      n <- validate_dimension(n, "Penalty Function I")
       1:n
     },
     fmin = 2.24997e-5,

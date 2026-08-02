@@ -39,10 +39,12 @@
 ex_rosen <- function() {
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n %% 2 != 0) {
-        stop("Extended Rosenbrock: n must be even")
-      }
+      n <- validate_dimension(
+        length(par),
+        "Extended Rosenbrock",
+        min = 2L,
+        multiple = 2L
+      )
       fsum <- 0
       for (i in 1:(n / 2)) {
         p2 <- 2 * i
@@ -55,10 +57,12 @@ ex_rosen <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n %% 2 != 0) {
-        stop("Extended Rosenbrock: n must be even")
-      }
+      n <- validate_dimension(
+        length(par),
+        "Extended Rosenbrock",
+        min = 2L,
+        multiple = 2L
+      )
       grad <- rep(0, n)
       for (i in 1:(n / 2)) {
         p2 <- 2 * i
@@ -74,10 +78,12 @@ ex_rosen <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
-      if (n %% 2 != 0) {
-        stop("Extended Rosenbrock: n must be even")
-      }
+      n <- validate_dimension(
+        length(x),
+        "Extended Rosenbrock",
+        min = 2L,
+        multiple = 2L
+      )
       h <- matrix(0.0, nrow = n, ncol = n)
       halfn <- n / 2
       for (jh in 1:halfn) {
@@ -95,10 +101,12 @@ ex_rosen <- function() {
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n %% 2 != 0) {
-        stop("Extended Rosenbrock: n must be even")
-      }
+      n <- validate_dimension(
+        length(par),
+        "Extended Rosenbrock",
+        min = 2L,
+        multiple = 2L
+      )
 
       fsum <- 0
       grad <- rep(0, n)
@@ -122,9 +130,7 @@ ex_rosen <- function() {
       )
     },
     x0 = function(n = 8) {
-      if (n %% 2 != 0) {
-        stop("Extended Rosenbrock: n must be even")
-      }
+      n <- validate_dimension(n, "Extended Rosenbrock", min = 2L, multiple = 2L)
       rep(c(-1.2, 1), n / 2)
     },
     fmin = 0,

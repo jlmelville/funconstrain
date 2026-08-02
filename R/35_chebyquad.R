@@ -43,10 +43,7 @@ chebyquad <- function() {
   list(
     m = NA,
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Chebyquad: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Chebyquad")
 
       # y is the shifted x
       y <- 2 * par - 1
@@ -72,10 +69,7 @@ chebyquad <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Chebyquad: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Chebyquad")
 
       y <- 2 * par - 1
 
@@ -116,7 +110,7 @@ chebyquad <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Chebyquad")
       h <- matrix(0.0, nrow = n, ncol = n)
       fvec <- rep(0.0, n)
       gvec <- rep(0.0, n)
@@ -200,10 +194,7 @@ chebyquad <- function() {
     },
 
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Chebyquad: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Chebyquad")
 
       y <- 2 * par - 1
 
@@ -251,9 +242,7 @@ chebyquad <- function() {
       )
     },
     x0 = function(n = 50) {
-      if (n < 1) {
-        stop("Chebyquad: n must be positive")
-      }
+      n <- validate_dimension(n, "Chebyquad")
 
       1:n / (n + 1)
     },

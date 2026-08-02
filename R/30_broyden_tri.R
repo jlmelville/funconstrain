@@ -40,35 +40,41 @@
 broyden_tri <- function() {
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Broyden Tridiagonal: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Broyden Tridiagonal")
 
       fi <- (3 - 2 * par) * par + 1
-      fi[1:(n - 1)] <- fi[1:(n - 1)] - 2 * par[2:n]
-      fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      if (n > 1) {
+        fi[1:(n - 1)] <- fi[1:(n - 1)] - 2 * par[2:n]
+        fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      }
       sum(fi * fi)
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Broyden Tridiagonal: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Broyden Tridiagonal")
 
       fi <- (3 - 2 * par) * par + 1
-      fi[1:(n - 1)] <- fi[1:(n - 1)] - 2 * par[2:n]
-      fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      if (n > 1) {
+        fi[1:(n - 1)] <- fi[1:(n - 1)] - 2 * par[2:n]
+        fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      }
 
       grad <- 2 * fi * (3 - 4 * par)
-      grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
-      grad[2:n] <- grad[2:n] - 4 * fi[1:(n - 1)]
+      if (n > 1) {
+        grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
+        grad[2:n] <- grad[2:n] - 4 * fi[1:(n - 1)]
+      }
 
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Broyden Tridiagonal")
       h <- matrix(0.0, nrow = n, ncol = n)
+      if (n == 1) {
+        r <- (3.0 - 2.0 * x[1]) * x[1] + 1.0
+        rp <- 3.0 - 4.0 * x[1]
+        h[1, 1] <- 2.0 * (rp^2 - 4.0 * r)
+        return(h)
+      }
       #       ! For i <- 1
       t <- (3.0 - 2.0 * x[1]) * x[1] - 2.0 * x[2] + 1.0
       t1 <- 3.0 - 4.0 * x[1]
@@ -96,29 +102,32 @@ broyden_tri <- function() {
       h[n - 1, n] <- h[n - 1, n] - 2.0 * t1
       h[n, n] <- h[n, n] + 2.0 * (t1^2 - 4.0 * t)
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
 
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Broyden Tridiagonal: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Broyden Tridiagonal")
 
       fi <- (3 - 2 * par) * par + 1
-      fi[1:(n - 1)] <- fi[1:(n - 1)] - 2 * par[2:n]
-      fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      if (n > 1) {
+        fi[1:(n - 1)] <- fi[1:(n - 1)] - 2 * par[2:n]
+        fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      }
       fsum <- sum(fi * fi)
 
       grad <- 2 * fi * (3 - 4 * par)
-      grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
-      grad[2:n] <- grad[2:n] - 4 * fi[1:(n - 1)]
+      if (n > 1) {
+        grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
+        grad[2:n] <- grad[2:n] - 4 * fi[1:(n - 1)]
+      }
 
       list(
         fn = fsum,
@@ -126,9 +135,7 @@ broyden_tri <- function() {
       )
     },
     x0 = function(n = 40) {
-      if (n < 1) {
-        stop("Broyden Tridiagonal: n must be positive")
-      }
+      n <- validate_dimension(n, "Broyden Tridiagonal")
       rep(-1, n)
     },
     fmin = 0,

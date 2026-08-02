@@ -40,10 +40,7 @@
 disc_ie <- function() {
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Discrete Integral Equation: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Discrete Integral Equation")
       h <- 1 / (n + 1)
 
       pt1 <- par + (1:n * h) + 1
@@ -71,10 +68,7 @@ disc_ie <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Discrete Integral Equation: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Discrete Integral Equation")
       grad <- rep(0, n)
 
       h <- 1 / (n + 1)
@@ -108,7 +102,7 @@ disc_ie <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Discrete Integral Equation")
       w1 <- rep(0, n)
       w2 <- rep(0, n + 1)
       gvec <- rep(0, n)
@@ -123,12 +117,14 @@ disc_ie <- function() {
       w1[1] <- d1 * (x[1] + d1 + 1.0)^3
       w2[n] <- (1.0 - n * d1) * (x[n] + n * d1 + 1.0)^3
       w2[n + 1] <- 0.0
-      for (i in 2:n) {
-        t1 <- i * d1
-        t2 <- (n - i + 1) * d1
-        w1[i] <- w1[i - 1] + t1 * (x[i] + t1 + 1.0)^3
-        w2[n - i + 1] <- w2[n - i + 2] +
-          (1.0 - t2) * (x[n - i + 1] + t2 + 1.0)^3
+      if (n > 1) {
+        for (i in 2:n) {
+          t1 <- i * d1
+          t2 <- (n - i + 1) * d1
+          w1[i] <- w1[i - 1] + t1 * (x[i] + t1 + 1.0)^3
+          w2[n - i + 1] <- w2[n - i + 2] +
+            (1.0 - t2) * (x[n - i + 1] + t2 + 1.0)^3
+        }
       }
 
       for (i in 1:n) {
@@ -168,19 +164,18 @@ disc_ie <- function() {
         }
       }
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Discrete Integral Equation: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Discrete Integral Equation")
 
       h <- 1 / (n + 1)
 
@@ -220,9 +215,7 @@ disc_ie <- function() {
       )
     },
     x0 = function(n = 35) {
-      if (n < 1) {
-        stop("Discrete Integral Equation: n must be positive")
-      }
+      n <- validate_dimension(n, "Discrete Integral Equation")
       t <- seq_len(n) / (n + 1)
       t * (t - 1)
     },

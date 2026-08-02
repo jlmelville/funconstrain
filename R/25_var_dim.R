@@ -35,10 +35,7 @@
 var_dim <- function() {
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Variably Dimensioned: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Variably Dimensioned")
       fsum <- 0
       fn1 <- 0
       for (j in 1:n) {
@@ -53,10 +50,7 @@ var_dim <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Variably Dimensioned: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Variably Dimensioned")
 
       fsum <- 0
       grad <- rep(0, n)
@@ -75,7 +69,7 @@ var_dim <- function() {
     },
     he = function(par) {
       # quite big discrepancy in n, n from numeric approx.
-      n <- length(par)
+      n <- validate_dimension(length(par), "Variably Dimensioned")
       h <- matrix(0.0, nrow = n, ncol = n)
       t1 <- 0.0
       for (j in 1:n) {
@@ -90,19 +84,18 @@ var_dim <- function() {
           }
         }
       }
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Variably Dimensioned: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Variably Dimensioned")
 
       fsum <- 0
       grad <- rep(0, n)
@@ -128,9 +121,7 @@ var_dim <- function() {
       )
     },
     x0 = function(n = 30) {
-      if (n < 1) {
-        stop("Variably Dimensioned: n must be positive")
-      }
+      n <- validate_dimension(n, "Variably Dimensioned")
       1 - (1:n) / n
     },
     fmin = 0,

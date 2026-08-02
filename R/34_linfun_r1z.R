@@ -43,56 +43,70 @@
 #' linr1z_m20$gr, method = "L-BFGS-B")
 #' @export
 linfun_r1z <- function(m = 100) {
+  m <- validate_dimension(
+    m,
+    "Linear Function - Rank 1 with Zero Columns and Rows",
+    label = "m"
+  )
+
   list(
     m = m,
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop(
-          "Linear Function - Rank 1 with Zero Columns and Rows:",
-          "n must be positive"
-        )
-      }
+      n <- validate_dimension(
+        length(par),
+        "Linear Function - Rank 1 with Zero Columns and Rows"
+      )
       if (m < n) {
         stop(
           "Linear Function - Rank 1 with Zero Columns and Rows:",
           " m must be >= n"
         )
       }
-      sum_jx <- sum(2:(n - 1) * par[2:(n - 1)])
+      interior <- if (n > 2) 2:(n - 1) else integer(0)
+      sum_jx <- sum(interior * par[interior])
       fi <- 0:(m - 1) * sum_jx - 1
       fi[c(1, m)] <- -1
       sum(fi * fi)
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop(
-          "Linear Function - Rank 1 with Zero Columns and Rows:",
-          "n must be positive"
-        )
-      }
+      n <- validate_dimension(
+        length(par),
+        "Linear Function - Rank 1 with Zero Columns and Rows"
+      )
       if (m < n) {
         stop(
           "Linear Function - Rank 1 with Zero Columns and Rows:",
           " m must be >= n"
         )
       }
-      sum_jx <- sum(2:(n - 1) * par[2:(n - 1)])
+      interior <- if (n > 2) 2:(n - 1) else integer(0)
+      sum_jx <- sum(interior * par[interior])
       fi <- 0:(m - 1) * sum_jx - 1
       fi[c(1, m)] <- -1
 
-      sum_jf <- sum(1:(m - 2) * fi[2:(m - 1)])
+      residual_interior <- if (m > 2) 2:(m - 1) else integer(0)
+      sum_jf <- sum((residual_interior - 1) * fi[residual_interior])
       grad <- rep(0, n)
-      grad[2:(n - 1)] <- 2 * 2:(n - 1) * sum_jf
+      grad[interior] <- 2 * interior * sum_jf
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(
+        length(x),
+        "Linear Function - Rank 1 with Zero Columns and Rows"
+      )
+      if (m < n) {
+        stop(
+          "Linear Function - Rank 1 with Zero Columns and Rows:",
+          " m must be >= n"
+        )
+      }
       h <- matrix(0.0, nrow = n, ncol = n)
       s1 <- 0.0
-      for (i in 2:(m - 1)) {
-        s1 <- s1 + (i - 1)^2
+      if (m > 2) {
+        for (i in 2:(m - 1)) {
+          s1 <- s1 + (i - 1)^2
+        }
       }
       s1 <- 2.0 * s1
 
@@ -106,36 +120,37 @@ linfun_r1z <- function(m = 100) {
         }
       }
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop(
-          "Linear Function - Rank 1 with Zero Columns and Rows:",
-          "n must be positive"
-        )
-      }
+      n <- validate_dimension(
+        length(par),
+        "Linear Function - Rank 1 with Zero Columns and Rows"
+      )
       if (m < n) {
         stop(
           "Linear Function - Rank 1 with Zero Columns and Rows:",
           " m must be >= n"
         )
       }
-      sum_jx <- sum(2:(n - 1) * par[2:(n - 1)])
+      interior <- if (n > 2) 2:(n - 1) else integer(0)
+      sum_jx <- sum(interior * par[interior])
       fi <- 0:(m - 1) * sum_jx - 1
       fi[c(1, m)] <- -1
       fsum <- sum(fi * fi)
 
-      sum_jf <- sum(1:(m - 2) * fi[2:(m - 1)])
+      residual_interior <- if (m > 2) 2:(m - 1) else integer(0)
+      sum_jf <- sum((residual_interior - 1) * fi[residual_interior])
       grad <- rep(0, n)
-      grad[2:(n - 1)] <- 2 * 2:(n - 1) * sum_jf
+      grad[interior] <- 2 * interior * sum_jf
 
       list(
         fn = fsum,
@@ -143,12 +158,10 @@ linfun_r1z <- function(m = 100) {
       )
     },
     x0 = function(n = 45) {
-      if (n < 1) {
-        stop(
-          "Linear Function - Rank 1 with Zero Columns and Rows:",
-          "n must be positive"
-        )
-      }
+      n <- validate_dimension(
+        n,
+        "Linear Function - Rank 1 with Zero Columns and Rows"
+      )
       if (m < n) {
         stop(
           "Linear Function - Rank 1 with Zero Columns and Rows:",

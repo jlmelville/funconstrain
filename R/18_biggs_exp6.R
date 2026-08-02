@@ -41,9 +41,7 @@
 #' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 biggs_exp6 <- function(m = 13) {
-  if (m < 6) {
-    stop("Biggs EXP6 function must have m >= 6")
-  }
+  m <- validate_dimension(m, "Biggs EXP6", min = 6L, label = "m")
 
   list(
     fn = function(par) {

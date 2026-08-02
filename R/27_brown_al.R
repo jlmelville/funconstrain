@@ -50,29 +50,24 @@ brown_al <- function() {
 
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Brown Almost-Linear: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Brown Almost-Linear")
       fi <- par + sum(par) - (n + 1)
       fi[n] <- prod(par) - 1
       sum(fi * fi)
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Brown Almost-Linear: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Brown Almost-Linear")
       fi <- par + sum(par) - (n + 1)
-      grad <- rep(2 * sum(fi[1:(n - 1)]), n)
-      grad[1:(n - 1)] <- grad[1:(n - 1)] + 2 * fi[1:(n - 1)]
+      residuals <- if (n > 1) seq_len(n - 1) else integer(0)
+      grad <- rep(2 * sum(fi[residuals]), n)
+      grad[residuals] <- grad[residuals] + 2 * fi[residuals]
       product_residual <- prod(par) - 1
       grad <- grad +
         2 * product_residual * product_excluding_each(par)
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Brown Almost-Linear")
       m <- n
       h <- matrix(0.0, nrow = n, ncol = n)
       pp <- matrix(0.0, nrow = (n + 1), ncol = (n + 1))
@@ -101,13 +96,15 @@ brown_al <- function() {
             t <- t1 - 1.0 #                t = t1 - 1.0_rk
             h[j, j] <- h[j, j] + 2.0 * (pp[j, 1] * pp[n + 1, j + 1])^2
             #                h(j,j) = h(j,j) + 2.0_rk*( prod(j-1,1)*prod(global_n,j+1) )**2
-            for (l in 1:(j - 1)) {
-              #                do l = 1, j-1
-              t2 <- pp[l, 1] * pp[j, l + 1] * pp[n + 1, j + 1]
-              #                  t2 = prod(l-1,1)*prod(j-1,l+1)*prod(global_n,j+1)
-              h[l, j] <- h[l, j] + 2.0 * t2 * (2.0 * t1 - 1.0)
-              #                  h(l,j) = h(l,j) + 2.0_rk*t2*( 2.0_rk*t1 - 1.0_rk )
-            } #                end do
+            if (j > 1) {
+              for (l in 1:(j - 1)) {
+                #                do l = 1, j-1
+                t2 <- pp[l, 1] * pp[j, l + 1] * pp[n + 1, j + 1]
+                #                  t2 = prod(l-1,1)*prod(j-1,l+1)*prod(global_n,j+1)
+                h[l, j] <- h[l, j] + 2.0 * t2 * (2.0 * t1 - 1.0)
+                #                  h(l,j) = h(l,j) + 2.0_rk*t2*( 2.0_rk*t1 - 1.0_rk )
+              } #                end do
+            }
           }
         } else {
           for (j in 1:n) {
@@ -124,22 +121,22 @@ brown_al <- function() {
         }
       }
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Brown Almost-Linear: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Brown Almost-Linear")
       fi <- par + sum(par) - (n + 1)
-      grad <- rep(2 * sum(fi[1:(n - 1)]), n)
-      grad[1:(n - 1)] <- grad[1:(n - 1)] + 2 * fi[1:(n - 1)]
+      residuals <- if (n > 1) seq_len(n - 1) else integer(0)
+      grad <- rep(2 * sum(fi[residuals]), n)
+      grad[residuals] <- grad[residuals] + 2 * fi[residuals]
       product_residual <- prod(par) - 1
 
       fi[n] <- product_residual
@@ -153,9 +150,7 @@ brown_al <- function() {
       )
     },
     x0 = function(n = 30) {
-      if (n < 1) {
-        stop("Brown Almost-Linear: n must be positive")
-      }
+      n <- validate_dimension(n, "Brown Almost-Linear")
       rep(0.5, n)
     },
     fmin = 0,

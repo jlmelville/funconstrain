@@ -44,10 +44,7 @@ penalty_2 <- function() {
 
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Penalty Function II: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Penalty Function II")
       ex01 <- exp(par * 0.1)
       ei <- exp(1:n * 0.1)
 
@@ -57,16 +54,20 @@ penalty_2 <- function() {
       fsum <- fsum + f1 * f1
 
       f2n <- n * par[1] * par[1]
-      for (i in 2:n) {
-        yi <- ei[i] + ei[i - 1]
-        fi <- ex01[i] + ex01[i - 1] - yi
+      if (n > 1) {
+        for (i in 2:n) {
+          yi <- ei[i] + ei[i - 1]
+          fi <- ex01[i] + ex01[i - 1] - yi
 
-        fsum <- fsum + a * fi * fi
-        f2n <- f2n + (n - i + 1) * par[i] * par[i]
+          fsum <- fsum + a * fi * fi
+          f2n <- f2n + (n - i + 1) * par[i] * par[i]
+        }
       }
-      for (i in (n + 1):(2 * n - 1)) {
-        fi <- ex01[i - n + 1] - e
-        fsum <- fsum + a * fi * fi
+      if (n > 1) {
+        for (i in (n + 1):(2 * n - 1)) {
+          fi <- ex01[i - n + 1] - e
+          fsum <- fsum + a * fi * fi
+        }
       }
 
       f2n <- f2n - 1
@@ -74,29 +75,30 @@ penalty_2 <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Penalty Function II: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Penalty Function II")
       grad <- rep(0, n)
       grad[1] <- grad[1] + 2 * (par[1] - 0.2)
       ex01 <- exp(par * 0.1)
       ei <- exp(1:n * 0.1)
 
       f2n <- n * par[1] * par[1]
-      for (i in 2:n) {
-        yi <- ei[i] + ei[i - 1]
-        fi <- (ex01[i] + ex01[i - 1] - yi)
+      if (n > 1) {
+        for (i in 2:n) {
+          yi <- ei[i] + ei[i - 1]
+          fi <- (ex01[i] + ex01[i - 1] - yi)
 
-        grad[i] <- grad[i] + 0.2 * fi * a * ex01[i]
-        grad[i - 1] <- grad[i - 1] + 0.2 * fi * a * ex01[i - 1]
+          grad[i] <- grad[i] + 0.2 * fi * a * ex01[i]
+          grad[i - 1] <- grad[i - 1] + 0.2 * fi * a * ex01[i - 1]
 
-        f2n <- f2n + (n - i + 1) * par[i] * par[i]
+          f2n <- f2n + (n - i + 1) * par[i] * par[i]
+        }
       }
 
-      for (i in (n + 1):(2 * n - 1)) {
-        fi <- ex01[i - n + 1] - e
-        grad[i - n + 1] <- grad[i - n + 1] + 0.2 * fi * a * ex01[i - n + 1]
+      if (n > 1) {
+        for (i in (n + 1):(2 * n - 1)) {
+          fi <- ex01[i - n + 1] - e
+          grad[i - n + 1] <- grad[i - n + 1] + 0.2 * fi * a * ex01[i - n + 1]
+        }
       }
 
       f2n <- f2n - 1
@@ -109,7 +111,7 @@ penalty_2 <- function() {
     },
     he = function(x) {
       # ?? failing? Why?
-      n <- length(x)
+      n <- validate_dimension(length(x), "Penalty Function II")
       h <- matrix(0.0, nrow = n, ncol = n)
       t1 <- -1.0
       for (j in 1:n) {
@@ -137,19 +139,18 @@ penalty_2 <- function() {
         d2 <- d1 * d2
       }
       h[1, 1] <- h[1, 1] + 2.0
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Penalty Function II: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Penalty Function II")
       ex01 <- exp(par * 0.1)
       ei <- exp(1:n * 0.1)
 
@@ -162,20 +163,24 @@ penalty_2 <- function() {
       fsum <- fsum + f1 * f1
       f2n <- n * par[1] * par[1]
 
-      for (i in 2:n) {
-        yi <- ei[i] + ei[i - 1]
-        fi <- (ex01[i] + ex01[i - 1] - yi)
-        fsum <- fsum + a * fi * fi
+      if (n > 1) {
+        for (i in 2:n) {
+          yi <- ei[i] + ei[i - 1]
+          fi <- (ex01[i] + ex01[i - 1] - yi)
+          fsum <- fsum + a * fi * fi
 
-        grad[i] <- grad[i] + 0.2 * fi * a * ex01[i]
-        grad[i - 1] <- grad[i - 1] + 0.2 * fi * a * ex01[i - 1]
-        f2n <- f2n + (n - i + 1) * par[i] * par[i]
+          grad[i] <- grad[i] + 0.2 * fi * a * ex01[i]
+          grad[i - 1] <- grad[i - 1] + 0.2 * fi * a * ex01[i - 1]
+          f2n <- f2n + (n - i + 1) * par[i] * par[i]
+        }
       }
 
-      for (i in (n + 1):(2 * n - 1)) {
-        fi <- ex01[i - n + 1] - e
-        fsum <- fsum + a * fi * fi
-        grad[i - n + 1] <- grad[i - n + 1] + 0.2 * fi * a * ex01[i - n + 1]
+      if (n > 1) {
+        for (i in (n + 1):(2 * n - 1)) {
+          fi <- ex01[i - n + 1] - e
+          fsum <- fsum + a * fi * fi
+          grad[i - n + 1] <- grad[i - n + 1] + 0.2 * fi * a * ex01[i - n + 1]
+        }
       }
 
       f2n <- f2n - 1
@@ -191,9 +196,7 @@ penalty_2 <- function() {
       )
     },
     x0 = function(n = 25) {
-      if (n < 1) {
-        stop("Penalty Function II: n must be positive")
-      }
+      n <- validate_dimension(n, "Penalty Function II")
       rep(0.5, n)
     },
     fmin = 9.376293e-6,

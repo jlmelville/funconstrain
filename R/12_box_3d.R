@@ -40,9 +40,7 @@
 #' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 box_3d <- function(m = 20) {
-  if (m < 3) {
-    stop("box3d: m must be >= 3")
-  }
+  m <- validate_dimension(m, "Box 3D", min = 3L, label = "m")
   list(
     fn = function(par) {
       x1 <- par[1]

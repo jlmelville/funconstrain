@@ -40,9 +40,7 @@
 #' method = "L-BFGS-B")
 #' @export
 linfun_fr <- function(m = 100) {
-  if (m < 1) {
-    stop("Linear Function - Full Rank: m must be positive")
-  }
+  m <- validate_dimension(m, "Linear Function - Full Rank", label = "m")
 
   m2 <- 2 / m
   m4 <- 2 * m2
@@ -50,10 +48,7 @@ linfun_fr <- function(m = 100) {
   list(
     m = m,
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Linear Function - Full Rank: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
       }
@@ -65,10 +60,7 @@ linfun_fr <- function(m = 100) {
       sum(fi * fi) + (m - n) * fnm * fnm
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Linear Function - Full Rank: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
       }
@@ -80,7 +72,10 @@ linfun_fr <- function(m = 100) {
       2 * fi - (m4 * (sum(fi) + (m - n) * fnm))
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Linear Function - Full Rank")
+      if (m < n) {
+        stop("Linear Function - Full Rank: m must be >= n")
+      }
       h <- matrix(0.0, nrow = n, ncol = n)
       for (i in 1:n) {
         h[i, i] <- 2.0 # since quadratic
@@ -88,10 +83,7 @@ linfun_fr <- function(m = 100) {
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Linear Function - Full Rank: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
       }
@@ -109,9 +101,7 @@ linfun_fr <- function(m = 100) {
       )
     },
     x0 = function(n = 45) {
-      if (n < 1) {
-        stop("Linear Function - Full Rank: n must be positive")
-      }
+      n <- validate_dimension(n, "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
       }

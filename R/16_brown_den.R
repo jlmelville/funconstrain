@@ -39,6 +39,8 @@
 #' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 brown_den <- function(m = 20) {
+  m <- validate_dimension(m, "Brown Dennis", min = 4L, label = "m")
+
   list(
     fn = function(par) {
       x1 <- par[1]

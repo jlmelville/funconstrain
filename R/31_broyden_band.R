@@ -49,10 +49,7 @@ broyden_band <- function() {
 
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Broyden Banded: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Broyden Banded")
 
       xx <- par * par
       fi <- (2 + 5 * xx) * par + 1
@@ -63,10 +60,7 @@ broyden_band <- function() {
       sum(fi * fi)
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Broyden Banded: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Broyden Banded")
 
       xx <- par * par
       fi <- (2 + 5 * xx) * par + 1
@@ -85,7 +79,7 @@ broyden_band <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Broyden Banded")
       h <- matrix(0.0, nrow = n, ncol = n)
 
       for (i in 1:n) {
@@ -129,20 +123,19 @@ broyden_band <- function() {
         }
       }
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
 
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Broyden Banded: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Broyden Banded")
 
       xx <- par * par
       fi <- (2 + 5 * xx) * par + 1
@@ -164,9 +157,7 @@ broyden_band <- function() {
       )
     },
     x0 = function(n = 40) {
-      if (n < 1) {
-        stop("Broyden Banded: n must be positive")
-      }
+      n <- validate_dimension(n, "Broyden Banded")
       rep(-1, n)
     },
     fmin = 0,

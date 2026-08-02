@@ -40,25 +40,21 @@
 disc_bv <- function() {
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Discrete Boundary Value: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Discrete Boundary Value")
       h <- 1 / (n + 1)
       hsq <- h * h
       ti <- 1:n * h
       pt1 <- par + ti + 1
 
       fi <- 2 * par + hsq * 0.5 * pt1 * pt1 * pt1
-      fi[1:(n - 1)] <- fi[1:(n - 1)] - par[2:n]
-      fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      if (n > 1) {
+        fi[1:(n - 1)] <- fi[1:(n - 1)] - par[2:n]
+        fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      }
       fsum <- sum(fi * fi)
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Discrete Boundary Value: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Discrete Boundary Value")
       grad <- rep(0, n)
 
       h <- 1 / (n + 1)
@@ -67,18 +63,30 @@ disc_bv <- function() {
       pt1 <- par + ti + 1
 
       fi <- 2 * par + hsq * 0.5 * pt1 * pt1 * pt1
-      fi[1:(n - 1)] <- fi[1:(n - 1)] - par[2:n]
-      fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      if (n > 1) {
+        fi[1:(n - 1)] <- fi[1:(n - 1)] - par[2:n]
+        fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      }
 
       grad <- 2 * fi * (1.5 * hsq * pt1 * pt1 + 2)
-      grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
-      grad[2:n] <- grad[2:n] - 2 * fi[1:(n - 1)]
+      if (n > 1) {
+        grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
+        grad[2:n] <- grad[2:n] - 2 * fi[1:(n - 1)]
+      }
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Discrete Boundary Value")
       h <- matrix(0.0, nrow = n, ncol = n)
       d1 <- 1.0 / (n + 1.0)
+      if (n == 1) {
+        arg <- x[1] + d1 + 1.0
+        r <- 2.0 * x[1] + d1^2 * arg^3 / 2.0
+        rp <- 2.0 + 1.5 * d1^2 * arg^2
+        rpp <- 3.0 * d1^2 * arg
+        h[1, 1] <- 2.0 * (rp^2 + r * rpp)
+        return(h)
+      }
       #       ! For i <- 1
       d2 <- d1
       arg <- x[1] + d2 + 1.0
@@ -113,19 +121,18 @@ disc_bv <- function() {
       h[n - 1, n] <- h[n - 1, n] - 2.0 * t1
       h[n, n] <- h[n, n] + 2.0 * (3.0 * d1^2 * arg * t + t1^2)
 
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Discrete Boundary Value: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Discrete Boundary Value")
 
       h <- 1 / (n + 1)
       hsq <- h * h
@@ -133,13 +140,17 @@ disc_bv <- function() {
       pt1 <- par + ti + 1
 
       fi <- 2 * par + hsq * 0.5 * pt1 * pt1 * pt1
-      fi[1:(n - 1)] <- fi[1:(n - 1)] - par[2:n]
-      fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      if (n > 1) {
+        fi[1:(n - 1)] <- fi[1:(n - 1)] - par[2:n]
+        fi[2:n] <- fi[2:n] - par[1:(n - 1)]
+      }
       fsum <- sum(fi * fi)
 
       grad <- 2 * fi * (1.5 * hsq * pt1 * pt1 + 2)
-      grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
-      grad[2:n] <- grad[2:n] - 2 * fi[1:(n - 1)]
+      if (n > 1) {
+        grad[1:(n - 1)] <- grad[1:(n - 1)] - 2 * fi[2:n]
+        grad[2:n] <- grad[2:n] - 2 * fi[1:(n - 1)]
+      }
 
       list(
         fn = fsum,
@@ -147,9 +158,7 @@ disc_bv <- function() {
       )
     },
     x0 = function(n = 35) {
-      if (n < 1) {
-        stop("Discrete Boundary Value: n must be positive")
-      }
+      n <- validate_dimension(n, "Discrete Boundary Value")
       t <- seq_len(n) / (n + 1)
       t * (t - 1)
     },

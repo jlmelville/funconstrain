@@ -42,10 +42,12 @@ ex_powell <- function() {
 
   list(
     fn = function(par) {
-      n <- length(par)
-      if (n %% 4 != 0) {
-        stop("Extended Powell: n must be a multiple of 4")
-      }
+      n <- validate_dimension(
+        length(par),
+        "Extended Powell",
+        min = 4L,
+        multiple = 4L
+      )
       fsum <- 0
       for (i in 1:(n / 4)) {
         w <- 4 * i - 3
@@ -64,10 +66,12 @@ ex_powell <- function() {
       fsum
     },
     gr = function(par) {
-      n <- length(par)
-      if (n %% 4 != 0) {
-        stop("Extended Powell: n must be a multiple of 4")
-      }
+      n <- validate_dimension(
+        length(par),
+        "Extended Powell",
+        min = 4L,
+        multiple = 4L
+      )
       grad <- rep(0, n)
 
       for (i in 1:(n / 4)) {
@@ -93,10 +97,12 @@ ex_powell <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
-      if (n %% 4 != 0) {
-        stop("Extended Powell: n must be a multiple of 4")
-      }
+      n <- validate_dimension(
+        length(x),
+        "Extended Powell",
+        min = 4L,
+        multiple = 4L
+      )
       h <- matrix(0.0, nrow = n, ncol = n)
       qn <- n / 4
       for (j4 in 1:qn) {
@@ -128,10 +134,12 @@ ex_powell <- function() {
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n %% 4 != 0) {
-        stop("Extended Powell: n must be a multiple of 4")
-      }
+      n <- validate_dimension(
+        length(par),
+        "Extended Powell",
+        min = 4L,
+        multiple = 4L
+      )
 
       fsum <- 0
       grad <- rep(0, n)
@@ -167,9 +175,7 @@ ex_powell <- function() {
       )
     },
     x0 = function(n = 20) {
-      if (n %% 4 != 0) {
-        stop("Extended Powell: n must be a multiple of 4")
-      }
+      n <- validate_dimension(n, "Extended Powell", min = 4L, multiple = 4L)
       rep(c(3, -1, 0, 1), n / 4)
     },
     fmin = 0,

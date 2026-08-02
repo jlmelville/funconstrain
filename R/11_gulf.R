@@ -48,10 +48,13 @@
 #' res <- stats::optim(fun20$x0, fun20$fn, fun20$gr, method = "L-BFGS-B")
 #' @export
 gulf <- function(m = 99) {
-  # can be between 3 and 100
-  if (m < 3 || m > 100) {
-    stop("Gulf research and development function: m must be between 3 and 100")
-  }
+  m <- validate_dimension(
+    m,
+    "Gulf research and development function",
+    min = 3L,
+    max = 100L,
+    label = "m"
+  )
 
   p66 <- 2 / 3
 

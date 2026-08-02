@@ -45,20 +45,14 @@ trigon <- function() {
   list(
     m = 30,
     fn = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Trigonometric: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Trigonometric")
 
       cos_sum <- sum(cos(par))
       fi <- n - cos_sum + 1:n * (1 - cos(par)) - sin(par)
       sum(fi * fi)
     },
     gr = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Trigonometric: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Trigonometric")
       cosx <- cos(par)
       sinx <- sin(par)
       cos_sum <- sum(cosx)
@@ -67,7 +61,7 @@ trigon <- function() {
       2 * (fi * (1:n * sinx - cosx) + sinx * sum(fi))
     },
     he = function(par) {
-      n <- length(par)
+      n <- validate_dimension(length(par), "Trigonometric")
       h <- matrix(0.0, nrow = n, ncol = n)
 
       s1 <- 0.0
@@ -97,19 +91,18 @@ trigon <- function() {
       for (j in 1:n) {
         h[j, j] <- 2.0 * (h[j, j] + cos(par[j]) * s2)
       }
-      for (j in 1:(n - 1)) {
-        # symmetrize
-        for (k in (j + 1):n) {
-          h[k, j] <- h[j, k]
+      if (n > 1) {
+        for (j in 1:(n - 1)) {
+          # symmetrize
+          for (k in (j + 1):n) {
+            h[k, j] <- h[j, k]
+          }
         }
       }
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (n < 1) {
-        stop("Trigonometric: n must be positive")
-      }
+      n <- validate_dimension(length(par), "Trigonometric")
       cosx <- cos(par)
       sinx <- sin(par)
       cos_sum <- sum(cosx)
@@ -124,9 +117,7 @@ trigon <- function() {
       )
     },
     x0 = function(n = 30) {
-      if (n < 1) {
-        stop("Trigonometric: n must be positive")
-      }
+      n <- validate_dimension(n, "Trigonometric")
       rep(1 / n, n)
     },
     fmin = 0,

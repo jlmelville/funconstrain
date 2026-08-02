@@ -45,9 +45,7 @@
 #' lower = -1, upper = 1)
 #' @export
 jenn_samp <- function(m = 10) {
-  if (m < 2) {
-    stop("Jennrich-Sampson: m must be >= 2")
-  }
+  m <- validate_dimension(m, "Jennrich-Sampson", min = 2L, label = "m")
   list(
     m = NA,
     fn = function(par) {

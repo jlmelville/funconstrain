@@ -41,10 +41,7 @@ watson <- function() {
   # m = 31
   list(
     fn = function(par) {
-      n <- length(par)
-      if (!(2 <= n && n <= 31)) {
-        stop("Watson: n must be between 2-31")
-      }
+      n <- validate_dimension(length(par), "Watson", min = 2L, max = 31L)
       fsum <- 0
       for (i in 1:29) {
         ti <- i / 29
@@ -67,10 +64,7 @@ watson <- function() {
       fsum + f30 * f30 + f31 * f31
     },
     gr = function(par) {
-      n <- length(par)
-      if (!(2 <= n && n <= 31)) {
-        stop("Watson: n must be between 2-31")
-      }
+      n <- validate_dimension(length(par), "Watson", min = 2L, max = 31L)
       grad <- rep(0, n)
       for (i in 1:29) {
         ti <- i / 29
@@ -98,7 +92,7 @@ watson <- function() {
       grad
     },
     he = function(x) {
-      n <- length(x)
+      n <- validate_dimension(length(x), "Watson", min = 2L, max = 31L)
       h <- matrix(0.0, ncol = n, nrow = n)
       for (i in 1:29) {
         d1 <- i / 29.0
@@ -141,10 +135,7 @@ watson <- function() {
       h
     },
     fg = function(par) {
-      n <- length(par)
-      if (!(2 <= n && n <= 31)) {
-        stop("Watson: n must be between 2-31")
-      }
+      n <- validate_dimension(length(par), "Watson", min = 2L, max = 31L)
 
       fsum <- 0
       grad <- rep(0, n)
@@ -183,9 +174,7 @@ watson <- function() {
     #    x0 = function(n = 15) {
     x0 = function(n = 6) {
       # Modified JN 2022-11-24 to n=6
-      if (!(2 <= n && n <= 31)) {
-        stop("Watson: n must be between 2-31")
-      }
+      n <- validate_dimension(n, "Watson", min = 2L, max = 31L)
       rep(0, n)
     },
     fmin = 2.28767e-3,
