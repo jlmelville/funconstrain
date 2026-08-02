@@ -29,6 +29,47 @@ test_that("problem factories expose documented core fields", {
   }
 })
 
+test_that("fixed-dimensional callbacks reject wrong-length parameters", {
+  cases <- list(
+    list(name = "rosen", n = 2L, problem = "Rosenbrock"),
+    list(name = "freud_roth", n = 2L, problem = "Freudenstein-Roth"),
+    list(name = "powell_bs", n = 2L, problem = "Powell Badly Scaled"),
+    list(name = "brown_bs", n = 2L, problem = "Brown Badly Scaled"),
+    list(name = "beale", n = 2L, problem = "Beale"),
+    list(name = "jenn_samp", n = 2L, problem = "Jennrich-Sampson"),
+    list(name = "helical", n = 3L, problem = "Helical Valley"),
+    list(name = "bard", n = 3L, problem = "Bard"),
+    list(name = "gauss", n = 3L, problem = "Gaussian"),
+    list(name = "meyer", n = 3L, problem = "Meyer"),
+    list(name = "gulf", n = 3L, problem = "Gulf"),
+    list(name = "box_3d", n = 3L, problem = "Box 3D"),
+    list(name = "powell_s", n = 4L, problem = "Powell Singular"),
+    list(name = "wood", n = 4L, problem = "Wood"),
+    list(name = "kow_osb", n = 4L, problem = "Kowalik-Osborne"),
+    list(name = "brown_den", n = 4L, problem = "Brown Dennis"),
+    list(name = "osborne_1", n = 5L, problem = "Osborne 1"),
+    list(name = "biggs_exp6", n = 6L, problem = "Biggs EXP6"),
+    list(name = "osborne_2", n = 11L, problem = "Osborne 2")
+  )
+
+  for (case in cases) {
+    testfun <- get_problem_factory(case$name)()
+    for (callback in c("fn", "gr", "he", "fg")) {
+      for (bad_n in c(case$n - 1L, case$n + 1L)) {
+        expect_error(
+          testfun[[callback]](rep(0, bad_n)),
+          paste0(
+            "^",
+            case$problem,
+            ": n is outside the allowed range$"
+          ),
+          info = paste(case$name, callback, "n =", bad_n)
+        )
+      }
+    }
+  }
+})
+
 test_that("fg matches fn and gr at each factory standard x0", {
   for (name in problem_factory_names()) {
     testfun <- get_problem_factory(name)()

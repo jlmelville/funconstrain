@@ -7,6 +7,19 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$fn, testfun$fn(testfun$x0))
   expect_equal(fg$gr, testfun$gr(testfun$x0))
 })
+test_that("Off-start derivatives match finite differences", {
+  par <- c(2, 0.2)
+  # A larger step avoids cancellation in this badly scaled objective.
+  expect_equal(
+    gfd(par, testfun$fn, rel_eps = 1e-2),
+    testfun$gr(par),
+    tolerance = 1e-4
+  )
+  expect_hfd(testfun, par, tolerance = 1e-5)
+  fg <- testfun$fg(par)
+  expect_equal(fg$fn, testfun$fn(par))
+  expect_equal(fg$gr, testfun$gr(par))
+})
 test_that("Gradient is zero at stated minima", {
   gr0 <- testfun$gr(c(1e6, 2e-6))
   expect_equal(gr0, c(0, 0))

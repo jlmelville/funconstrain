@@ -54,6 +54,7 @@ bard <- function() {
   n <- 3
   list(
     fn = function(par) {
+      validate_dimension(length(par), "Bard", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -68,6 +69,7 @@ bard <- function() {
       fsum
     },
     gr = function(par) {
+      validate_dimension(length(par), "Bard", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -89,6 +91,7 @@ bard <- function() {
       grad
     },
     he = function(par) {
+      validate_dimension(length(par), "Bard", min = 3L, max = 3L)
       y8 <- c(
         0.14,
         0.18,
@@ -140,6 +143,7 @@ bard <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Bard", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

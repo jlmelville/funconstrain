@@ -35,6 +35,12 @@ freud_roth <- function() {
   list(
     m = NA,
     fn = function(par) {
+      validate_dimension(
+        length(par),
+        "Freudenstein-Roth",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
 
@@ -44,6 +50,12 @@ freud_roth <- function() {
       f1 * f1 + f2 * f2
     },
     gr = function(par) {
+      validate_dimension(
+        length(par),
+        "Freudenstein-Roth",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
       yy <- y * y
@@ -62,6 +74,12 @@ freud_roth <- function() {
       )
     },
     he = function(par) {
+      validate_dimension(
+        length(par),
+        "Freudenstein-Roth",
+        min = 2L,
+        max = 2L
+      )
       x1 <- par[1]
       x2 <- par[2]
       h <- matrix(NA, nrow = 2, ncol = 2)
@@ -79,6 +97,12 @@ freud_roth <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(
+        length(par),
+        "Freudenstein-Roth",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
       f1 <- -13 + x + ((5 - y) * y - 2) * y

@@ -60,6 +60,7 @@ gulf <- function(m = 99) {
 
   list(
     fn = function(par) {
+      validate_dimension(length(par), "Gulf", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -70,6 +71,7 @@ gulf <- function(m = 99) {
       sum(fi * fi)
     },
     gr = function(par) {
+      validate_dimension(length(par), "Gulf", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -91,6 +93,7 @@ gulf <- function(m = 99) {
       c(dx, dy, dz)
     },
     he = function(par) {
+      validate_dimension(length(par), "Gulf", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -123,6 +126,7 @@ gulf <- function(m = 99) {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Gulf", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

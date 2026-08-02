@@ -46,6 +46,7 @@ gauss <- function() {
   m <- 15
   list(
     fn = function(par) {
+      validate_dimension(length(par), "Gaussian", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -59,6 +60,7 @@ gauss <- function() {
       fsum
     },
     gr = function(par) {
+      validate_dimension(length(par), "Gaussian", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -79,6 +81,7 @@ gauss <- function() {
       grad
     },
     he = function(par) {
+      validate_dimension(length(par), "Gaussian", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -126,6 +129,7 @@ gauss <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Gaussian", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

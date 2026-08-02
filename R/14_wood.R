@@ -34,6 +34,7 @@
 wood <- function() {
   list(
     fn = function(par) {
+      validate_dimension(length(par), "Wood", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -51,6 +52,7 @@ wood <- function() {
       f1 * f1 + f2 * f2 + f3 * f3 + f4 * f4 + f5 * f5 + f6 * f6
     },
     gr = function(par) {
+      validate_dimension(length(par), "Wood", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -69,6 +71,7 @@ wood <- function() {
       )
     },
     he = function(par) {
+      validate_dimension(length(par), "Wood", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -93,6 +96,7 @@ wood <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Wood", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

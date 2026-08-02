@@ -35,6 +35,12 @@
 powell_s <- function() {
   list(
     fn = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Singular",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -50,6 +56,12 @@ powell_s <- function() {
       f1 * f1 + f2s + f3 * f3 + f4s
     },
     gr = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Singular",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -70,6 +82,12 @@ powell_s <- function() {
       )
     },
     he = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Singular",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -99,6 +117,12 @@ powell_s <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Singular",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

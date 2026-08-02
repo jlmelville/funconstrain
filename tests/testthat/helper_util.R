@@ -1,25 +1,21 @@
-gfd <- function(par, fn, rel_eps = sqrt(.Machine$double.eps)) {
+gfd <- function(par, fn, rel_eps = .Machine$double.eps^(1 / 3)) {
   g <- rep(0, length(par))
   for (i in seq_along(par)) {
     oldx <- par[i]
-    if (oldx != 0) {
-      eps <- oldx * rel_eps
-    } else {
-      eps <- 1e-3
-    }
-    par[i] <- oldx + eps
+    h <- rel_eps * max(1, abs(oldx))
+    par[i] <- oldx + h
     fplus <- fn(par)
 
-    par[i] <- oldx - eps
+    par[i] <- oldx - h
     fminus <- fn(par)
     par[i] <- oldx
 
-    g[i] <- (fplus - fminus) / (2 * eps)
+    g[i] <- (fplus - fminus) / (2 * h)
   }
   g
 }
 
-make_gfd <- function(fn, rel_eps = sqrt(.Machine$double.eps)) {
+make_gfd <- function(fn, rel_eps = .Machine$double.eps^(1 / 3)) {
   function(par) {
     gfd(par, fn, rel_eps)
   }
@@ -97,22 +93,32 @@ hessian_fd <- function(par, gr, rel_eps = .Machine$double.eps^(1 / 4)) {
 
   for (i in seq_along(par)) {
     oldx <- par[i]
-    eps <- rel_eps
-    if (oldx != 0) {
-      eps <- abs(oldx) * rel_eps
-    }
+    h <- rel_eps * max(1, abs(oldx))
 
-    par[i] <- oldx + eps
+    par[i] <- oldx + h
     gplus <- gr(par)
 
-    par[i] <- oldx - eps
+    par[i] <- oldx - h
     gminus <- gr(par)
     par[i] <- oldx
 
-    hessian[, i] <- (gplus - gminus) / (2 * eps)
+    hessian[, i] <- (gplus - gminus) / (2 * h)
   }
 
   hessian
+}
+
+expect_hfd <- function(
+  testfun,
+  par,
+  tolerance = 1e-6,
+  rel_eps = .Machine$double.eps^(1 / 4)
+) {
+  expect_equal(
+    testfun$he(par),
+    hessian_fd(par, testfun$gr, rel_eps),
+    tolerance = tolerance
+  )
 }
 
 factory_m_metadata <- function() {

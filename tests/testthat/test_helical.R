@@ -38,6 +38,7 @@ test_that("Gradient is finite on the smooth positive y-axis", {
     expect_equal(fg$fn, testfun$fn(case$par))
     expect_true(all(is.finite(testfun$he(case$par))), info = case_name)
     expect_gfd(testfun, case$par, tolerance = 1e-3)
+    expect_hfd(testfun, case$par, tolerance = 1e-5)
   }
 })
 
@@ -55,6 +56,7 @@ test_that("Gradient remains correct at an ordinary off-axis point", {
   expect_equal(fg$gr, testfun$gr(par))
   expect_equal(fg$fn, testfun$fn(par))
   expect_gfd(testfun, par, tolerance = 1e-6)
+  expect_hfd(testfun, par, tolerance = 1e-5)
 })
 
 test_that("Undefined Helical domains produce clear callback errors", {

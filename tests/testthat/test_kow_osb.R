@@ -14,6 +14,14 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$fn, testfun$fn(testfun$x0))
   expect_equal(fg$gr, testfun$gr(testfun$x0))
 })
+test_that("Off-start derivatives match finite differences", {
+  par <- c(0.2, 0.3, 0.4, 0.5)
+  expect_gfd(testfun, par, tolerance = 1e-6)
+  expect_hfd(testfun, par, tolerance = 1e-5)
+  fg <- testfun$fg(par)
+  expect_equal(fg$fn, testfun$fn(par))
+  expect_equal(fg$gr, testfun$gr(par))
+})
 test_that("Hessian singular branch returns epsilon sentinel matrix", {
   expect_equal(
     testfun$he(c(1, 1, -4, 0)),

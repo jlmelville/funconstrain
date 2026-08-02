@@ -35,6 +35,12 @@ powell_bs <- function() {
   list(
     m = NA,
     fn = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Badly Scaled",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
 
@@ -44,6 +50,12 @@ powell_bs <- function() {
       f1 * f1 + f2 * f2
     },
     gr = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Badly Scaled",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
       a <- 2e4 * (1e4 * x * y - 1)
@@ -55,6 +67,12 @@ powell_bs <- function() {
       )
     },
     he = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Badly Scaled",
+        min = 2L,
+        max = 2L
+      )
       x1 <- par[1]
       x2 <- par[2]
       h <- matrix(NA, nrow = 2, ncol = 2)
@@ -67,6 +85,12 @@ powell_bs <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(
+        length(par),
+        "Powell Badly Scaled",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
 

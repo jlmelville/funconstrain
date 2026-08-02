@@ -104,6 +104,7 @@ osborne_2 <- function() {
 
   list(
     fn = function(par) {
+      validate_dimension(length(par), "Osborne 2", min = 11L, max = 11L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -126,6 +127,7 @@ osborne_2 <- function() {
       sum(fi * fi)
     },
     gr = function(par) {
+      validate_dimension(length(par), "Osborne 2", min = 11L, max = 11L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -175,6 +177,7 @@ osborne_2 <- function() {
       grad
     },
     he = function(par) {
+      validate_dimension(length(par), "Osborne 2", min = 11L, max = 11L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -248,6 +251,7 @@ osborne_2 <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Osborne 2", min = 11L, max = 11L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

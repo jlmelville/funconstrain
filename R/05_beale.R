@@ -35,6 +35,7 @@ beale <- function() {
   list(
     m = NA,
     fn = function(par) {
+      validate_dimension(length(par), "Beale", min = 2L, max = 2L)
       x <- par[1]
       y <- par[2]
       yy <- y * y
@@ -47,6 +48,7 @@ beale <- function() {
       f1 * f1 + f2 * f2 + f3 * f3
     },
     gr = function(par) {
+      validate_dimension(length(par), "Beale", min = 2L, max = 2L)
       x <- par[1]
       y <- par[2]
 
@@ -63,6 +65,7 @@ beale <- function() {
       )
     },
     he = function(par) {
+      validate_dimension(length(par), "Beale", min = 2L, max = 2L)
       x1 <- par[1]
       x2 <- par[2]
       h <- matrix(0.0, nrow = 2, ncol = 2)
@@ -80,6 +83,7 @@ beale <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Beale", min = 2L, max = 2L)
       x <- par[1]
       y <- par[2]
       yy <- y * y

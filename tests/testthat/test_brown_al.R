@@ -49,6 +49,7 @@ test_that("Product residual gradient handles negative products and zeros", {
     expect_true(all(is.finite(actual)), info = case_name)
     expect_true(all(is.finite(fg$gr)), info = case_name)
     expect_gfd(testfun, case$par, tolerance = 1e-6)
+    expect_hfd(testfun, case$par, tolerance = 1e-5)
   }
 })
 

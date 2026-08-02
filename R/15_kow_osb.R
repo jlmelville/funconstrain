@@ -49,6 +49,12 @@ kow_osb <- function() {
   u <- c(4, 2, 1, 0.5, 0.25, 0.167, 0.125, 0.1, 0.0833, 0.0714, 0.0625)
   list(
     fn = function(par) {
+      validate_dimension(
+        length(par),
+        "Kowalik-Osborne",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -65,6 +71,12 @@ kow_osb <- function() {
       fsum
     },
     gr = function(par) {
+      validate_dimension(
+        length(par),
+        "Kowalik-Osborne",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -90,6 +102,12 @@ kow_osb <- function() {
       grad
     },
     he = function(par) {
+      validate_dimension(
+        length(par),
+        "Kowalik-Osborne",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -133,6 +151,12 @@ kow_osb <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(
+        length(par),
+        "Kowalik-Osborne",
+        min = 4L,
+        max = 4L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]

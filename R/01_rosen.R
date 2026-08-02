@@ -34,11 +34,13 @@ rosen <- function() {
   list(
     m = NA,
     fn = function(x) {
+      validate_dimension(length(x), "Rosenbrock", min = 2L, max = 2L)
       x1 <- x[1]
       x2 <- x[2]
       100 * (x2 - x1 * x1)^2 + (1 - x1)^2
     },
     gr = function(x) {
+      validate_dimension(length(x), "Rosenbrock", min = 2L, max = 2L)
       x1 <- x[1]
       x2 <- x[2]
       c(
@@ -47,6 +49,7 @@ rosen <- function() {
       )
     },
     he = function(x) {
+      validate_dimension(length(x), "Rosenbrock", min = 2L, max = 2L)
       x1 <- x[1]
       x2 <- x[2]
       h <- matrix(NA, nrow = 2, ncol = 2)
@@ -58,6 +61,7 @@ rosen <- function() {
       h
     },
     fg = function(x) {
+      validate_dimension(length(x), "Rosenbrock", min = 2L, max = 2L)
       x1 <- x[1]
       x2 <- x[2]
       x2x11 <- x2 - x1 * x1

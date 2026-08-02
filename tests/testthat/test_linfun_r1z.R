@@ -24,6 +24,14 @@ test_that("f, g, and fg match at x0", {
   expect_equal(fg$fn, testfun$fn(x0))
   expect_equal(fg$gr, testfun$gr(x0))
 })
+test_that("Off-start derivatives match finite differences", {
+  par <- c(0.2, 0.4, 0.6, 0.8)
+  expect_gfd(testfun, par, tolerance = 1e-6)
+  expect_hfd(testfun, par, tolerance = 1e-5)
+  fg <- testfun$fg(par)
+  expect_equal(fg$fn, testfun$fn(par))
+  expect_equal(fg$gr, testfun$gr(par))
+})
 test_that("Minima has expected relationship to m", {
   expect_equal(
     sum(2:(n - 1) * min_x10[2:(n - 1)]),

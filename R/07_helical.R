@@ -56,6 +56,12 @@ helical <- function() {
 
   list(
     fn = function(par) {
+      validate_dimension(
+        length(par),
+        "Helical Valley",
+        min = 3L,
+        max = 3L
+      )
       x <- par[1]
       y <- par[2]
       z <- par[3]
@@ -68,6 +74,12 @@ helical <- function() {
       f1 * f1 + f2 * f2 + f3 * f3
     },
     gr = function(par) {
+      validate_dimension(
+        length(par),
+        "Helical Valley",
+        min = 3L,
+        max = 3L
+      )
       x <- par[1]
       y <- par[2]
       z <- par[3]
@@ -87,6 +99,12 @@ helical <- function() {
       c(dx, dy, dz)
     },
     he = function(par) {
+      validate_dimension(
+        length(par),
+        "Helical Valley",
+        min = 3L,
+        max = 3L
+      )
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -124,6 +142,12 @@ helical <- function() {
       h
     },
     fg = function(par) {
+      validate_dimension(
+        length(par),
+        "Helical Valley",
+        min = 3L,
+        max = 3L
+      )
       x <- par[1]
       y <- par[2]
       z <- par[3]

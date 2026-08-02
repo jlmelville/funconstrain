@@ -49,6 +49,12 @@ jenn_samp <- function(m = 10) {
   list(
     m = NA,
     fn = function(par) {
+      validate_dimension(
+        length(par),
+        "Jennrich-Sampson",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
 
@@ -60,6 +66,12 @@ jenn_samp <- function(m = 10) {
       fsum
     },
     gr = function(par) {
+      validate_dimension(
+        length(par),
+        "Jennrich-Sampson",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
 
@@ -74,6 +86,12 @@ jenn_samp <- function(m = 10) {
       grad
     },
     he = function(par) {
+      validate_dimension(
+        length(par),
+        "Jennrich-Sampson",
+        min = 2L,
+        max = 2L
+      )
       x1 <- par[1]
       x2 <- par[2]
       h <- matrix(0.0, nrow = 2, ncol = 2)
@@ -89,6 +107,12 @@ jenn_samp <- function(m = 10) {
       h
     },
     fg = function(par) {
+      validate_dimension(
+        length(par),
+        "Jennrich-Sampson",
+        min = 2L,
+        max = 2L
+      )
       x <- par[1]
       y <- par[2]
 

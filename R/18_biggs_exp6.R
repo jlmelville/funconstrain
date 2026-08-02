@@ -45,6 +45,7 @@ biggs_exp6 <- function(m = 13) {
 
   list(
     fn = function(par) {
+      validate_dimension(length(par), "Biggs EXP6", min = 6L, max = 6L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -58,6 +59,7 @@ biggs_exp6 <- function(m = 13) {
       sum(fi * fi)
     },
     gr = function(par) {
+      validate_dimension(length(par), "Biggs EXP6", min = 6L, max = 6L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -87,6 +89,7 @@ biggs_exp6 <- function(m = 13) {
       )
     },
     he = function(par) {
+      validate_dimension(length(par), "Biggs EXP6", min = 6L, max = 6L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
@@ -159,6 +162,7 @@ biggs_exp6 <- function(m = 13) {
       h
     },
     fg = function(par) {
+      validate_dimension(length(par), "Biggs EXP6", min = 6L, max = 6L)
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
