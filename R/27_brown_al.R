@@ -41,6 +41,13 @@
 #'                       method = "L-BFGS-B")
 #' @export
 brown_al <- function() {
+  product_excluding_each <- function(x) {
+    n <- length(x)
+    prefix <- cumprod(c(1, x[-n]))
+    suffix <- rev(cumprod(c(1, rev(x[-1]))))
+    prefix * suffix
+  }
+
   list(
     fn = function(par) {
       n <- length(par)
@@ -59,11 +66,9 @@ brown_al <- function() {
       fi <- par + sum(par) - (n + 1)
       grad <- rep(2 * sum(fi[1:(n - 1)]), n)
       grad[1:(n - 1)] <- grad[1:(n - 1)] + 2 * fi[1:(n - 1)]
-      prod_x <- prod(par)
-      if (prod_x > 0) {
-        fn <- prod_x - 1
-        grad <- grad + 2 * fn * (prod_x / par)
-      }
+      product_residual <- prod(par) - 1
+      grad <- grad +
+        2 * product_residual * product_excluding_each(par)
       grad
     },
     he = function(x) {
@@ -135,14 +140,12 @@ brown_al <- function() {
       fi <- par + sum(par) - (n + 1)
       grad <- rep(2 * sum(fi[1:(n - 1)]), n)
       grad[1:(n - 1)] <- grad[1:(n - 1)] + 2 * fi[1:(n - 1)]
-      prod_x <- prod(par)
-      fn <- prod_x - 1
+      product_residual <- prod(par) - 1
 
-      fi[n] <- prod_x - 1
+      fi[n] <- product_residual
       fsum <- sum(fi * fi)
-      if (prod_x > 0) {
-        grad <- grad + 2 * fn * (prod_x / par)
-      }
+      grad <- grad +
+        2 * product_residual * product_excluding_each(par)
 
       list(
         fn = fsum,
