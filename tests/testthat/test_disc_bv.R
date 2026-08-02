@@ -29,6 +29,12 @@ test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x10), min_fx10, tolerance = 1e-6)
 })
 
+test_that("Standard starting point matches the canonical definition", {
+  n <- 4
+  t <- seq_len(n) / (n + 1)
+  expect_equal(testfun$x0(n), t * (t - 1))
+})
+
 test_that("Optimizer can reach minimum", {
   res <- stats::optim(
     par = testfun$x0(10),
