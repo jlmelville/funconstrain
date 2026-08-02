@@ -37,7 +37,7 @@ The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable, number of summand
-functions \code{m = n + 1}.
+functions \code{m = 2 * n}.
 \item Minima: \verb{f = 9.37629...e-6} if \code{n = 4};
 \verb{f = 2.93660...e-4} if \code{n = 10}.
 }
