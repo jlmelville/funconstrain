@@ -32,6 +32,20 @@
 helical <- function() {
   one_div_2pi <- 0.5 / pi
 
+  check_objective_domain <- function(x, y) {
+    if (x == 0 && y == 0) {
+      stop("Helical Valley: objective is undefined at the origin")
+    }
+  }
+
+  check_derivative_domain <- function(x, y) {
+    if (x == 0 && y <= 0) {
+      stop(
+        "Helical Valley: derivatives are undefined at the origin or on the negative y-axis"
+      )
+    }
+  }
+
   theta <- function(x1, x2) {
     res <- one_div_2pi * atan(x2 / x1)
     if (x1 < 0) {
@@ -45,6 +59,7 @@ helical <- function() {
       x <- par[1]
       y <- par[2]
       z <- par[3]
+      check_objective_domain(x, y)
 
       f1 <- 10 * (z - 10 * theta(x, y))
       f2 <- 10 * (sqrt(x * x + y * y) - 1)
@@ -56,18 +71,17 @@ helical <- function() {
       x <- par[1]
       y <- par[2]
       z <- par[3]
+      check_derivative_domain(x, y)
 
-      xx <- x * x
-      yy <- y * y
-      sxy <- sqrt(xx + yy)
-      pyyxx <- pi * (yy / xx + 1)
+      r2 <- x * x + y * y
+      sxy <- sqrt(r2)
 
       fx <- 10 * (z - 10 * theta(x, y))
       fy <- 10 * (sxy - 1)
       fz <- z
 
-      dx <- (100 * y * fx) / (pyyxx * xx) + (20 * x * fy) / sxy
-      dy <- (-100 * fx) / (pyyxx * x) + (20 * y * fy) / sxy
+      dx <- (100 * y * fx) / (pi * r2) + (20 * x * fy) / sxy
+      dy <- (-100 * x * fx) / (pi * r2) + (20 * y * fy) / sxy
       dz <- 20 * fx + 2 * z
 
       c(dx, dy, dz)
@@ -76,6 +90,7 @@ helical <- function() {
       x1 <- par[1]
       x2 <- par[2]
       x3 <- par[3]
+      check_derivative_domain(x1, x2)
       h <- matrix(0.0, nrow = 3, ncol = 3)
 
       if (x1 == 0.0) {
@@ -112,18 +127,17 @@ helical <- function() {
       x <- par[1]
       y <- par[2]
       z <- par[3]
+      check_derivative_domain(x, y)
 
-      xx <- x * x
-      yy <- y * y
-      sxy <- sqrt(xx + yy)
-      pyyxx <- pi * (yy / xx + 1)
+      r2 <- x * x + y * y
+      sxy <- sqrt(r2)
 
       fx <- 10 * (z - 10 * theta(x, y))
       fy <- 10 * (sxy - 1)
       fz <- z
 
-      dx <- (100 * y * fx) / (pyyxx * xx) + (20 * x * fy) / sxy
-      dy <- (-100 * fx) / (pyyxx * x) + (20 * y * fy) / sxy
+      dx <- (100 * y * fx) / (pi * r2) + (20 * x * fy) / sxy
+      dy <- (-100 * x * fx) / (pi * r2) + (20 * y * fy) / sxy
       dz <- 20 * fx + 2 * z
 
       fsum <- fx * fx + fy * fy + fz * fz
