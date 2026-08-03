@@ -10,6 +10,9 @@
 #' - Minima: `f = 8.214877e-3` at c(0.08241056, 1.133036, 2.343695)
 #'    Solvers terminate with `f` near 17 for parameter 1 in 0.84 to 0.89 approximately
 #'    and large negative values of the other two parameters.
+#' @note
+#' The Hessian is undefined when a denominator in its formula is exactly zero,
+#' so `he()` raises an error at that parameter value.
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -51,7 +54,6 @@ bard <- function() {
     4.39
   )
   m <- 15
-  n <- 3
   list(
     fn = function(par) {
       validate_dimension(length(par), "Bard", min = 3L, max = 3L)
@@ -132,9 +134,7 @@ bard <- function() {
           h[2, 3] <- h[2, 3] + 2.0 * s2 * d2 * d3
           h[3, 3] <- h[3, 3] + 2.0 * s2 * d3^2
         } else {
-          h[1:n, 1:n] <- .Machine$double.xmax
-          # flag <- - 3
-          return(h)
+          stop("Hessian is undefined at this parameter value")
         }
       } # end loop
       h[2, 1] <- h[1, 2]

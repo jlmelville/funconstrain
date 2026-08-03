@@ -17,6 +17,9 @@
 #' least 1e4). It is not recommended to rely on the typical gradient norm
 #' termination conditions if using this test function.
 #'
+#' The Hessian is undefined when a denominator in its formula is exactly zero,
+#' so `he()` raises an error at that parameter value.
+#'
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -117,9 +120,7 @@ meyer <- function() {
           h[3, 3] <- h[3, 3] +
             2.0 * t1 * x1 * x2 / d2^3 * (2.0 * t2 + s1 * x2 / d2)
         } else {
-          h <- matrix(0.0, ncol = 3, nrow = 3)
-          # flag <- - 3
-          return(h)
+          stop("Hessian is undefined at this parameter value")
         }
       } # end loop
       h[2, 1] <- h[1, 2]

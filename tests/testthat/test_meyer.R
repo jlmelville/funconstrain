@@ -25,10 +25,10 @@ test_that("Off-start derivatives match finite differences", {
   expect_equal(fg$fn, testfun$fn(par))
   expect_equal(fg$gr, testfun$gr(par))
 })
-test_that("Hessian singular branch returns zero sentinel matrix", {
-  expect_equal(
+test_that("Hessian singular branch raises an error", {
+  expect_error(
     testfun$he(c(1, 1, -50)),
-    matrix(0, nrow = 3, ncol = 3)
+    regexp = "^Hessian is undefined at this parameter value$"
   )
 })
 test_that("Gradient is near stationary at stated minima", {

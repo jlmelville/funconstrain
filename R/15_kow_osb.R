@@ -9,6 +9,9 @@
 #'   functions `m = 11`.
 #' - Minima: `f = 3.07505...e-4`;
 #'   and `f = 1.02734...e-3` at `(Inf, -14.07..., -Inf, -Inf)`.
+#' @note
+#' The Hessian is undefined when a denominator in its formula is exactly zero,
+#' so `he()` raises an error at that parameter value.
 #'
 #' @template factory-return
 #' @references
@@ -137,9 +140,7 @@ kow_osb <- function() {
           h[4, 4] <- h[4, 4] +
             2.0 * x1 * u[i] * s1 / t1^3 * (x1 * u[i] * s1 / t1 - 2.0 * d1)
         } else {
-          h <- matrix(.Machine$double.eps, nrow = 4, ncol = 4)
-          # flag <- - 3
-          return(h)
+          stop("Hessian is undefined at this parameter value")
         }
       }
       h[2, 1] <- h[1, 2]

@@ -43,6 +43,10 @@ Solvers terminate with \code{f} near 17 for parameter 1 in 0.84 to 0.89 approxim
 and large negative values of the other two parameters.
 }
 }
+\note{
+The Hessian is undefined when a denominator in its formula is exactly zero,
+so \code{he()} raises an error at that parameter value.
+}
 \examples{
 fun <- bard()
 # Optimize using the standard starting point

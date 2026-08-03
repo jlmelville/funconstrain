@@ -42,6 +42,10 @@ functions \code{m = 11}.
 and \verb{f = 1.02734...e-3} at \verb{(Inf, -14.07..., -Inf, -Inf)}.
 }
 }
+\note{
+The Hessian is undefined when a denominator in its formula is exactly zero,
+so \code{he()} raises an error at that parameter value.
+}
 \examples{
 fun <- kow_osb()
 # Optimize using the standard starting point

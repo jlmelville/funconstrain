@@ -48,6 +48,9 @@ The gradient is large even at the optimal value, and enormous if using the
 level of precision given by Meyer and Roth (smallest gradient component is at
 least 1e4). It is not recommended to rely on the typical gradient norm
 termination conditions if using this test function.
+
+The Hessian is undefined when a denominator in its formula is exactly zero,
+so \code{he()} raises an error at that parameter value.
 }
 \examples{
 fun <- meyer()
