@@ -1,5 +1,22 @@
 # Changelog
 
+## funconstrain 0.1.1
+
+### Bug fixes and minor improvements
+
+- Fixed gradient edge cases in
+  [`brown_al()`](https://jlmelville.github.io/funconstrain/reference/brown_al.md)
+  and
+  [`helical()`](https://jlmelville.github.io/funconstrain/reference/helical.md).
+- Corrected the standard starting points for
+  [`disc_bv()`](https://jlmelville.github.io/funconstrain/reference/disc_bv.md)
+  and
+  [`disc_ie()`](https://jlmelville.github.io/funconstrain/reference/disc_ie.md).
+- Improved dimension and input validation, including consistent errors
+  where Hessians are undefined.
+- Documentation has been clarified for problems with configurable
+  dimensions and the reported minima.
+
 ## funconstrain 0.1.0
 
 ### Bug fixes and minor improvements

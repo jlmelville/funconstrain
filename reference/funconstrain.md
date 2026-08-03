@@ -86,9 +86,16 @@ The return value is a list containing the core problem contract:
   order provided in the MGH paper, the value of `n` increases from `2`
   to `50`.
 
-- `fmin`: The reported minimum function value.
+- `fmin`: A reported minimum objective value.
 
-- `xmin`: A numeric vector with reported minimum parameters.
+- `xmin`: A corresponding reported parameter vector, or an `NA` vector
+  when no single minimizer is stored.
+
+For problems with variable `n` or configurable `m`, these stored
+references may apply only to the configuration described in the
+factory's Minima section; they are not recalculated for other choices of
+`n` or `m`. In some cases, `fmin` applies more broadly than the stored
+`xmin`.
 
 Some factories also include `m`, a metadata field for the number of
 summand functions. It is absent for most factories, `NA` for

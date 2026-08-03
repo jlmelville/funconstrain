@@ -11,7 +11,7 @@ methods."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">funconstrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,9 +117,14 @@ function which takes one value, <code>n</code>, and returns a numeric vector of 
 defaults have been chosen arbitrarily, but with the idea that if you were
 to use these test functions in the order provided in the MGH paper, the
 value of <code>n</code> increases from <code>2</code> to <code>50</code>.</p></li>
-<li><p><code>fmin</code>: The reported minimum function value.</p></li>
-<li><p><code>xmin</code>: A numeric vector with reported minimum parameters.</p></li>
-</ul><p>Some factories also include <code>m</code>, a metadata field for the number of summand
+<li><p><code>fmin</code>: A reported minimum objective value.</p></li>
+<li><p><code>xmin</code>: A corresponding reported parameter vector, or an <code>NA</code> vector when
+no single minimizer is stored.</p></li>
+</ul><p>For problems with variable <code>n</code> or configurable <code>m</code>, these stored references
+may apply only to the configuration described in the factory's Minima
+section; they are not recalculated for other choices of <code>n</code> or <code>m</code>. In some
+cases, <code>fmin</code> applies more broadly than the stored <code>xmin</code>.</p>
+<p>Some factories also include <code>m</code>, a metadata field for the number of summand
 functions. It is absent for most factories, <code>NA</code> for <code><a href="beale.html">beale()</a></code>,
 <code><a href="brown_bs.html">brown_bs()</a></code>, <code><a href="chebyquad.html">chebyquad()</a></code>, <code><a href="freud_roth.html">freud_roth()</a></code>, <code><a href="jenn_samp.html">jenn_samp()</a></code>, <code><a href="powell_bs.html">powell_bs()</a></code>,
 and <code><a href="rosen.html">rosen()</a></code>, and numeric for <code><a href="linfun_fr.html">linfun_fr()</a></code>, <code><a href="linfun_r1.html">linfun_r1()</a></code>,

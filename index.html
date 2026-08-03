@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">funconstrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<p>It’s pretty simple. You call a function named after the test problem at hand, and get back a list. That list contains functions that implement the objective, gradient, Hessian, and combined objective-plus-gradient calculation; a suggested starting point, which is also a function if the test problem supports different dimensionalities and is a plain numeric vector otherwise; and reported <code>fmin</code> and <code>xmin</code> values from the source material.</p>
+<p>It’s pretty simple. You call a function named after the test problem at hand, and get back a list. That list contains functions that implement the objective, gradient, Hessian, and combined objective-plus-gradient calculation; a suggested starting point, which is also a function if the test problem supports different dimensionalities and is a plain numeric vector otherwise; and reported <code>fmin</code> and <code>xmin</code> references from the source material. For problems with variable <code>n</code> or configurable <code>m</code>, these stored references may apply only to the configuration described in the factory documentation and are not recalculated for other choices. In some cases, <code>fmin</code> applies more broadly than the stored <code>xmin</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jlmelville.github.io/funconstrain/">funconstrain</a></span><span class="op">)</span></span>
 <span></span>

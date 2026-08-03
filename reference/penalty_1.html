@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">funconstrain</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,9 +56,14 @@ parameter vector and returns a list with members <code>fn</code> and <code>gr</c
 <li><p><code>x0</code>: Suggested starting point. For fixed-dimension problems this is a
 numeric vector; for variable-dimension problems this is a function that
 returns a numeric vector for a requested <code>n</code>.</p></li>
-<li><p><code>fmin</code>: Reported minimum objective value.</p></li>
-<li><p><code>xmin</code>: Numeric vector at a reported minimum.</p></li>
-</ul><p>Some factories also include <code>m</code>, a metadata field for the number of summand
+<li><p><code>fmin</code>: A reported minimum objective value.</p></li>
+<li><p><code>xmin</code>: A corresponding reported parameter vector, or an <code>NA</code> vector when
+no single minimizer is stored.</p></li>
+</ul><p>For problems with variable <code>n</code> or configurable <code>m</code>, these stored references
+may apply only to the configuration described in the factory's Minima
+section; they are not recalculated for other choices of <code>n</code> or <code>m</code>. In some
+cases, <code>fmin</code> applies more broadly than the stored <code>xmin</code>.</p>
+<p>Some factories also include <code>m</code>, a metadata field for the number of summand
 functions. It is absent for most factories, <code>NA</code> for several legacy fixed
 problems, and numeric for <code><a href="linfun_fr.html">linfun_fr()</a></code>, <code><a href="linfun_r1.html">linfun_r1()</a></code>, <code><a href="linfun_r1z.html">linfun_r1z()</a></code>, and
 <code><a href="trigon.html">trigon()</a></code>. It is not part of the core return contract needed by optimizers.</p>
@@ -69,7 +74,8 @@ problems, and numeric for <code><a href="linfun_fr.html">linfun_fr()</a></code>,
 parameters.</p><ul><li><p>Dimensions: Number of parameters <code>n</code> variable, number of summand
 functions <code>m = n + 1</code>.</p></li>
 <li><p>Minima: <code>f = 2.24997...e-5</code> if <code>n = 4</code>;
-<code>f = 7.08765...e-5</code> if <code>n = 10</code>.</p></li>
+<code>f = 7.08765...e-5</code> if <code>n = 10</code>. The returned <code>fmin</code> and <code>xmin</code>
+describe the <code>n = 4</code> example.</p></li>
 </ul><p>The number of parameters, <code>n</code>, in the objective function is not
 specified when invoking this function. It is implicitly set by the length of
 the parameter vector passed to the objective and gradient functions that this

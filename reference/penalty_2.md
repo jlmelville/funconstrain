@@ -28,9 +28,16 @@ A list containing the core problem contract:
   numeric vector; for variable-dimension problems this is a function
   that returns a numeric vector for a requested `n`.
 
-- `fmin`: Reported minimum objective value.
+- `fmin`: A reported minimum objective value.
 
-- `xmin`: Numeric vector at a reported minimum.
+- `xmin`: A corresponding reported parameter vector, or an `NA` vector
+  when no single minimizer is stored.
+
+For problems with variable `n` or configurable `m`, these stored
+references may apply only to the configuration described in the
+factory's Minima section; they are not recalculated for other choices of
+`n` or `m`. In some cases, `fmin` applies more broadly than the stored
+`xmin`.
 
 Some factories also include `m`, a metadata field for the number of
 summand functions. It is absent for most factories, `NA` for several
@@ -48,10 +55,10 @@ The objective function is the sum of `m` functions, each of `n`
 parameters.
 
 - Dimensions: Number of parameters `n` variable, number of summand
-  functions `m = n + 1`.
+  functions `m = 2 * n`.
 
 - Minima: `f = 9.37629...e-6` if `n = 4`; `f = 2.93660...e-4` if
-  `n = 10`.
+  `n = 10`. The returned `fmin` and `xmin` describe the `n = 4` example.
 
 The number of parameters, `n`, in the objective function is not
 specified when invoking this function. It is implicitly set by the
