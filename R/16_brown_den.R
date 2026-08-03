@@ -7,7 +7,9 @@
 #'
 #' - Dimensions: Number of parameters `n = 4`, number of summand
 #'   functions `m >= n`.
-#' - Minima: `f = 85822.2` if `m = 20`.
+#' - Minima: `f = 85822.2` if `m = 20`. The returned `fmin` and `xmin`
+#'   describe the `m = 20` example; a different `m` has different reference
+#'   values.
 #'
 #' @param m Number of summand functions in the objective function. Should be
 #'   equal to or greater than 4.

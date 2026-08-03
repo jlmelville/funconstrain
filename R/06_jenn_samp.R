@@ -8,7 +8,8 @@
 #' - Dimensions: Number of parameters `n = 2`, number of summand
 #'   functions `m >= n`.
 #' - Minima: `f = 124.362...` at `(x1 = x2 = 0.2578)` for
-#'   `m = 10`,
+#'   `m = 10`. The returned `fmin` and `xmin` describe this `m = 10`
+#'   example; a different `m` has different reference values.
 #'
 #' @note This test problem isn't really unconstrained. `x1` must take
 #' a value between `(-1, 1)`. Included for the sake of completeness.

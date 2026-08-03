@@ -9,7 +9,9 @@
 #'   summand functions `m >= n`.
 #' - Minima: `f = (m * (m - 1)) / (2 * (2 * m + 1))` at any set of
 #'   points `x[j]` with `j = 1, 2, ..., n` where the sum of
-#'   `j * x[j] = 3 / (2 * m + 1)`.
+#'   `j * x[j] = 3 / (2 * m + 1)`. The returned `fmin` is the `m = 100`
+#'   value and applies to every valid `n` for that `m`; the returned `xmin`
+#'   is the `n = 5, m = 100` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of

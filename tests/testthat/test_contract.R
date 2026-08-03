@@ -134,6 +134,193 @@ test_that("reported xmin values evaluate to reported fmin values", {
   }
 })
 
+test_that("documented stored reference configurations are internally valid", {
+  cases <- list(
+    list(
+      name = "jenn_samp",
+      args = list(m = 10),
+      configuration = "m=10",
+      xmin_length = 2L
+    ),
+    list(
+      name = "gulf",
+      args = list(m = 10),
+      configuration = "m=10",
+      xmin_length = 3L
+    ),
+    list(
+      name = "box_3d",
+      args = list(m = 20),
+      configuration = "m=20",
+      xmin_length = 3L
+    ),
+    list(
+      name = "brown_den",
+      args = list(m = 20),
+      configuration = "m=20",
+      xmin_length = 4L
+    ),
+    list(
+      name = "biggs_exp6",
+      args = list(m = 13),
+      configuration = "m=13",
+      xmin_length = 6L
+    ),
+    list(
+      name = "watson",
+      args = list(),
+      configuration = "n=6",
+      xmin_length = 6L
+    ),
+    list(
+      name = "ex_rosen",
+      args = list(),
+      configuration = "n=8",
+      xmin_length = 8L
+    ),
+    list(
+      name = "ex_powell",
+      args = list(),
+      configuration = "n=4",
+      xmin_length = 4L
+    ),
+    list(
+      name = "penalty_1",
+      args = list(),
+      configuration = "n=4",
+      xmin_length = 4L
+    ),
+    list(
+      name = "penalty_2",
+      args = list(),
+      configuration = "n=4",
+      xmin_length = 4L
+    ),
+    list(
+      name = "var_dim",
+      args = list(),
+      configuration = "n=6",
+      xmin_length = 6L
+    ),
+    list(
+      name = "trigon",
+      args = list(),
+      configuration = "n=4",
+      xmin_length = 4L
+    ),
+    list(
+      name = "brown_al",
+      args = list(),
+      configuration = "n=4",
+      xmin_length = 4L
+    ),
+    list(
+      name = "disc_bv",
+      args = list(),
+      configuration = "n=5",
+      xmin_length = 5L
+    ),
+    list(
+      name = "disc_ie",
+      args = list(),
+      configuration = "n=5",
+      xmin_length = 5L
+    ),
+    list(
+      name = "broyden_tri",
+      args = list(),
+      configuration = "n=5",
+      xmin_length = 5L
+    ),
+    list(
+      name = "broyden_band",
+      args = list(),
+      configuration = "n=5",
+      xmin_length = 5L
+    ),
+    list(
+      name = "linfun_fr",
+      args = list(m = 100),
+      configuration = "n=4,m=100",
+      xmin_length = 4L
+    ),
+    list(
+      name = "linfun_r1",
+      args = list(m = 100),
+      configuration = "n=5,m=100",
+      xmin_length = 5L
+    ),
+    list(
+      name = "linfun_r1z",
+      args = list(m = 100),
+      configuration = "n=5,m=100",
+      xmin_length = 5L
+    ),
+    list(
+      name = "chebyquad",
+      args = list(),
+      configuration = "n=8",
+      xmin_length = 8L
+    )
+  )
+
+  for (case in cases) {
+    test_that(
+      paste("stored reference is valid for", case$name, case$configuration),
+      {
+        testfun <- do.call(get_problem_factory(case$name), case$args)
+        info <- paste(case$name, case$configuration)
+
+        expect_equal(
+          length(testfun$xmin),
+          case$xmin_length,
+          info = paste(info, "xmin length")
+        )
+
+        if (!anyNA(testfun$xmin)) {
+          actual <- testfun$fn(testfun$xmin)
+          tolerance <- max(1e-8, abs(testfun$fmin) * 1e-5)
+
+          expect_true(is.finite(actual), info = paste(info, "fn(xmin)"))
+          expect_true(
+            abs(actual - testfun$fmin) <= tolerance,
+            info = paste(
+              info,
+              "fn(xmin) =",
+              format(actual, digits = 16),
+              "fmin =",
+              format(testfun$fmin, digits = 16)
+            )
+          )
+        }
+      }
+    )
+  }
+})
+
+test_that("linfun_r1z handles empty interiors at n=1 and n=2", {
+  testfun <- linfun_r1z(m = 100)
+
+  for (n in 1:2) {
+    x <- rep(0, n)
+    info <- paste("linfun_r1z", "m=100", paste0("n=", n))
+
+    expect_equal(testfun$fn(x), 100, info = paste(info, "fn"))
+    expect_equal(testfun$gr(x), rep(0, n), info = paste(info, "gr"))
+    expect_equal(testfun$fg(x)$fn, 100, info = paste(info, "fg fn"))
+    expect_equal(testfun$fg(x)$gr, rep(0, n), info = paste(info, "fg gr"))
+    expect_equal(
+      testfun$he(x),
+      matrix(0, nrow = n, ncol = n),
+      info = paste(info, "he")
+    )
+    expect_true(
+      abs(testfun$fn(x) - testfun$fmin) > 1,
+      info = paste(info, "stored fmin is not applicable")
+    )
+  }
+})
+
 test_that("current m metadata is recorded without making it a core field", {
   expected <- data.frame(
     factory = problem_factory_names(),

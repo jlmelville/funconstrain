@@ -8,7 +8,8 @@
 #' - Dimensions: Number of parameters `n` variable, number of summand
 #'   functions `m = 2 * n`.
 #' - Minima: `f = 9.37629...e-6` if `n = 4`;
-#'   `f = 2.93660...e-4` if `n = 10`.
+#'   `f = 2.93660...e-4` if `n = 10`. The returned `fmin` and `xmin`
+#'   describe the `n = 4` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of

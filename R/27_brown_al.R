@@ -9,7 +9,9 @@
 #'   functions `m = n`.
 #' - Minima: `f = 0` at `(a, a, a, ..., a ^ (1 - n))`, where
 #'   `a` satisfies `n * a ^ n - (n + 1) * a ^ (n - 1) + 1 = 0`;
-#'   `f = 1` at `c(0, 0, ..., n + 1)`.
+#'   `f = 1` at `c(0, 0, ..., n + 1)`. The returned `fmin` is the
+#'   dimension-independent zero value, while the returned `xmin` is the
+#'   `n = 4` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of

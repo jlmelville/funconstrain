@@ -88,9 +88,15 @@ function which takes one value, \code{n}, and returns a numeric vector of length
 defaults have been chosen arbitrarily, but with the idea that if you were
 to use these test functions in the order provided in the MGH paper, the
 value of \code{n} increases from \code{2} to \code{50}.
-\item \code{fmin}: The reported minimum function value.
-\item \code{xmin}: A numeric vector with reported minimum parameters.
+\item \code{fmin}: A reported minimum objective value.
+\item \code{xmin}: A corresponding reported parameter vector, or an \code{NA} vector when
+no single minimizer is stored.
 }
+
+For problems with variable \code{n} or configurable \code{m}, these stored references
+may apply only to the configuration described in the factory's Minima
+section; they are not recalculated for other choices of \code{n} or \code{m}. In some
+cases, \code{fmin} applies more broadly than the stored \code{xmin}.
 
 Some factories also include \code{m}, a metadata field for the number of summand
 functions. It is absent for most factories, \code{NA} for \code{beale()},

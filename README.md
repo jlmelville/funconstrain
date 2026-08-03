@@ -29,7 +29,11 @@ It's pretty simple. You call a function named after the test problem at hand, an
 That list contains functions that implement the objective, gradient, Hessian, and combined
 objective-plus-gradient calculation; a suggested starting point, which is also a function if the
 test problem supports different dimensionalities and is a plain numeric vector otherwise; and
-reported `fmin` and `xmin` values from the source material.
+reported `fmin` and `xmin` references from the source material. For problems
+with variable `n` or configurable `m`, these stored references may apply only
+to the configuration described in the factory documentation and are not
+recalculated for other choices. In some cases, `fmin` applies more broadly than
+the stored `xmin`.
 
 ```R
 library(funconstrain)

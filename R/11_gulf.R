@@ -7,7 +7,8 @@
 #'
 #' - Dimensions: Number of parameters `n = 3`, number of summand
 #'   functions `3 <= m <= 100`.
-#' - Minima: `f = 0` at `(50, 25, 1.5)`.
+#' - Minima: `f = 0` at `(50, 25, 1.5)` for every valid `m`. The returned
+#'   `fmin` and `xmin` are applicable to all valid `m`.
 #'
 #' Note that the equation as published by Moré, Garbow and Hillstrom (1981)
 #' contains an error, where the symbol 'mi' should be interpreted as a minus

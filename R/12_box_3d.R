@@ -8,7 +8,9 @@
 #' - Dimensions: Number of parameters `n = 3`, number of summand
 #'   functions `m >= n`.
 #' - Minima: `f = 0` at `(1, 10, 1), (10, 1, -1)` and
-#'     where `x1 = x2` and `x3 = 0`.
+#'     where `x1 = x2` and `x3 = 0`, for every valid `m`. The returned
+#'     `fmin` is applicable to all valid `m`; `xmin` is `NA` because no
+#'     single location is selected or stored for these multiple minima.
 #'
 #' @param m Number of summand functions in the objective function. Should be
 #'   equal to or greater than 3.

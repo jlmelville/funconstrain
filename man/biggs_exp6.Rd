@@ -24,9 +24,15 @@ parameter vector and returns a list with members \code{fn} and \code{gr}.
 \item \code{x0}: Suggested starting point. For fixed-dimension problems this is a
 numeric vector; for variable-dimension problems this is a function that
 returns a numeric vector for a requested \code{n}.
-\item \code{fmin}: Reported minimum objective value.
-\item \code{xmin}: Numeric vector at a reported minimum.
+\item \code{fmin}: A reported minimum objective value.
+\item \code{xmin}: A corresponding reported parameter vector, or an \code{NA} vector when
+no single minimizer is stored.
 }
+
+For problems with variable \code{n} or configurable \code{m}, these stored references
+may apply only to the configuration described in the factory's Minima
+section; they are not recalculated for other choices of \code{n} or \code{m}. In some
+cases, \code{fmin} applies more broadly than the stored \code{xmin}.
 
 Some factories also include \code{m}, a metadata field for the number of summand
 functions. It is absent for most factories, \code{NA} for several legacy fixed
@@ -45,8 +51,9 @@ functions \code{m >= n}.
 \item Minima: \verb{f = 5.65565...e-3} if \code{m = 13};
 not reported in the MGH (1981) paper is \code{(f = 0)} at
 \code{c(1, 10, 1, 5, 4, 3)} and \code{c(4, 10, 3, 5, 1, 1)}
-(and probably others) for all \code{m} (probably: I stopped testing after
-\code{m = 1000}).
+for all valid \code{m}. The returned \code{fmin = 0} and \code{xmin} describe the
+exact zero at \code{c(4, 10, 3, 5, 1, 1)} for all valid \code{m}; the MGH value
+above is a separate \code{m = 13} reference.
 }
 }
 \examples{

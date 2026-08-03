@@ -7,9 +7,12 @@
 #'
 #' - Dimensions: Number of parameters `n` variable, number of
 #'   summand functions `m >= n`.
-#' - Minima: `f = (m * m  + 3 * m - 6) / (2 * (2 * m - 3))` at any
-#'   set of points `x[j]` with `j = 2, ..., n - 1` where the sum of
-#'   `j * x[j] = 3 / (2 * m - 3)`.
+#' - Minima: For `3 <= n <= m`, `f = (m * m  + 3 * m - 6) /
+#'   (2 * (2 * m - 3))` at any set of points `x[j]` with `j = 2, ..., n - 1`
+#'   where the sum of `j * x[j] = 3 / (2 * m - 3)`. For `n = 1` or `n = 2`,
+#'   the interior index set is empty and the objective is identically `f = m`.
+#'   The returned `fmin` is the `m = 100` value and applies only for
+#'   `3 <= n <= m`; the returned `xmin` is the `n = 5, m = 100` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of

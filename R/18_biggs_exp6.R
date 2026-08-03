@@ -10,8 +10,9 @@
 #' - Minima: `f = 5.65565...e-3` if `m = 13`;
 #'   not reported in the MGH (1981) paper is `(f = 0)` at
 #'   `c(1, 10, 1, 5, 4, 3)` and `c(4, 10, 3, 5, 1, 1)`
-#'   (and probably others) for all `m` (probably: I stopped testing after
-#'   `m = 1000`).
+#'   for all valid `m`. The returned `fmin = 0` and `xmin` describe the
+#'   exact zero at `c(4, 10, 3, 5, 1, 1)` for all valid `m`; the MGH value
+#'   above is a separate `m = 13` reference.
 #'
 #' @param m Number of summand functions in the objective function. Should be
 #'   equal to or greater than 6.

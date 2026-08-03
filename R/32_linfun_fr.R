@@ -6,7 +6,8 @@
 #' parameters.
 #'
 #' - Dimensions: Number of parameters `n` variable, `m >= n`.
-#' - Minima: `f = m - n` at `rep(-1, n)`.
+#' - Minima: `f = m - n` at `rep(-1, n)` for every valid `n` and `m`. The
+#'   returned `fmin = 96` and `xmin` describe the `m = 100, n = 4` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of

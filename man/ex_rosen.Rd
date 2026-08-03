@@ -20,9 +20,15 @@ parameter vector and returns a list with members \code{fn} and \code{gr}.
 \item \code{x0}: Suggested starting point. For fixed-dimension problems this is a
 numeric vector; for variable-dimension problems this is a function that
 returns a numeric vector for a requested \code{n}.
-\item \code{fmin}: Reported minimum objective value.
-\item \code{xmin}: Numeric vector at a reported minimum.
+\item \code{fmin}: A reported minimum objective value.
+\item \code{xmin}: A corresponding reported parameter vector, or an \code{NA} vector when
+no single minimizer is stored.
 }
+
+For problems with variable \code{n} or configurable \code{m}, these stored references
+may apply only to the configuration described in the factory's Minima
+section; they are not recalculated for other choices of \code{n} or \code{m}. In some
+cases, \code{fmin} applies more broadly than the stored \code{xmin}.
 
 Some factories also include \code{m}, a metadata field for the number of summand
 functions. It is absent for most factories, \code{NA} for several legacy fixed
@@ -38,7 +44,9 @@ parameters.
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable but even, number
 of summand functions \code{m = n}.
-\item Minima: \code{f = 0} at \code{rep(1, n)}
+\item Minima: \code{f = 0} at \code{rep(1, n)} for every valid \code{n}. The returned
+\code{fmin} is this dimension-independent value, while the returned \code{xmin}
+is the \code{n = 8} example.
 }
 
 The number of parameters, \code{n}, in the objective function is not

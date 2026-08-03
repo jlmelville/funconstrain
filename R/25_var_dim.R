@@ -7,7 +7,9 @@
 #'
 #' - Dimensions: Number of parameters `n` variable, number of summand
 #'   functions `m = n + 2`.
-#' - Minima: `f = 0` at `rep(1, n)`.
+#' - Minima: `f = 0` at `rep(1, n)` for every valid `n`. The returned
+#'   `fmin` is this dimension-independent value, while the returned `xmin`
+#'   is the `n = 6` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of

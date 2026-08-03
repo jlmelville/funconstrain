@@ -9,7 +9,8 @@
 #'   summand functions `m = n`.
 #' - Minima: `f = 0` for `m = n`, `1 <= n <= 7` and `n = 9`;
 #'   `f = 3.51687...e-3` for `m = n = 8`;
-#'   `f = 6.50395...e-3` for `m = n = 10`.
+#'   `f = 6.50395...e-3` for `m = n = 10`. The returned `fmin` and `xmin`
+#'   describe the `n = m = 8` example.
 #'
 #' The number of parameters, `n`, in the objective function is not
 #' specified when invoking this function. It is implicitly set by the length of
