@@ -1,9 +1,9 @@
 # funconstrain
 
-[R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
-[codecov](https://codecov.io/gh/jlmelville/funconstrain)
-
 An R Package of Functions for Testing Unconstrained Numerical Optimization.
+
+[![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V)](https://codecov.io/gh/jlmelville/funconstrain)
 
 `funconstrain` is a pure R implementation of the 35 test functions in the paper by
 [Moré, Garbow, and Hillstrom](https://doi.org/10.1145/355934.355936) useful (to varying degrees)
