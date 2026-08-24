@@ -34,43 +34,11 @@ expect_gfd <- function(testfun, par, tolerance = 1e-6, tol = NULL) {
 }
 
 problem_factory_names <- function() {
-  c(
-    "bard",
-    "beale",
-    "biggs_exp6",
-    "box_3d",
-    "brown_al",
-    "brown_bs",
-    "brown_den",
-    "broyden_band",
-    "broyden_tri",
-    "chebyquad",
-    "disc_bv",
-    "disc_ie",
-    "ex_powell",
-    "ex_rosen",
-    "freud_roth",
-    "gauss",
-    "gulf",
-    "helical",
-    "jenn_samp",
-    "kow_osb",
-    "linfun_fr",
-    "linfun_r1",
-    "linfun_r1z",
-    "meyer",
-    "osborne_1",
-    "osborne_2",
-    "penalty_1",
-    "penalty_2",
-    "powell_bs",
-    "powell_s",
-    "rosen",
-    "trigon",
-    "var_dim",
-    "watson",
-    "wood"
-  )
+  manifest <- getFromNamespace(
+    "funconstrain_problem_manifest",
+    "funconstrain"
+  )()
+  manifest$name
 }
 
 problem_factory_core_fields <- function() {

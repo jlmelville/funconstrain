@@ -2,6 +2,9 @@
 
 ## Bug fixes and minor improvements
 
+- Added `funconstrain_catalog()` and `funconstrain_problem()` for ordered
+  problem discovery and strict, solver-neutral resolution of concrete test
+  configurations.
 - Fixed gradient edge cases in `brown_al()` and `helical()`.
 - Corrected the standard starting points for `disc_bv()` and `disc_ie()`.
 - Improved dimension and input validation, including consistent errors where

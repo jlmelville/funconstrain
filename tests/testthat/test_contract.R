@@ -1,7 +1,12 @@
 test_that("factory contract list covers all exported problem factories", {
   exported_factories <- setdiff(
     getNamespaceExports("funconstrain"),
-    c("fufn", "fufnrun")
+    c(
+      "fufn",
+      "fufnrun",
+      "funconstrain_catalog",
+      "funconstrain_problem"
+    )
   )
 
   expect_equal(sort(problem_factory_names()), sort(exported_factories))
@@ -322,120 +327,37 @@ test_that("linfun_r1z handles empty interiors at n=1 and n=2", {
 })
 
 test_that("current m metadata is recorded without making it a core field", {
+  factories_with_na_m <- c(
+    "beale",
+    "brown_bs",
+    "chebyquad",
+    "freud_roth",
+    "jenn_samp",
+    "powell_bs",
+    "rosen"
+  )
+  factories_with_numeric_m <- c(
+    linfun_fr = 100,
+    linfun_r1 = 100,
+    linfun_r1z = 100,
+    trigon = 30
+  )
   expected <- data.frame(
     factory = problem_factory_names(),
-    m_present = c(
-      FALSE,
-      TRUE,
-      FALSE,
-      FALSE,
-      FALSE,
-      TRUE,
-      FALSE,
-      FALSE,
-      FALSE,
-      TRUE,
-      FALSE,
-      FALSE,
-      FALSE,
-      FALSE,
-      TRUE,
-      FALSE,
-      FALSE,
-      FALSE,
-      TRUE,
-      FALSE,
-      TRUE,
-      TRUE,
-      TRUE,
-      FALSE,
-      FALSE,
-      FALSE,
-      FALSE,
-      FALSE,
-      TRUE,
-      FALSE,
-      TRUE,
-      TRUE,
-      FALSE,
-      FALSE,
-      FALSE
-    ),
-    m_type = c(
-      NA,
-      "logical",
-      NA,
-      NA,
-      NA,
-      "logical",
-      NA,
-      NA,
-      NA,
-      "logical",
-      NA,
-      NA,
-      NA,
-      NA,
-      "logical",
-      NA,
-      NA,
-      NA,
-      "logical",
-      NA,
-      "double",
-      "double",
-      "double",
-      NA,
-      NA,
-      NA,
-      NA,
-      NA,
-      "logical",
-      NA,
-      "logical",
-      "double",
-      NA,
-      NA,
-      NA
-    ),
-    m_value = c(
-      NA,
-      "NA",
-      NA,
-      NA,
-      NA,
-      "NA",
-      NA,
-      NA,
-      NA,
-      "NA",
-      NA,
-      NA,
-      NA,
-      NA,
-      "NA",
-      NA,
-      NA,
-      NA,
-      "NA",
-      NA,
-      "100",
-      "100",
-      "100",
-      NA,
-      NA,
-      NA,
-      NA,
-      NA,
-      "NA",
-      NA,
-      "NA",
-      "30",
-      NA,
-      NA,
-      NA
-    ),
+    m_present = FALSE,
+    m_type = NA_character_,
+    m_value = NA_character_,
     stringsAsFactors = FALSE
+  )
+  na_rows <- expected$factory %in% factories_with_na_m
+  numeric_rows <- expected$factory %in% names(factories_with_numeric_m)
+
+  expected$m_present[na_rows | numeric_rows] <- TRUE
+  expected$m_type[na_rows] <- "logical"
+  expected$m_value[na_rows] <- "NA"
+  expected$m_type[numeric_rows] <- "double"
+  expected$m_value[numeric_rows] <- as.character(
+    factories_with_numeric_m[expected$factory[numeric_rows]]
   )
 
   expect_equal(factory_m_metadata(), expected)

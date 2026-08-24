@@ -51,7 +51,12 @@ test_that("fufn and fufnrun report missing optimx clearly", {
 })
 
 test_that("fufn returns optimx-ready data for a problem", {
-  testthat::skip_if_not_installed("optimx")
+  method_fixture <- c("nlminb", "Rvmmin", "L-BFGS-B")
+  testthat::local_mocked_bindings(
+    require_optimx = function() NULL,
+    optimx_bounded_methods = function() method_fixture,
+    .package = "funconstrain"
+  )
 
   tfun <- fufn(1)
 
@@ -76,11 +81,16 @@ test_that("fufn returns optimx-ready data for a problem", {
   expect_true(is.function(tfun$ffgr))
   expect_true(is.function(tfun$ffhe))
   expect_equal(tfun$x0, rosen()$x0)
-  expect_true("L-BFGS-B" %in% tfun$ameth)
+  expect_identical(tfun$ameth, method_fixture)
 })
 
 test_that("fufn dispatch table returns coherent data for every problem", {
-  testthat::skip_if_not_installed("optimx")
+  method_fixture <- c("nlminb", "Rvmmin", "L-BFGS-B")
+  testthat::local_mocked_bindings(
+    require_optimx = function() NULL,
+    optimx_bounded_methods = function() method_fixture,
+    .package = "funconstrain"
+  )
 
   expected <- data.frame(
     fnum = 1:35,
@@ -178,11 +188,50 @@ test_that("fufn dispatch table returns coherent data for every problem", {
   for (i in seq_len(nrow(expected))) {
     case <- expected[i, ]
     tfun <- fufn(case$fnum)
+    factory <- getExportedValue("funconstrain", case$fname)
+    direct <- factory()
+    direct_x0 <- if (is.function(direct$x0)) {
+      direct$x0(case$npar)
+    } else {
+      direct$x0
+    }
     hessian <- tfun$ffhe(tfun$x0)
+    expected_lo <- rep(min(direct_x0) - 0.1, case$npar)
+    expected_up <- rep(max(direct_x0) + 0.1, case$npar)
+    if (case$fnum == 4L) {
+      expected_lo[] <- -1e20
+      expected_up[] <- 1e20
+    }
+    if (case$fnum == 17L) {
+      expected_lo[4:5] <- 0
+    }
+    expected_methods <- if (case$fnum == 17L) {
+      method_fixture[method_fixture != "L-BFGS-B"]
+    } else {
+      method_fixture
+    }
 
     expect_named(tfun, expected_fields, info = case$fname)
     expect_identical(tfun$fname, case$fname, info = case$fname)
     expect_equal(tfun$npar, case$npar, info = case$fname)
+    expect_identical(
+      typeof(tfun$npar),
+      "double",
+      info = paste(case$fname, "npar")
+    )
+    expect_identical(
+      typeof(tfun$mask),
+      "integer",
+      info = paste(case$fname, "mask")
+    )
+    expect_equal(tfun$x0, direct_x0, info = paste(case$fname, "x0"))
+    expect_equal(tfun$lo, expected_lo, info = paste(case$fname, "lo"))
+    expect_equal(tfun$up, expected_up, info = paste(case$fname, "up"))
+    expect_identical(
+      tfun$ameth,
+      expected_methods,
+      info = paste(case$fname, "ameth")
+    )
     expect_equal(length(tfun$x0), tfun$npar, info = paste(case$fname, "x0"))
     expect_equal(length(tfun$lo), tfun$npar, info = paste(case$fname, "lo"))
     expect_equal(length(tfun$up), tfun$npar, info = paste(case$fname, "up"))
@@ -198,9 +247,19 @@ test_that("fufn dispatch table returns coherent data for every problem", {
       info = paste(case$fname, "fffn")
     )
     expect_equal(
+      tfun$fffn(tfun$x0),
+      direct$fn(direct_x0),
+      info = paste(case$fname, "direct fn")
+    )
+    expect_equal(
       length(tfun$ffgr(tfun$x0)),
       tfun$npar,
       info = paste(case$fname, "ffgr")
+    )
+    expect_equal(
+      tfun$ffgr(tfun$x0),
+      direct$gr(direct_x0),
+      info = paste(case$fname, "direct gr")
     )
     expect_true(is.matrix(hessian), info = paste(case$fname, "ffhe"))
     expect_equal(
@@ -214,6 +273,22 @@ test_that("fufn dispatch table returns coherent data for every problem", {
       info = paste(case$fname, "ameth")
     )
   }
+})
+
+test_that("fufn retains the factories' variable-dimension callbacks", {
+  testthat::local_mocked_bindings(
+    require_optimx = function() NULL,
+    optimx_bounded_methods = function() "L-BFGS-B",
+    .package = "funconstrain"
+  )
+
+  tfun <- fufn(21)
+  alternate_x <- ex_rosen()$x0(8)
+
+  expect_equal(tfun$npar, 10)
+  expect_equal(tfun$fffn(alternate_x), ex_rosen()$fn(alternate_x))
+  expect_equal(tfun$ffgr(alternate_x), ex_rosen()$gr(alternate_x))
+  expect_equal(tfun$ffhe(alternate_x), ex_rosen()$he(alternate_x))
 })
 
 test_that("fufnrun closes file and sink resources on parser errors", {
