@@ -4,6 +4,12 @@
 
 ### Bug fixes and minor improvements
 
+- Added
+  [`funconstrain_catalog()`](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md)
+  and
+  [`funconstrain_problem()`](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md)
+  for ordered problem discovery and strict, solver-neutral resolution of
+  concrete test configurations.
 - Fixed gradient edge cases in
   [`brown_al()`](https://jlmelville.github.io/funconstrain/reference/brown_al.md)
   and

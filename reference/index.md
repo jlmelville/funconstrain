@@ -39,6 +39,9 @@
 - [`funconstrain-package`](https://jlmelville.github.io/funconstrain/reference/funconstrain.md)
   [`funconstrain`](https://jlmelville.github.io/funconstrain/reference/funconstrain.md)
   : funconstrain: Test functions for unconstrained minimization.
+- [`funconstrain_catalog()`](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md)
+  [`funconstrain_problem()`](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md)
+  : Discover funconstrain test problems
 - [`gauss()`](https://jlmelville.github.io/funconstrain/reference/gauss.md)
   : Gaussian Function
 - [`gulf()`](https://jlmelville.github.io/funconstrain/reference/gulf.md)
