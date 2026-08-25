@@ -25,11 +25,11 @@ definitions follow Section 3 of
 The authors' [Algorithm 566 source](https://netlib.org/toms/566.gz) is a
 second primary source for resolving typographical and indexing ambiguities.
 
-The equations come from those sources; the supported dimensions and defaults
-come from the current package. When those surfaces differ, the package's
-narrower contract is stated explicitly. To run a problem, see
+The formulas follow those sources; the dimensions and defaults describe the
+current package. Where `funconstrain` supports a narrower range, that range is
+shown. To run a problem, see
 [Getting started with funconstrain](getting-started.html) or the
-[`funconstrain_problem()` reference](../reference/funconstrain_problem.html).
+[`funconstrain_problem()` reference](../reference/funconstrain_catalog.html).
 
 For $x=(x_1,\ldots,x_n)\in\mathbb{R}^n$, every problem below defines
 $m$ residuals. The scalar callback returned by the package is

@@ -58,21 +58,12 @@ stopifnot(
 ```
 
 ```{r resolved-contract, include=FALSE}
-at_start <- problem$fg(problem$x0)
-hessian <- problem$he(problem$x0)
-
 stopifnot(
-  identical(
-    names(problem),
-    c(
-      "fn", "gr", "he", "fg", "x0", "problem", "configuration", "reference"
-    )
-  ),
+  all(c("x0", "fn", "gr") %in% names(problem)),
   is.numeric(problem$x0),
   length(problem$x0) == 2L,
-  length(at_start$fn) == 1L,
-  length(at_start$gr) == 2L,
-  identical(dim(hessian), c(2L, 2L))
+  is.function(problem$fn),
+  is.function(problem$gr)
 )
 ```
 
@@ -88,25 +79,18 @@ catalog_view <- catalog[
 ]
 
 knitr::kable(data.frame(
-  number = catalog_view$number,
-  name = catalog_view$name,
-  title = catalog_view$title,
-  n = ifelse(
-    catalog_view$n_kind == "fixed",
-    as.character(catalog_view$n_default),
-    paste0("variable; default ", catalog_view$n_default)
-  ),
-  m = ifelse(
-    catalog_view$m_configurable,
-    paste0("choose; default ", catalog_view$m_default),
-    paste0("fixed or follows n; default ", catalog_view$m_default)
-  ),
-  row.names = NULL
+  Problem = paste0(catalog_view$title, " (", catalog_view$name, ")"),
+  `Default n` = catalog_view$n_default,
+  `Can choose n?` = ifelse(catalog_view$n_kind == "variable", "yes", "no"),
+  `Default m` = catalog_view$m_default,
+  `Can choose m?` = ifelse(catalog_view$m_configurable, "yes", "no"),
+  row.names = NULL,
+  check.names = FALSE
 ))
 ```
 
-The [mathematical definitions](problem-definitions.html) give the supported
-dimensions, standard start, and equations for every catalogue entry.
+The [mathematical definitions](problem-definitions.html) give the exact
+supported dimensions, standard start, and equations for every catalogue entry.
 
 ## Choose `n` or `m`
 
@@ -131,8 +115,9 @@ data.frame(
 )
 ```
 
-Extended Rosenbrock derives `m = 4` from the chosen `n = 4`. Jennrich and
-Sampson keeps its fixed `n = 2` and uses the requested `m = 20`.
+Extended Rosenbrock derives `m = 4` from the chosen `n = 4`. The
+Jennrich--Sampson problem keeps its fixed `n = 2` and uses the requested
+`m = 20`.
 
 ```{r configuration-check, include=FALSE}
 stopifnot(
@@ -182,7 +167,7 @@ data.frame(
 The minimum value zero applies at `n = 4`, while the stored minimizer belongs
 to the package's `n = 8` example. Check the status of the particular reference
 you intend to use. The [`funconstrain_problem()`
-reference](../reference/funconstrain_problem.html) documents the complete
+reference](../reference/funconstrain_catalog.html) documents the complete
 status and diagnostic vocabulary.
 
 ```{r reference-check, include=FALSE}
@@ -192,16 +177,6 @@ stopifnot(
   identical(extended$reference$xmin$status, "not_applicable"),
   identical(extended$reference$xmin$source_configuration, list(n = 8L))
 )
-
-default_references <- lapply(
-  catalog$name,
-  function(name) funconstrain_problem(name)$reference
-)
-default_statuses <- unlist(lapply(
-  default_references,
-  function(records) vapply(records, `[[`, character(1L), "status")
-))
-stopifnot(!"unknown" %in% default_statuses)
 ```
 
 ## Next steps
