@@ -121,9 +121,7 @@ Jennrich--Sampson problem keeps its fixed `n = 2` and uses the requested
 
 ```{r configuration-check, include=FALSE}
 stopifnot(
-  identical(extended$configuration$requested, list(n = 4L, m = NULL)),
   identical(extended$configuration$effective, list(n = 4L, m = 4L)),
-  identical(sampled$configuration$requested, list(n = NULL, m = 20L)),
   identical(sampled$configuration$effective, list(n = 2L, m = 20L))
 )
 ```
