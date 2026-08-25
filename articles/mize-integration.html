@@ -11,8 +11,8 @@
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using funconstrain with mize">
-<meta name="description" content="Resolve exact test problems, run development mize, and retain inspectable outcome, quality, work, and provenance records.">
-<meta property="og:description" content="Resolve exact test problems, run development mize, and retain inspectable outcome, quality, work, and provenance records.">
+<meta name="description" content="Pass a test problem to mize, inspect the result, and repeat the setup over a small problem set.">
+<meta property="og:description" content="Pass a test problem to mize, inspect the result, and repeat the setup over a small problem set.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -62,218 +62,111 @@
 
     
     
-<p>This article shows a small, repeatable integration between
-<code>funconstrain</code> and <a href="https://jlmelville.github.io/mize/" class="external-link"><code>mize</code></a>. It
-resolves exact problem instances, adapts their callback names, and keeps
-the optimizer’s native termination record separate from independent
-final-quality checks.</p>
-<p>The first version supports GitHub development <code>mize</code>
-version 0.2.5.9001 or later, rather than CRAN <code>mize</code> 0.2.5.
-Install the supported version before running the examples:</p>
+<p><code>funconstrain</code> supplies the test problem; <a href="https://jlmelville.github.io/mize/" class="external-link"><code>mize</code></a> supplies
+the optimizer. We will fit Rosenbrock with BFGS, look at the
+optimization as it progresses, and then use a small harness to repeat
+the same setup consistently.</p>
+<blockquote>
+<p><strong>Version requirement.</strong> These examples use GitHub
+development <code>mize</code> 0.2.5.9001 or later. Install it with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jlmelville/mize"</span><span class="op">)</span></span></code></pre></div>
+</blockquote>
 <div class="section level2">
-<h2 id="load-the-shared-harness">Load the shared harness<a class="anchor" aria-label="anchor" href="#load-the-shared-harness"></a>
+<h2 id="fit-rosenbrock-with-bfgs">Fit Rosenbrock with BFGS<a class="anchor" aria-label="anchor" href="#fit-rosenbrock-with-bfgs"></a>
 </h2>
-<p>The sourceable companion used here is installed with
-<code>funconstrain</code>. It remains an unexported example rather than
-a package API:</p>
+<p>Start by resolving Rosenbrock and passing its callbacks to
+<code>mize()</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jlmelville.github.io/funconstrain/">funconstrain</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">harness_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span><span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_problem</a></span><span class="op">(</span><span class="st">"rosen"</span><span class="op">)</span></span>
+<span><span class="va">fg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  fn <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">fn</span>,</span>
+<span>  gr <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">gr</span>,</span>
+<span>  fg <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">fg</span>,</span>
+<span>  hs <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">he</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">mize</span><span class="fu">::</span><span class="fu"><a href="https://jlmelville.github.io/mize/reference/mize.html" class="external-link">mize</a></span><span class="op">(</span></span>
+<span>  <span class="va">problem</span><span class="op">$</span><span class="va">x0</span>,</span>
+<span>  <span class="va">fg</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"BFGS"</span>,</span>
+<span>  max_iter <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  abs_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rel_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ginf_tol <span class="op">=</span> <span class="fl">1e-6</span>,</span>
+<span>  step_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  store_progress <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  status <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">status</span>,</span>
+<span>  stopped_by <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">terminate</span><span class="op">$</span><span class="va">what</span>,</span>
+<span>  iterations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">iter</span>,</span>
+<span>  objective_evaluations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">nf</span>,</span>
+<span>  gradient_evaluations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">ng</span>,</span>
+<span>  final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">f</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  gradient_inf_norm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">ginfn</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;      status stopped_by iterations objective_evaluations gradient_evaluations</span></span>
+<span><span class="co">#&gt; 1 converged   ginf_tol         38                    48                   48</span></span>
+<span><span class="co">#&gt;   final_objective gradient_inf_norm</span></span>
+<span><span class="co">#&gt; 1        5.59e-16          6.23e-07</span></span></code></pre></div>
+<p><code>mize</code> reports that the gradient infinity-norm tolerance
+stopped this run. The small final objective and gradient norm provide a
+useful check that the returned point is good for this problem.</p>
+<p>The callback list is a direct name-for-name match except for the
+Hessian: <code>funconstrain</code> calls it <code>he</code>, while
+<code>mize</code> calls it <code>hs</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="follow-the-optimization">Follow the optimization<a class="anchor" aria-label="anchor" href="#follow-the-optimization"></a>
+</h2>
+<p>With <code>store_progress = TRUE</code>, <code>mize</code> records
+the initial state and then one row per outer iteration. The objective
+trace shows the rapid early decrease and the smaller improvements near
+the solution.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">objective_trace</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">progress</span><span class="op">$</span><span class="va">f</span></span>
+<span><span class="va">objective_trace</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">problem</span><span class="op">$</span><span class="fu">fn</span><span class="op">(</span><span class="va">problem</span><span class="op">$</span><span class="va">x0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">objective_trace</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span>,</span>
+<span>  <span class="va">objective_trace</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"l"</span>,</span>
+<span>  log <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="st">"Outer iteration"</span>,</span>
+<span>  ylab <span class="op">=</span> <span class="st">"Objective"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="mize-integration_files/figure-html/objective-trace-1.png" class="r-plt" alt="A line plot on a logarithmic vertical scale showing the Rosenbrock objective falling by many orders of magnitude over the BFGS iterations." width="700"><p class="caption">
+BFGS objective trace for Rosenbrock. The initial objective is followed
+by the value at each outer iteration.
+</p>
+</div>
+<p>The plot uses outer iteration to show the trajectory. The result
+table above reports objective and gradient evaluations because methods
+can do different amounts of work inside one iteration.</p>
+</div>
+<div class="section level2">
+<h2 id="repeat-runs-consistently">Repeat runs consistently<a class="anchor" aria-label="anchor" href="#repeat-runs-consistently"></a>
+</h2>
+<p>The direct call is all that is needed for one problem. Repeating it
+across problems also calls for consistent stopping controls and result
+summaries. <code>funconstrain</code> therefore installs a small
+sourceable example harness:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">harness_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"examples"</span>,</span>
 <span>  <span class="st">"mize-harness.R"</span>,</span>
 <span>  package <span class="op">=</span> <span class="st">"funconstrain"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">harness_path</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="va">harness_path</span><span class="op">)</span></span></code></pre></div>
-<p>At the callback boundary, <code>mize</code> uses <code>hs</code> for
-a Hessian while <code>funconstrain</code> uses <code>he</code>. The
-adapter preserves the objective, gradient, and combined callback and
-changes only that Hessian name:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_problem</a></span><span class="op">(</span><span class="st">"rosen"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">as_mize_fg</span><span class="op">(</span><span class="va">problem</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "fn" "gr" "fg" "hs"</span></span></code></pre></div>
-<p>The companion also wraps <code>fn</code>, <code>gr</code>,
-<code>fg</code>, and <code>hs</code> separately. These physical call
-counts answer a different question from <code>mize</code>’s native
-<code>nf</code> and <code>ng</code> evaluation totals, especially when
-one combined <code>fg</code> call supplies both an objective and a
-gradient.</p>
-</div>
-<div class="section level2">
-<h2 id="run-one-ordinary-solve">Run one ordinary solve<a class="anchor" aria-label="anchor" href="#run-one-ordinary-solve"></a>
-</h2>
-<p><code>run_mize_problem()</code> owns the resolved starting point,
-callback list, and method argument. Solver controls are supplied
-explicitly in a named list, so the run record retains the choices that
-differ from <code>mize</code> defaults.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ordinary</span> <span class="op">&lt;-</span> <span class="fu">run_mize_problem</span><span class="op">(</span></span>
-<span>  <span class="st">"rosen"</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"BFGS"</span>,</span>
-<span>  controls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    max_iter <span class="op">=</span> <span class="fl">200</span>,</span>
-<span>    abs_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    rel_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    ginf_tol <span class="op">=</span> <span class="fl">1e-6</span>,</span>
-<span>    step_tol <span class="op">=</span> <span class="cn">NULL</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  status <span class="op">=</span> <span class="va">ordinary</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">status</span>,</span>
-<span>  termination <span class="op">=</span> <span class="va">ordinary</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">terminate</span><span class="op">$</span><span class="va">what</span>,</span>
-<span>  converged <span class="op">=</span> <span class="va">ordinary</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">converged</span>,</span>
-<span>  final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">ordinary</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">objective</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>  gradient_inf_norm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span></span>
-<span>    <span class="va">ordinary</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">gradient_inf_norm</span>,</span>
-<span>    <span class="fl">3</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt;      status termination converged final_objective gradient_inf_norm</span></span>
-<span><span class="co">#&gt; 1 converged    ginf_tol      TRUE        5.59e-16          6.23e-07</span></span></code></pre></div>
-<p><code>status</code>, <code>message</code>, <code>converged</code>,
-and <code>terminate</code> above are native <code>mize</code>
-observations. The final objective and gradient infinity norm are
-evaluated afterward through the original resolved callbacks. They are
-independent audit observations, not a reinterpretation of the native
-termination status.</p>
-<p>The stored objective reference is kept as a structured record.
-Compare with its value only when its status is
-<code>"applicable"</code>; a stored minimizer is not a required equality
-target for a successful run.</p>
+<p>Declare the problems and dimensions you want to run. Use
+<code>NA</code> to accept a default dimension:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ordinary</span><span class="op">$</span><span class="va">reference</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"status"</span>, <span class="st">"value"</span>, <span class="st">"source_configuration"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; $status</span></span>
-<span><span class="co">#&gt; [1] "applicable"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $value</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $source_configuration</span></span>
-<span><span class="co">#&gt; list()</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="preserve-a-hard-budget-outcome">Preserve a hard-budget outcome<a class="anchor" aria-label="anchor" href="#preserve-a-hard-budget-outcome"></a>
-</h2>
-<p>A hard callback budget is a valid experimental outcome, not a
-malformed row. This run permits only one combined objective-or-gradient
-evaluation:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">budget_limited</span> <span class="op">&lt;-</span> <span class="fu">run_mize_problem</span><span class="op">(</span></span>
-<span>  <span class="st">"rosen"</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"BFGS"</span>,</span>
-<span>  controls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    max_iter <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>    max_fg <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    abs_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    rel_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    grad_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    ginf_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>    step_tol <span class="op">=</span> <span class="cn">NULL</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  status <span class="op">=</span> <span class="va">budget_limited</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">status</span>,</span>
-<span>  termination <span class="op">=</span> <span class="va">budget_limited</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">terminate</span><span class="op">$</span><span class="va">what</span>,</span>
-<span>  converged <span class="op">=</span> <span class="va">budget_limited</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">converged</span>,</span>
-<span>  native_objective_available <span class="op">=</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span></span>
-<span>    <span class="va">budget_limited</span><span class="op">$</span><span class="va">native_quality</span><span class="op">$</span><span class="va">objective</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  audited_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span></span>
-<span>    <span class="va">budget_limited</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">objective</span>,</span>
-<span>    <span class="fl">3</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt;             status termination converged native_objective_available</span></span>
-<span><span class="co">#&gt; 1 budget_exhausted      max_fg     FALSE                      FALSE</span></span>
-<span><span class="co">#&gt;   audited_objective</span></span>
-<span><span class="co">#&gt; 1              24.2</span></span></code></pre></div>
-<p>Here <code>mize</code> legitimately omits its final objective because
-another optimizer callback would violate the hard budget. The harness
-leaves that native field absent. Its separately labelled audited
-objective is evaluated only after the run, through the original callback
-and outside the optimizer callback counts.</p>
-</div>
-<div class="section level2">
-<h2 id="inspect-work-and-provenance">Inspect work and provenance<a class="anchor" aria-label="anchor" href="#inspect-work-and-provenance"></a>
-</h2>
-<p>Keep native evaluation totals and physical callback invocations as
-two labelled views rather than trying to reconcile them into one
-number:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ordinary</span><span class="op">$</span><span class="va">work</span></span>
-<span><span class="co">#&gt; $native</span></span>
-<span><span class="co">#&gt; $native$nf</span></span>
-<span><span class="co">#&gt; [1] 48</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $native$ng</span></span>
-<span><span class="co">#&gt; [1] 48</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $native$iter</span></span>
-<span><span class="co">#&gt; [1] 38</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $physical</span></span>
-<span><span class="co">#&gt; fn gr fg hs </span></span>
-<span><span class="co">#&gt;  1  1 47  0</span></span></code></pre></div>
-<p>The record also keeps the exact configurations and environment
-provenance. The commit identifies the development <code>mize</code>
-source used for this rendered run; it records provenance without turning
-the article into a permanent commit pin.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ordinary</span><span class="op">$</span><span class="va">problem</span></span>
-<span><span class="co">#&gt; $number</span></span>
-<span><span class="co">#&gt; [1] 1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $name</span></span>
-<span><span class="co">#&gt; [1] "rosen"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $title</span></span>
-<span><span class="co">#&gt; [1] "Rosenbrock Function"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $configuration</span></span>
-<span><span class="co">#&gt; $configuration$requested</span></span>
-<span><span class="co">#&gt; $configuration$requested$n</span></span>
-<span><span class="co">#&gt; NULL</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $configuration$requested$m</span></span>
-<span><span class="co">#&gt; NULL</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $configuration$effective</span></span>
-<span><span class="co">#&gt; $configuration$effective$n</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $configuration$effective$m</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
-<span><span class="va">ordinary</span><span class="op">$</span><span class="va">provenance</span></span>
-<span><span class="co">#&gt; $r_version</span></span>
-<span><span class="co">#&gt; [1] "R version 4.6.1 (2026-06-24)"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $platform</span></span>
-<span><span class="co">#&gt; [1] "x86_64-pc-linux-gnu"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $funconstrain_version</span></span>
-<span><span class="co">#&gt; [1] "0.1.1"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mize_version</span></span>
-<span><span class="co">#&gt; [1] "0.2.5.9001"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mize_commit</span></span>
-<span><span class="co">#&gt; [1] "6f975bc7897700ab0ba7c652c73c5ead8abd203e"</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="run-a-small-explicit-manifest">Run a small explicit manifest<a class="anchor" aria-label="anchor" href="#run-a-small-explicit-manifest"></a>
-</h2>
-<p>For a small integration check, declare every problem instance. Use
-<code>NA</code> for a default dimension and explicit values for variable
-<code>n</code> or configurable <code>m</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">manifest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rosen"</span>, <span class="st">"ex_rosen"</span>, <span class="st">"jenn_samp"</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA_integer_</span>, <span class="fl">4L</span>, <span class="cn">NA_integer_</span><span class="op">)</span>,</span>
@@ -283,30 +176,93 @@ the article into a permanent commit pin.</p>
 <span><span class="va">suite</span> <span class="op">&lt;-</span> <span class="fu">run_mize_suite</span><span class="op">(</span></span>
 <span>  <span class="va">manifest</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"BFGS"</span>,</span>
-<span>  controls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>max_iter <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span>  controls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    max_iter <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    abs_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    rel_tol <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    ginf_tol <span class="op">=</span> <span class="fl">1e-6</span>,</span>
+<span>    step_tol <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">suite_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">suite</span><span class="op">$</span><span class="va">runs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">run</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    problem <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">name</span>,</span>
-<span>    effective_n <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
-<span>    effective_m <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span>,</span>
+<span>    n <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
+<span>    m <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span>,</span>
 <span>    status <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">status</span>,</span>
-<span>    final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">objective</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>    objective_evaluations <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">work</span><span class="op">$</span><span class="va">native</span><span class="op">$</span><span class="va">nf</span>,</span>
+<span>    gradient_evaluations <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">work</span><span class="op">$</span><span class="va">native</span><span class="op">$</span><span class="va">ng</span>,</span>
+<span>    final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">objective</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>    gradient_inf_norm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span></span>
+<span>      <span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">gradient_inf_norm</span>,</span>
+<span>      <span class="fl">3</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">suite_table</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">suite_table</span></span>
-<span><span class="co">#&gt;     problem effective_n effective_m           status final_objective</span></span>
-<span><span class="co">#&gt; 1     rosen           2           2 budget_exhausted            2.60</span></span>
-<span><span class="co">#&gt; 2  ex_rosen           4           4 budget_exhausted            4.72</span></span>
-<span><span class="co">#&gt; 3 jenn_samp           2          20 budget_exhausted        36200.00</span></span></code></pre></div>
-<p>This is intentionally a small integration and reproducibility
-harness. It does not rank methods or prescribe line searches and
-stopping controls. See the <a href="https://jlmelville.github.io/mize/" class="external-link"><code>mize</code>
-documentation</a> for optimizer behavior and method selection; use this
-companion when exact <code>funconstrain</code> problem resolution and an
-inspectable run record are the task.</p>
+<span><span class="co">#&gt;     problem n  m    status objective_evaluations gradient_evaluations</span></span>
+<span><span class="co">#&gt; 1     rosen 2  2 converged                    48                   48</span></span>
+<span><span class="co">#&gt; 2  ex_rosen 4  4 converged                    54                   54</span></span>
+<span><span class="co">#&gt; 3 jenn_samp 2 20 converged                    61                   61</span></span>
+<span><span class="co">#&gt;   final_objective gradient_inf_norm</span></span>
+<span><span class="co">#&gt; 1        5.59e-16          6.23e-07</span></span>
+<span><span class="co">#&gt; 2        9.65e-24          1.02e-11</span></span>
+<span><span class="co">#&gt; 3        1.45e+03          4.70e-07</span></span></code></pre></div>
+<p>All three runs use the same method and stopping rule. The chosen rows
+exercise a fixed problem, an explicit parameter dimension, and an
+explicit residual count.</p>
+<p>The table uses the stopping status and evaluation totals reported by
+<code>mize</code>. The final objective and gradient norm are checked
+afterward with the original problem callbacks so every row receives the
+same final-quality calculation.</p>
+</div>
+<div class="section level2">
+<h2 id="reproduce-a-run">Reproduce a run<a class="anchor" aria-label="anchor" href="#reproduce-a-run"></a>
+</h2>
+<p>Each harness result retains the supplied controls, problem
+dimensions, package versions, platform, and development
+<code>mize</code> commit. A compact summary is often enough for a
+report:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rosen_run</span> <span class="op">&lt;-</span> <span class="va">suite</span><span class="op">$</span><span class="va">runs</span><span class="op">$</span><span class="va">rosen</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  field <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Problem"</span>,</span>
+<span>    <span class="st">"Dimensions"</span>,</span>
+<span>    <span class="st">"Method"</span>,</span>
+<span>    <span class="st">"funconstrain"</span>,</span>
+<span>    <span class="st">"mize"</span>,</span>
+<span>    <span class="st">"mize commit"</span>,</span>
+<span>    <span class="st">"R platform"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">title</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>      <span class="st">"n = "</span>, <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
+<span>      <span class="st">", m = "</span>, <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">method</span>,</span>
+<span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">funconstrain_version</span>,</span>
+<span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">mize_version</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">mize_commit</span>, <span class="fl">1L</span>, <span class="fl">12L</span><span class="op">)</span>,</span>
+<span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">platform</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;          field               value</span></span>
+<span><span class="co">#&gt; 1      Problem Rosenbrock Function</span></span>
+<span><span class="co">#&gt; 2   Dimensions        n = 2, m = 2</span></span>
+<span><span class="co">#&gt; 3       Method                BFGS</span></span>
+<span><span class="co">#&gt; 4 funconstrain               0.1.1</span></span>
+<span><span class="co">#&gt; 5         mize          0.2.5.9001</span></span>
+<span><span class="co">#&gt; 6  mize commit        6f975bc78977</span></span>
+<span><span class="co">#&gt; 7   R platform x86_64-pc-linux-gnu</span></span></code></pre></div>
+<p>For optimizer behavior and method selection, continue with the <a href="https://jlmelville.github.io/mize/" class="external-link"><code>mize</code>
+documentation</a>. For problem dimensions and stored references, see <a href="getting-started.html">Getting started with funconstrain</a> and <a href="problem-definitions.html">Mathematical definitions of the test
+problems</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Getting started with resolved problems • funconstrain</title>
+<title>Getting started with funconstrain • funconstrain</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with resolved problems">
-<meta name="description" content="Discover a test problem, resolve one exact configuration, run an optimizer, and interpret its reference metadata.">
-<meta property="og:description" content="Discover a test problem, resolve one exact configuration, run an optimizer, and interpret its reference metadata.">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting started with funconstrain">
+<meta name="description" content="Solve a test problem, choose its dimensions, browse the catalogue, and use a stored reference safely.">
+<meta property="og:description" content="Solve a test problem, choose its dimensions, browse the catalogue, and use a stored reference safely.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -53,7 +53,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Getting started with resolved problems</h1>
+      <h1>Getting started with funconstrain</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jlmelville/funconstrain/blob/master/vignettes/articles/getting-started.Rmd" class="external-link"><code>vignettes/articles/getting-started.Rmd</code></a></small>
@@ -62,97 +62,29 @@
 
     
     
-<p><code>funconstrain</code> provides the 35 nonlinear least-squares
-test problems from Moré, Garbow, and Hillstrom. The resolver is the
-simplest entry point for solver-neutral code: it turns a problem name
-and optional dimensions into one concrete starting point, a set of
-dimension-checked callbacks, and metadata describing the exact
-configuration.</p>
+<p><code>funconstrain</code> collects the 35 nonlinear least-squares
+problems used by Moré, Garbow, and Hillstrom to test optimization
+software. We will start by fitting Rosenbrock with
+<code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code>, then see how to choose dimensions and use
+the stored reference values.</p>
 <div class="section level2">
-<h2 id="find-a-problem">Find a problem<a class="anchor" aria-label="anchor" href="#find-a-problem"></a>
+<h2 id="solve-your-first-problem">Solve your first problem<a class="anchor" aria-label="anchor" href="#solve-your-first-problem"></a>
 </h2>
-<p><code><a href="../reference/funconstrain_catalog.html">funconstrain_catalog()</a></code> lists the available problems in
-paper order. Its columns distinguish fixed and variable parameter
-dimensions (<code>n</code>) and show whether the number of summand
-functions (<code>m</code>) can be configured.</p>
+<p><code><a href="../reference/funconstrain_catalog.html">funconstrain_problem()</a></code> returns a starting point and the
+functions needed by an optimizer:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jlmelville.github.io/funconstrain/">funconstrain</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">catalog</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_catalog</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">catalog</span><span class="op">[</span></span>
-<span>  <span class="va">catalog</span><span class="op">$</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rosen"</span>, <span class="st">"jenn_samp"</span>, <span class="st">"ex_rosen"</span>, <span class="st">"chebyquad"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="st">"number"</span>, <span class="st">"name"</span>, <span class="st">"n_kind"</span>, <span class="st">"n_default"</span>, <span class="st">"m_configurable"</span>, <span class="st">"m_default"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">]</span></span>
-<span><span class="co">#&gt;    number      name   n_kind n_default m_configurable m_default</span></span>
-<span><span class="co">#&gt; 1       1     rosen    fixed         2          FALSE         2</span></span>
-<span><span class="co">#&gt; 6       6 jenn_samp    fixed         2           TRUE        10</span></span>
-<span><span class="co">#&gt; 21     21  ex_rosen variable         8          FALSE         8</span></span>
-<span><span class="co">#&gt; 35     35 chebyquad variable        50          FALSE        50</span></span></code></pre></div>
-<p>Names are matched exactly. This makes a selected problem unambiguous
-in scripts and saved experiment configurations.</p>
-</div>
-<div class="section level2">
-<h2 id="resolve-one-exact-problem">Resolve one exact problem<a class="anchor" aria-label="anchor" href="#resolve-one-exact-problem"></a>
-</h2>
-<p>The Rosenbrock problem has fixed <code>n = 2</code> and
-<code>m = 2</code>, so no dimensions need to be supplied:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rosen_problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_problem</a></span><span class="op">(</span><span class="st">"rosen"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rosen_problem</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "fn"            "gr"            "he"            "fg"           </span></span>
-<span><span class="co">#&gt; [5] "x0"            "problem"       "configuration" "reference"</span></span>
-<span><span class="va">rosen_problem</span><span class="op">$</span><span class="va">x0</span></span>
-<span><span class="co">#&gt; [1] -1.2  1.0</span></span>
-<span><span class="va">rosen_problem</span><span class="op">$</span><span class="va">configuration</span></span>
-<span><span class="co">#&gt; $requested</span></span>
-<span><span class="co">#&gt; $requested$n</span></span>
-<span><span class="co">#&gt; NULL</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $requested$m</span></span>
-<span><span class="co">#&gt; NULL</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $effective</span></span>
-<span><span class="co">#&gt; $effective$n</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $effective$m</span></span>
-<span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
-<p>The resolved callbacks are:</p>
-<ul>
-<li>
-<code>fn(x)</code>, the scalar objective;</li>
-<li>
-<code>gr(x)</code>, its gradient;</li>
-<li>
-<code>he(x)</code>, its Hessian; and</li>
-<li>
-<code>fg(x)</code>, a combined objective-and-gradient
-calculation.</li>
-</ul>
-<p>Unlike the raw factory interface, a resolved <code>x0</code> is
-always a numeric vector. Each callback is pinned to the effective value
-of <code>n</code>, so an accidental vector of another length fails at
-the problem boundary.</p>
-</div>
-<div class="section level2">
-<h2 id="run-an-optimizer">Run an optimizer<a class="anchor" aria-label="anchor" href="#run-an-optimizer"></a>
-</h2>
-<p>The callbacks can be passed directly to an optimizer. Here,
-<code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code> uses its BFGS method and the analytic
-gradient:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span></span>
-<span>  par <span class="op">=</span> <span class="va">rosen_problem</span><span class="op">$</span><span class="va">x0</span>,</span>
-<span>  fn <span class="op">=</span> <span class="va">rosen_problem</span><span class="op">$</span><span class="va">fn</span>,</span>
-<span>  gr <span class="op">=</span> <span class="va">rosen_problem</span><span class="op">$</span><span class="va">gr</span>,</span>
+<span><span class="va">problem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_problem</a></span><span class="op">(</span><span class="st">"rosen"</span><span class="op">)</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span></span>
+<span>  par <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">x0</span>,</span>
+<span>  fn <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">fn</span>,</span>
+<span>  gr <span class="op">=</span> <span class="va">problem</span><span class="op">$</span><span class="va">gr</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"BFGS"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">final_objective</span> <span class="op">&lt;-</span> <span class="va">rosen_problem</span><span class="op">$</span><span class="fu">fn</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></span>
-<span><span class="va">gradient_inf_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">rosen_problem</span><span class="op">$</span><span class="fu">gr</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">par</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">final_objective</span> <span class="op">&lt;-</span> <span class="va">problem</span><span class="op">$</span><span class="fu">fn</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></span>
+<span><span class="va">gradient_inf_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">problem</span><span class="op">$</span><span class="fu">gr</span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">par</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  convergence <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">convergence</span>,</span>
@@ -162,167 +94,166 @@ gradient:</p>
 <span><span class="co">#&gt;   convergence final_objective gradient_inf_norm</span></span>
 <span><span class="co">#&gt; 1           0        9.59e-18          2.48e-09</span></span></code></pre></div>
 <p>A convergence code of zero means that <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code>
-reports successful completion. The final objective and gradient infinity
-norm are evaluated again through the resolved problem, independently of
-the optimizer’s stored objective value. Their small magnitudes provide a
-useful quality check for this run; exact values and iteration counts can
-vary across R versions and platforms.</p>
+reports successful completion. The small objective and gradient norm
+provide a second check on the returned point.</p>
+<p>The three fields used by <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim()</a></code> have direct roles:
+<code>x0</code> is the starting vector, <code>fn</code> is the
+objective, and <code>gr</code> is its gradient.</p>
 </div>
 <div class="section level2">
-<h2 id="request-dimensions-explicitly">Request dimensions explicitly<a class="anchor" aria-label="anchor" href="#request-dimensions-explicitly"></a>
+<h2 id="browse-the-catalogue">Browse the catalogue<a class="anchor" aria-label="anchor" href="#browse-the-catalogue"></a>
 </h2>
-<p>For a variable-dimension problem, pass <code>n</code>. For a problem
-with configurable summand count, pass <code>m</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p><code><a href="../reference/funconstrain_catalog.html">funconstrain_catalog()</a></code> lists all 35 problems in paper
+order. Here <code>n</code> is the number of parameters and
+<code>m</code> is the number of residual functions:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">catalog</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_catalog</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">catalog_view</span> <span class="op">&lt;-</span> <span class="va">catalog</span><span class="op">[</span></span>
+<span>  <span class="va">catalog</span><span class="op">$</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rosen"</span>, <span class="st">"jenn_samp"</span>, <span class="st">"ex_rosen"</span>, <span class="st">"chebyquad"</span><span class="op">)</span>,</span>
+<span><span class="op">]</span></span>
+<span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  number <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">number</span>,</span>
+<span>  name <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">name</span>,</span>
+<span>  title <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">title</span>,</span>
+<span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
+<span>    <span class="va">catalog_view</span><span class="op">$</span><span class="va">n_kind</span> <span class="op">==</span> <span class="st">"fixed"</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">catalog_view</span><span class="op">$</span><span class="va">n_default</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"variable; default "</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">n_default</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
+<span>    <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_configurable</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"choose; default "</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_default</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"fixed or follows n; default "</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_default</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="7%">
+<col width="10%">
+<col width="30%">
+<col width="21%">
+<col width="31%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">number</th>
+<th align="left">name</th>
+<th align="left">title</th>
+<th align="left">n</th>
+<th align="left">m</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">rosen</td>
+<td align="left">Rosenbrock Function</td>
+<td align="left">2</td>
+<td align="left">fixed or follows n; default 2</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">jenn_samp</td>
+<td align="left">Jennrich and Sampson Function</td>
+<td align="left">2</td>
+<td align="left">choose; default 10</td>
+</tr>
+<tr class="odd">
+<td align="right">21</td>
+<td align="left">ex_rosen</td>
+<td align="left">Extended Rosenbrock Function</td>
+<td align="left">variable; default 8</td>
+<td align="left">fixed or follows n; default 8</td>
+</tr>
+<tr class="even">
+<td align="right">35</td>
+<td align="left">chebyquad</td>
+<td align="left">Chebyquad Function</td>
+<td align="left">variable; default 50</td>
+<td align="left">fixed or follows n; default 50</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="problem-definitions.html">mathematical definitions</a>
+give the supported dimensions, standard start, and equations for every
+catalogue entry.</p>
+</div>
+<div class="section level2">
+<h2 id="choose-n-or-m">Choose <code>n</code> or <code>m</code><a class="anchor" aria-label="anchor" href="#choose-n-or-m"></a>
+</h2>
+<p>For a variable-dimension problem, supply <code>n</code>. For a
+problem whose residual count can be chosen independently, supply
+<code>m</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extended</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_problem</a></span><span class="op">(</span><span class="st">"ex_rosen"</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">sampled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/funconstrain_catalog.html">funconstrain_problem</a></span><span class="op">(</span><span class="st">"jenn_samp"</span>, m <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  problem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">extended</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">name</span>, <span class="va">sampled</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">name</span><span class="op">)</span>,</span>
-<span>  requested <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n = 4"</span>, <span class="st">"m = 20"</span><span class="op">)</span>,</span>
-<span>  effective_n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  supplied <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n = 4"</span>, <span class="st">"m = 20"</span><span class="op">)</span>,</span>
+<span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
 <span>    <span class="va">sampled</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  effective_m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span>,</span>
 <span>    <span class="va">sampled</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;     problem requested effective_n effective_m</span></span>
-<span><span class="co">#&gt; 1  ex_rosen     n = 4           4           4</span></span>
-<span><span class="co">#&gt; 2 jenn_samp    m = 20           2          20</span></span></code></pre></div>
-<p><code>configuration$requested</code> records normalized values
-supplied by the caller; an omitted value remains <code>NULL</code>.
-<code>configuration$effective</code> records the concrete integer values
-used to create the starting point and callbacks. Here, Extended
-Rosenbrock derives <code>m = 4</code> from the requested
-<code>n = 4</code>, while Jennrich and Sampson combines the requested
-<code>m = 20</code> with its default <code>n = 2</code>.</p>
+<span><span class="co">#&gt;     problem supplied n  m</span></span>
+<span><span class="co">#&gt; 1  ex_rosen    n = 4 4  4</span></span>
+<span><span class="co">#&gt; 2 jenn_samp   m = 20 2 20</span></span></code></pre></div>
+<p>Extended Rosenbrock derives <code>m = 4</code> from the chosen
+<code>n = 4</code>. Jennrich and Sampson keeps its fixed
+<code>n = 2</code> and uses the requested <code>m = 20</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="decide-whether-a-reference-applies">Decide whether a reference applies<a class="anchor" aria-label="anchor" href="#decide-whether-a-reference-applies"></a>
+<h2 id="check-a-reference-before-using-it">Check a reference before using it<a class="anchor" aria-label="anchor" href="#check-a-reference-before-using-it"></a>
 </h2>
-<p>Each resolved problem has separate <code>fmin</code> and
-<code>xmin</code> reference records. A record contains a
-<code>value</code>, a <code>status</code>, a machine-readable
-<code>reason</code>, and <code>source_configuration</code>, the encoded
-configuration rule associated with the record. The status says whether a
-value is available and whether that rule establishes applicability. The
-table below is built from four current problem configurations.</p>
-<table class="table">
-<colgroup>
-<col width="24%">
-<col width="11%">
-<col width="16%">
-<col width="14%">
-<col width="32%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Problem configuration</th>
-<th align="left">Reference</th>
-<th align="left">Status</th>
-<th align="left">Value stored</th>
-<th align="left">Source configuration</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">rosen (defaults)</td>
-<td align="left">fmin</td>
-<td align="left">applicable</td>
-<td align="left">yes</td>
-<td align="left">all supported configurations</td>
-</tr>
-<tr class="even">
-<td align="left">rosen (defaults)</td>
-<td align="left">xmin</td>
-<td align="left">applicable</td>
-<td align="left">yes</td>
-<td align="left">all supported configurations</td>
-</tr>
-<tr class="odd">
-<td align="left">ex_rosen (n = 4)</td>
-<td align="left">fmin</td>
-<td align="left">applicable</td>
-<td align="left">yes</td>
-<td align="left">all supported configurations</td>
-</tr>
-<tr class="even">
-<td align="left">ex_rosen (n = 4)</td>
-<td align="left">xmin</td>
-<td align="left">not_applicable</td>
-<td align="left">yes</td>
-<td align="left">n = 8</td>
-</tr>
-<tr class="odd">
-<td align="left">jenn_samp (m = 20)</td>
-<td align="left">fmin</td>
-<td align="left">not_applicable</td>
-<td align="left">yes</td>
-<td align="left">m = 10</td>
-</tr>
-<tr class="even">
-<td align="left">jenn_samp (m = 20)</td>
-<td align="left">xmin</td>
-<td align="left">not_applicable</td>
-<td align="left">yes</td>
-<td align="left">m = 10</td>
-</tr>
-<tr class="odd">
-<td align="left">box_3d (defaults)</td>
-<td align="left">fmin</td>
-<td align="left">applicable</td>
-<td align="left">yes</td>
-<td align="left">all supported configurations</td>
-</tr>
-<tr class="even">
-<td align="left">box_3d (defaults)</td>
-<td align="left">xmin</td>
-<td align="left">unavailable</td>
-<td align="left">no</td>
-<td align="left">all supported configurations</td>
-</tr>
-</tbody>
-</table>
-<p>Interpret the four possible statuses before using a stored value as a
-target:</p>
-<ul>
-<li>
-<code>applicable</code>: the value applies to the effective
-configuration;</li>
-<li>
-<code>not_applicable</code>: the stored value is retained for
-inspection, but its source configuration does not match this problem
-instance;</li>
-<li>
-<code>unavailable</code>: the package has no stored value, so
-<code>value</code> is <code>NULL</code>; and</li>
-<li>
-<code>unknown</code>: a value is stored, but the package has not
-encoded enough information to decide applicability.</li>
-</ul>
-<p>No current catalogue entry returns <code>unknown</code>, but it
-remains part of the public record vocabulary so consumers do not have to
-treat missing knowledge as either applicable or inapplicable. Notice
-also that <code>fmin</code> and <code>xmin</code> can have different
-statuses: at <code>ex_rosen(n = 4)</code>, the minimum value applies but
-the stored minimizer is for <code>n = 8</code>. Always inspect the
-status of the specific reference you intend to use.</p>
+<p>Before comparing a result with a stored minimum, check that the
+reference applies to the problem you resolved:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fmin_reference</span> <span class="op">&lt;-</span> <span class="va">problem</span><span class="op">$</span><span class="va">reference</span><span class="op">$</span><span class="va">fmin</span></span>
+<span><span class="va">objective_gap</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">fmin_reference</span><span class="op">$</span><span class="va">status</span>, <span class="st">"applicable"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">final_objective</span> <span class="op">-</span> <span class="va">fmin_reference</span><span class="op">$</span><span class="va">value</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>  <span class="cn">NA_real_</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  reference_status <span class="op">=</span> <span class="va">fmin_reference</span><span class="op">$</span><span class="va">status</span>,</span>
+<span>  objective_gap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">objective_gap</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   reference_status objective_gap</span></span>
+<span><span class="co">#&gt; 1       applicable      9.59e-18</span></span></code></pre></div>
+<p>Minimum values and minimizer locations are checked separately.
+Extended Rosenbrock at <code>n = 4</code> shows why:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  reference <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Minimum value"</span>, <span class="st">"Minimizer location"</span><span class="op">)</span>,</span>
+<span>  status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="va">extended</span><span class="op">$</span><span class="va">reference</span><span class="op">$</span><span class="va">fmin</span><span class="op">$</span><span class="va">status</span>,</span>
+<span>    <span class="va">extended</span><span class="op">$</span><span class="va">reference</span><span class="op">$</span><span class="va">xmin</span><span class="op">$</span><span class="va">status</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  value_stored <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">extended</span><span class="op">$</span><span class="va">reference</span><span class="op">$</span><span class="va">fmin</span><span class="op">$</span><span class="va">value</span><span class="op">)</span>,</span>
+<span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">extended</span><span class="op">$</span><span class="va">reference</span><span class="op">$</span><span class="va">xmin</span><span class="op">$</span><span class="va">value</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;            reference         status value_stored</span></span>
+<span><span class="co">#&gt; 1      Minimum value     applicable         TRUE</span></span>
+<span><span class="co">#&gt; 2 Minimizer location not_applicable         TRUE</span></span></code></pre></div>
+<p>The minimum value zero applies at <code>n = 4</code>, while the
+stored minimizer belongs to the package’s <code>n = 8</code> example.
+Check the status of the particular reference you intend to use. The <a href="../reference/funconstrain_problem.html"><code>funconstrain_problem()</code>
+reference</a> documents the complete status and diagnostic
+vocabulary.</p>
 </div>
 <div class="section level2">
-<h2 id="when-to-use-a-raw-factory">When to use a raw factory<a class="anchor" aria-label="anchor" href="#when-to-use-a-raw-factory"></a>
+<h2 id="next-steps">Next steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
 </h2>
-<p>Direct factories such as <code><a href="../reference/rosen.html">rosen()</a></code> remain useful when you
-want to inspect the lower-level problem definition or manage dimensions
-yourself. Their starting point is a numeric vector for fixed-dimension
-problems and a function for variable-dimension problems. The resolver is
-usually more convenient for solver-neutral code because it returns one
-numeric start, pinned callbacks, and explicit configuration and
-reference metadata.</p>
-<p>See the <a href="../reference/funconstrain_catalog.html">problem
-resolver reference</a> for the complete return contract. To run the
-problems through the optional <code>optimx</code> bridge, continue with
-<a href="optimx-bridge.html">Using the optimx bridge</a>.</p>
+<p>For equations and supported dimensions, continue with <a href="problem-definitions.html">Mathematical definitions of the test
+problems</a>. For optimizer examples, see <a href="mize-integration.html">Using funconstrain with mize</a> or <a href="optimx-bridge.html">Using the optimx bridge</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

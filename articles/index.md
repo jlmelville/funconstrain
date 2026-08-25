@@ -2,11 +2,11 @@
 
 ### Core guides
 
-- [Getting started with resolved
-  problems](https://jlmelville.github.io/funconstrain/articles/getting-started.md):
+- [Getting started with
+  funconstrain](https://jlmelville.github.io/funconstrain/articles/getting-started.md):
 
-  Discover a test problem, resolve one exact configuration, run an
-  optimizer, and interpret its reference metadata.
+  Solve a test problem, choose its dimensions, browse the catalogue, and
+  use a stored reference safely.
 
 - [Mathematical definitions of the test
   problems](https://jlmelville.github.io/funconstrain/articles/problem-definitions.md):
@@ -19,8 +19,8 @@
 - [Using funconstrain with
   mize](https://jlmelville.github.io/funconstrain/articles/mize-integration.md):
 
-  Resolve exact test problems, run development mize, and retain
-  inspectable outcome, quality, work, and provenance records.
+  Pass a test problem to mize, inspect the result, and repeat the setup
+  over a small problem set.
 
 - [Using the optimx
   bridge](https://jlmelville.github.io/funconstrain/articles/optimx-bridge.md):

@@ -1,17 +1,20 @@
 # Mathematical definitions of the test problems
 
-This article gives the mathematical definitions implemented by
-`funconstrain`. It restates the test problems in Section 3 of [Moré,
-Garbow, and Hillstrom (1981)](https://doi.org/10.1145/355934.355936)
-using one notation throughout. The authors’ [Algorithm 566
+Use this page to find the residual equations, supported dimensions, and
+standard starting point for any problem implemented by `funconstrain`.
+The definitions follow Section 3 of [Moré, Garbow, and Hillstrom
+(1981)](https://doi.org/10.1145/355934.355936) using one notation
+throughout. The authors’ [Algorithm 566
 source](https://netlib.org/toms/566.gz) is a second primary source for
 resolving typographical and indexing ambiguities.
 
 The equations come from those sources; the supported dimensions and
 defaults come from the current package. When those surfaces differ, the
-package’s narrower contract is stated explicitly. For discovery,
-callback use, and reference metadata, see [Getting started with resolved
-problems](https://jlmelville.github.io/funconstrain/articles/getting-started.md).
+package’s narrower contract is stated explicitly. To run a problem, see
+[Getting started with
+funconstrain](https://jlmelville.github.io/funconstrain/articles/getting-started.md)
+or the [`funconstrain_problem()`
+reference](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`x=(x_1,\ldots,x_n)\in\mathbb{R}^n`$, every problem below defines
 $`m`$ residuals. The scalar callback returned by the package is
@@ -22,55 +25,53 @@ F(x)=\sum_{i=1}^{m}r_i(x)^2,
 ```
 
 Indices in the equations are one-based. A sum over an empty index range
-is zero. $`x^{(0)}`$ denotes the standard starting point. Gradients,
-Hessians, minima, and solver comparisons are deliberately left to the
-factory reference pages and solver-focused articles.
+is zero. $`x^{(0)}`$ denotes the standard starting point.
 
 ## Problem index
 
-1.  [Rosenbrock Function](#problem-01-rosen)
-2.  [Freudenstein and Roth Function](#problem-02-freud-roth)
-3.  [Powell Badly Scaled Function](#problem-03-powell-bs)
-4.  [Brown Badly Scaled Function](#problem-04-brown-bs)
-5.  [Beale Function](#problem-05-beale)
-6.  [Jennrich and Sampson Function](#problem-06-jenn-samp)
-7.  [Helical Valley Function](#problem-07-helical)
-8.  [Bard Function](#problem-08-bard)
-9.  [Gaussian Function](#problem-09-gauss)
-10. [Meyer Function](#problem-10-meyer)
-11. [Gulf Research and Development Function](#problem-11-gulf)
-12. [Box Three-Dimensional Function](#problem-12-box-3d)
-13. [Powell Singular Function](#problem-13-powell-s)
-14. [Wood Function](#problem-14-wood)
-15. [Kowalik and Osborne Function](#problem-15-kow-osb)
-16. [Brown and Dennis Function](#problem-16-brown-den)
-17. [Osborne 1 Function](#problem-17-osborne-1)
-18. [Biggs EXP6 Function](#problem-18-biggs-exp6)
-19. [Osborne 2 Function](#problem-19-osborne-2)
-20. [Watson Function](#problem-20-watson)
-21. [Extended Rosenbrock Function](#problem-21-ex-rosen)
-22. [Extended Powell Function](#problem-22-ex-powell)
-23. [Penalty Function I](#problem-23-penalty-1)
-24. [Penalty Function II](#problem-24-penalty-2)
-25. [Variably Dimensioned Function](#problem-25-var-dim)
-26. [Trigonometric Function](#problem-26-trigon)
-27. [Brown Almost-Linear Function](#problem-27-brown-al)
-28. [Discrete Boundary Value Function](#problem-28-disc-bv)
-29. [Discrete Integral Equation Function](#problem-29-disc-ie)
-30. [Broyden Tridiagonal Function](#problem-30-broyden-tri)
-31. [Broyden Banded Function](#problem-31-broyden-band)
-32. [Linear Function - Full Rank](#problem-32-linfun-fr)
-33. [Linear Function - Rank 1](#problem-33-linfun-r1)
-34. [Linear Function - Rank 1 with Zero Columns and
-    Rows](#problem-34-linfun-r1z)
-35. [Chebyquad Function](#problem-35-chebyquad)
+| Number | Problem | Default n | Default m |
+|---:|:---|---:|---:|
+| 1 | [Rosenbrock Function](#problem-01-rosen) | 2 | 2 |
+| 2 | [Freudenstein and Roth Function](#problem-02-freud-roth) | 2 | 2 |
+| 3 | [Powell Badly Scaled Function](#problem-03-powell-bs) | 2 | 2 |
+| 4 | [Brown Badly Scaled Function](#problem-04-brown-bs) | 2 | 3 |
+| 5 | [Beale Function](#problem-05-beale) | 2 | 3 |
+| 6 | [Jennrich and Sampson Function](#problem-06-jenn-samp) | 2 | 10 |
+| 7 | [Helical Valley Function](#problem-07-helical) | 3 | 3 |
+| 8 | [Bard Function](#problem-08-bard) | 3 | 15 |
+| 9 | [Gaussian Function](#problem-09-gauss) | 3 | 15 |
+| 10 | [Meyer Function](#problem-10-meyer) | 3 | 16 |
+| 11 | [Gulf Research and Development Function](#problem-11-gulf) | 3 | 99 |
+| 12 | [Box Three-Dimensional Function](#problem-12-box-3d) | 3 | 20 |
+| 13 | [Powell Singular Function](#problem-13-powell-s) | 4 | 4 |
+| 14 | [Wood Function](#problem-14-wood) | 4 | 6 |
+| 15 | [Kowalik and Osborne Function](#problem-15-kow-osb) | 4 | 11 |
+| 16 | [Brown and Dennis Function](#problem-16-brown-den) | 4 | 20 |
+| 17 | [Osborne 1 Function](#problem-17-osborne-1) | 5 | 33 |
+| 18 | [Biggs EXP6 Function](#problem-18-biggs-exp6) | 6 | 13 |
+| 19 | [Osborne 2 Function](#problem-19-osborne-2) | 11 | 65 |
+| 20 | [Watson Function](#problem-20-watson) | 6 | 31 |
+| 21 | [Extended Rosenbrock Function](#problem-21-ex-rosen) | 8 | 8 |
+| 22 | [Extended Powell Function](#problem-22-ex-powell) | 20 | 20 |
+| 23 | [Penalty Function I](#problem-23-penalty-1) | 25 | 26 |
+| 24 | [Penalty Function II](#problem-24-penalty-2) | 25 | 50 |
+| 25 | [Variably Dimensioned Function](#problem-25-var-dim) | 30 | 32 |
+| 26 | [Trigonometric Function](#problem-26-trigon) | 30 | 30 |
+| 27 | [Brown Almost-Linear Function](#problem-27-brown-al) | 30 | 30 |
+| 28 | [Discrete Boundary Value Function](#problem-28-disc-bv) | 35 | 35 |
+| 29 | [Discrete Integral Equation Function](#problem-29-disc-ie) | 35 | 35 |
+| 30 | [Broyden Tridiagonal Function](#problem-30-broyden-tri) | 40 | 40 |
+| 31 | [Broyden Banded Function](#problem-31-broyden-band) | 40 | 40 |
+| 32 | [Linear Function - Full Rank](#problem-32-linfun-fr) | 45 | 100 |
+| 33 | [Linear Function - Rank 1](#problem-33-linfun-r1) | 45 | 100 |
+| 34 | [Linear Function - Rank 1 with Zero Columns and Rows](#problem-34-linfun-r1z) | 45 | 100 |
+| 35 | [Chebyquad Function](#problem-35-chebyquad) | 50 | 50 |
 
 ## 1. Rosenbrock Function
 
-Package domain: $`n=2`$, $`m=2`$. Package routes:
+**Dimensions:** $`n=2`$, $`m=2`$  
+**Factory:**
 [`rosen()`](https://jlmelville.github.io/funconstrain/reference/rosen.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -79,14 +80,13 @@ r_2(x)&=1-x_1.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(-1.2,1)`$.
+**Start:** $`x^{(0)}=(-1.2,1)`$
 
 ## 2. Freudenstein and Roth Function
 
-Package domain: $`n=2`$, $`m=2`$. Package routes:
+**Dimensions:** $`n=2`$, $`m=2`$  
+**Factory:**
 [`freud_roth()`](https://jlmelville.github.io/funconstrain/reference/freud_roth.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -95,14 +95,13 @@ r_2(x)&=-29+x_1+\{(1+x_2)x_2-14\}x_2.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(1/2,-2)`$.
+**Start:** $`x^{(0)}=(1/2,-2)`$
 
 ## 3. Powell Badly Scaled Function
 
-Package domain: $`n=2`$, $`m=2`$. Package routes:
+**Dimensions:** $`n=2`$, $`m=2`$  
+**Factory:**
 [`powell_bs()`](https://jlmelville.github.io/funconstrain/reference/powell_bs.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -111,14 +110,13 @@ r_2(x)&=e^{-x_1}+e^{-x_2}-1.0001.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(0,1)`$.
+**Start:** $`x^{(0)}=(0,1)`$
 
 ## 4. Brown Badly Scaled Function
 
-Package domain: $`n=2`$, $`m=3`$. Package routes:
+**Dimensions:** $`n=2`$, $`m=3`$  
+**Factory:**
 [`brown_bs()`](https://jlmelville.github.io/funconstrain/reference/brown_bs.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -128,14 +126,13 @@ r_3(x)&=x_1x_2-2.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(1,1)`$.
+**Start:** $`x^{(0)}=(1,1)`$
 
 ## 5. Beale Function
 
-Package domain: $`n=2`$, $`m=3`$. Package routes:
+**Dimensions:** $`n=2`$, $`m=3`$  
+**Factory:**
 [`beale()`](https://jlmelville.github.io/funconstrain/reference/beale.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,2,3`$, let $`(c_1,c_2,c_3)=(1.5,2.25,2.625)`$. Then
 
@@ -143,15 +140,13 @@ For $`i=1,2,3`$, let $`(c_1,c_2,c_3)=(1.5,2.25,2.625)`$. Then
 r_i(x)=c_i-x_1(1-x_2^i).
 ```
 
-The standard start is $`x^{(0)}=(1,1)`$.
+**Start:** $`x^{(0)}=(1,1)`$
 
 ## 6. Jennrich and Sampson Function
 
-Package domain: $`n=2`$, $`m\ge2`$; package default $`m=10`$. Package
-routes:
+**Dimensions:** $`n=2`$, $`m\ge2`$; default $`m=10`$  
+**Factory:**
 [`jenn_samp()`](https://jlmelville.github.io/funconstrain/reference/jenn_samp.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,m`$,
 
@@ -159,14 +154,13 @@ For $`i=1,\ldots,m`$,
 r_i(x)=2+2i-e^{ix_1}-e^{ix_2}.
 ```
 
-The standard start is $`x^{(0)}=(0.3,0.4)`$.
+**Start:** $`x^{(0)}=(0.3,0.4)`$
 
 ## 7. Helical Valley Function
 
-Package domain: $`n=3`$, $`m=3`$. Package routes:
+**Dimensions:** $`n=3`$, $`m=3`$  
+**Factory:**
 [`helical()`](https://jlmelville.github.io/funconstrain/reference/helical.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Away from $`(x_1,x_2)=(0,0)`$, define
 
@@ -189,15 +183,16 @@ r_3(x)&=x_3.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(-1,0,0)`$. The package rejects the
-origin, where the objective is undefined.
+**Implementation note:** The package rejects the origin, where the
+objective is undefined.
+
+**Start:** $`x^{(0)}=(-1,0,0)`$
 
 ## 8. Bard Function
 
-Package domain: $`n=3`$, $`m=15`$. Package routes:
+**Dimensions:** $`n=3`$, $`m=15`$  
+**Factory:**
 [`bard()`](https://jlmelville.github.io/funconstrain/reference/bard.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,15`$, set $`v_i=16-i`$, $`w_i=\min(i,v_i)`$, and
 
@@ -214,14 +209,13 @@ Then
 r_i(x)=y_i-\left(x_1+\frac{i}{v_ix_2+w_ix_3}\right).
 ```
 
-The standard start is $`x^{(0)}=(1,1,1)`$.
+**Start:** $`x^{(0)}=(1,1,1)`$
 
 ## 9. Gaussian Function
 
-Package domain: $`n=3`$, $`m=15`$. Package routes:
+**Dimensions:** $`n=3`$, $`m=15`$  
+**Factory:**
 [`gauss()`](https://jlmelville.github.io/funconstrain/reference/gauss.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,15`$, set $`t_i=(8-i)/2`$ and
 
@@ -239,14 +233,13 @@ Then
 r_i(x)=x_1\exp\left\{-\frac{x_2}{2}(t_i-x_3)^2\right\}-y_i.
 ```
 
-The standard start is $`x^{(0)}=(0.4,1,0)`$.
+**Start:** $`x^{(0)}=(0.4,1,0)`$
 
 ## 10. Meyer Function
 
-Package domain: $`n=3`$, $`m=16`$. Package routes:
+**Dimensions:** $`n=3`$, $`m=16`$  
+**Factory:**
 [`meyer()`](https://jlmelville.github.io/funconstrain/reference/meyer.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,16`$, set $`t_i=45+5i`$ and
 
@@ -263,15 +256,13 @@ Then
 r_i(x)=x_1\exp\left(\frac{x_2}{t_i+x_3}\right)-y_i.
 ```
 
-The standard start is $`x^{(0)}=(0.02,4000,250)`$.
+**Start:** $`x^{(0)}=(0.02,4000,250)`$
 
 ## 11. Gulf Research and Development Function
 
-Package domain: $`n=3`$, $`3\le m\le100`$; package default $`m=99`$.
-Package routes:
+**Dimensions:** $`n=3`$, $`3\le m\le100`$; default $`m=99`$  
+**Factory:**
 [`gulf()`](https://jlmelville.github.io/funconstrain/reference/gulf.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,m`$, define
 
@@ -286,18 +277,17 @@ The residual is
 r_i(x)=\exp\left\{-\frac{|x_2-y_i|^{x_3}}{x_1}\right\}-t_i.
 ```
 
-The standard start is $`x^{(0)}=(5,2.5,0.15)`$. The published equation
-has a typographical glyph where the subtraction in $`|x_2-y_i|`$ should
-appear; the corrected form above agrees with the authors’ Algorithm 566
-source and the package.
+**Source note:** The published equation has a typographical glyph where
+the subtraction in $`|x_2-y_i|`$ should appear; the corrected form above
+agrees with the authors’ Algorithm 566 source and the package.
+
+**Start:** $`x^{(0)}=(5,2.5,0.15)`$
 
 ## 12. Box Three-Dimensional Function
 
-Package domain: $`n=3`$, $`m\ge3`$; package default $`m=20`$. Package
-routes:
+**Dimensions:** $`n=3`$, $`m\ge3`$; default $`m=20`$  
+**Factory:**
 [`box_3d()`](https://jlmelville.github.io/funconstrain/reference/box_3d.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,m`$, let $`t_i=i/10`$. Then
 
@@ -305,14 +295,13 @@ For $`i=1,\ldots,m`$, let $`t_i=i/10`$. Then
 r_i(x)=e^{-t_ix_1}-e^{-t_ix_2}-x_3(e^{-t_i}-e^{-i}).
 ```
 
-The standard start is $`x^{(0)}=(0,10,20)`$.
+**Start:** $`x^{(0)}=(0,10,20)`$
 
 ## 13. Powell Singular Function
 
-Package domain: $`n=4`$, $`m=4`$. Package routes:
+**Dimensions:** $`n=4`$, $`m=4`$  
+**Factory:**
 [`powell_s()`](https://jlmelville.github.io/funconstrain/reference/powell_s.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -323,14 +312,13 @@ r_4(x)&=\sqrt{10}(x_1-x_4)^2.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(3,-1,0,1)`$.
+**Start:** $`x^{(0)}=(3,-1,0,1)`$
 
 ## 14. Wood Function
 
-Package domain: $`n=4`$, $`m=6`$. Package routes:
+**Dimensions:** $`n=4`$, $`m=6`$  
+**Factory:**
 [`wood()`](https://jlmelville.github.io/funconstrain/reference/wood.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -341,14 +329,13 @@ r_6(x)&=(x_2-x_4)/\sqrt{10}.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(-3,-1,-3,-1)`$.
+**Start:** $`x^{(0)}=(-3,-1,-3,-1)`$
 
 ## 15. Kowalik and Osborne Function
 
-Package domain: $`n=4`$, $`m=11`$. Package routes:
+**Dimensions:** $`n=4`$, $`m=11`$  
+**Factory:**
 [`kow_osb()`](https://jlmelville.github.io/funconstrain/reference/kow_osb.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 The data are
 
@@ -367,15 +354,13 @@ For $`i=1,\ldots,11`$,
 r_i(x)=y_i-x_1\frac{u_i(u_i+x_2)}{u_i(u_i+x_3)+x_4}.
 ```
 
-The standard start is $`x^{(0)}=(0.25,0.39,0.415,0.39)`$.
+**Start:** $`x^{(0)}=(0.25,0.39,0.415,0.39)`$
 
 ## 16. Brown and Dennis Function
 
-Package domain: $`n=4`$, $`m\ge4`$; package default $`m=20`$. Package
-routes:
+**Dimensions:** $`n=4`$, $`m\ge4`$; default $`m=20`$  
+**Factory:**
 [`brown_den()`](https://jlmelville.github.io/funconstrain/reference/brown_den.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,m`$, let $`t_i=i/5`$ and define
 
@@ -387,16 +372,16 @@ r_i(x)&=a_i(x)^2+b_i(x)^2.
 \end{aligned}
 ```
 
-Thus this problem squares $`a_i^2+b_i^2`$ once more in the shared
-objective $`F(x)=\sum_i r_i(x)^2`$. The standard start is
-$`x^{(0)}=(25,5,-5,1)`$.
+**Objective note:** This problem squares $`a_i^2+b_i^2`$ once more in
+the shared objective $`F(x)=\sum_i r_i(x)^2`$.
+
+**Start:** $`x^{(0)}=(25,5,-5,1)`$
 
 ## 17. Osborne 1 Function
 
-Package domain: $`n=5`$, $`m=33`$. Package routes:
+**Dimensions:** $`n=5`$, $`m=33`$  
+**Factory:**
 [`osborne_1()`](https://jlmelville.github.io/funconstrain/reference/osborne_1.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Let $`t_i=10(i-1)`$ and define the observations in consecutive blocks:
 
@@ -416,15 +401,13 @@ For $`i=1,\ldots,33`$,
 r_i(x)=y_i-\{x_1+x_2e^{-t_ix_4}+x_3e^{-t_ix_5}\}.
 ```
 
-The standard start is $`x^{(0)}=(0.5,1.5,-1,0.01,0.02)`$.
+**Start:** $`x^{(0)}=(0.5,1.5,-1,0.01,0.02)`$
 
 ## 18. Biggs EXP6 Function
 
-Package domain: $`n=6`$, $`m\ge6`$; package default $`m=13`$. Package
-routes:
+**Dimensions:** $`n=6`$, $`m\ge6`$; default $`m=13`$  
+**Factory:**
 [`biggs_exp6()`](https://jlmelville.github.io/funconstrain/reference/biggs_exp6.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,m`$, let $`t_i=i/10`$ and
 
@@ -438,14 +421,13 @@ Then
 r_i(x)=x_3e^{-t_ix_1}-x_4e^{-t_ix_2}+x_6e^{-t_ix_5}-y_i.
 ```
 
-The standard start is $`x^{(0)}=(1,2,1,1,1,1)`$.
+**Start:** $`x^{(0)}=(1,2,1,1,1,1)`$
 
 ## 19. Osborne 2 Function
 
-Package domain: $`n=11`$, $`m=65`$. Package routes:
+**Dimensions:** $`n=11`$, $`m=65`$  
+**Factory:**
 [`osborne_2()`](https://jlmelville.github.io/funconstrain/reference/osborne_2.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Let $`t_i=(i-1)/10`$. The observations, in consecutive blocks, are
 
@@ -472,16 +454,13 @@ r_i(x)=y_i-&\{x_1e^{-t_ix_5}+x_2e^{-x_6(t_i-x_9)^2}\\
 \end{aligned}
 ```
 
-The standard start is
-$`x^{(0)}=(1.3,0.65,0.65,0.7,0.6,3,5,7,2,4.5,5.5)`$.
+**Start:** $`x^{(0)}=(1.3,0.65,0.65,0.7,0.6,3,5,7,2,4.5,5.5)`$
 
 ## 20. Watson Function
 
-Package domain: $`2\le n\le31`$, $`m=31`$; package default $`n=6`$.
-Package routes:
+**Dimensions:** $`2\le n\le31`$, $`m=31`$; default $`n=6`$  
+**Factory:**
 [`watson()`](https://jlmelville.github.io/funconstrain/reference/watson.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,29`$, define
 
@@ -503,15 +482,13 @@ r_{31}(x)&=x_2-x_1^2-1.
 \end{aligned}
 ```
 
-The standard start is $`x^{(0)}=(0,\ldots,0)`$.
+**Start:** $`x^{(0)}=(0,\ldots,0)`$
 
 ## 21. Extended Rosenbrock Function
 
-Package domain: even $`n\ge2`$, $`m=n`$; package default $`n=8`$.
-Package routes:
+**Dimensions:** even $`n\ge2`$, $`m=n`$; default $`n=8`$  
+**Factory:**
 [`ex_rosen()`](https://jlmelville.github.io/funconstrain/reference/ex_rosen.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`k=1,\ldots,n/2`$,
 
@@ -522,15 +499,14 @@ r_{2k}(x)&=1-x_{2k-1}.
 \end{aligned}
 ```
 
-The standard start repeats $`(-1.2,1)`$ exactly $`n/2`$ times.
+**Start:** Repeat $`(-1.2,1)`$ exactly $`n/2`$ times.
 
 ## 22. Extended Powell Function
 
-Package domain: $`n\ge4`$ and divisible by 4, $`m=n`$; package default
-$`n=20`$. Package routes:
+**Dimensions:** $`n\ge4`$ and divisible by 4, $`m=n`$; default
+$`n=20`$  
+**Factory:**
 [`ex_powell()`](https://jlmelville.github.io/funconstrain/reference/ex_powell.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`k=1,\ldots,n/4`$, let $`a=4k-3`$. Then
 
@@ -543,17 +519,16 @@ r_{a+3}(x)&=\sqrt{10}(x_a-x_{a+3})^2.
 \end{aligned}
 ```
 
-The standard start repeats $`(3,-1,0,1)`$ exactly $`n/4`$ times. MGH
-calls this the “Extended Powell singular” problem; the package title is
-shortened.
+**Naming note:** MGH calls this the “Extended Powell singular” problem;
+the package title is shortened.
+
+**Start:** Repeat $`(3,-1,0,1)`$ exactly $`n/4`$ times.
 
 ## 23. Penalty Function I
 
-Package domain: $`n\ge1`$, $`m=n+1`$; package default $`n=25`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n+1`$; default $`n=25`$  
+**Factory:**
 [`penalty_1()`](https://jlmelville.github.io/funconstrain/reference/penalty_1.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 With $`a=10^{-5}`$,
 
@@ -564,15 +539,13 @@ r_{n+1}(x)&=\sum_{j=1}^{n}x_j^2-\frac14.
 \end{aligned}
 ```
 
-The standard start is $`x_j^{(0)}=j`$.
+**Start:** $`x_j^{(0)}=j`$
 
 ## 24. Penalty Function II
 
-Package domain: $`n\ge1`$, $`m=2n`$; package default $`n=25`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=2n`$; default $`n=25`$  
+**Factory:**
 [`penalty_2()`](https://jlmelville.github.io/funconstrain/reference/penalty_2.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 With $`a=10^{-5}`$, the residuals are
 
@@ -587,16 +560,15 @@ r_{2n}(x)&=\sum_{j=1}^{n}(n-j+1)x_j^2-1.
 \end{aligned}
 ```
 
-For $`n=1`$, the two middle ranges are empty. The standard start is
-$`x_j^{(0)}=1/2`$.
+**Edge case:** For $`n=1`$, the two middle ranges are empty.
+
+**Start:** $`x_j^{(0)}=1/2`$
 
 ## 25. Variably Dimensioned Function
 
-Package domain: $`n\ge1`$, $`m=n+2`$; package default $`n=30`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n+2`$; default $`n=30`$  
+**Factory:**
 [`var_dim()`](https://jlmelville.github.io/funconstrain/reference/var_dim.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Define $`s(x)=\sum_{j=1}^{n}j(x_j-1)`$. Then
 
@@ -608,15 +580,13 @@ r_{n+2}(x)&=s(x)^2.
 \end{aligned}
 ```
 
-The standard start is $`x_j^{(0)}=1-j/n`$.
+**Start:** $`x_j^{(0)}=1-j/n`$
 
 ## 26. Trigonometric Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=30`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=30`$  
+**Factory:**
 [`trigon()`](https://jlmelville.github.io/funconstrain/reference/trigon.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,n`$,
 
@@ -624,15 +594,13 @@ For $`i=1,\ldots,n`$,
 r_i(x)=n-\sum_{j=1}^{n}\cos(x_j)+i\{1-\cos(x_i)\}-\sin(x_i).
 ```
 
-The standard start is $`x_j^{(0)}=1/n`$.
+**Start:** $`x_j^{(0)}=1/n`$
 
 ## 27. Brown Almost-Linear Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=30`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=30`$  
+**Factory:**
 [`brown_al()`](https://jlmelville.github.io/funconstrain/reference/brown_al.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 ``` math
 \begin{aligned}
@@ -641,16 +609,15 @@ r_n(x)&=\prod_{j=1}^{n}x_j-1.
 \end{aligned}
 ```
 
-For $`n=1`$, the first range is empty. The standard start is
-$`x_j^{(0)}=1/2`$.
+**Edge case:** For $`n=1`$, the first range is empty.
+
+**Start:** $`x_j^{(0)}=1/2`$
 
 ## 28. Discrete Boundary Value Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=35`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=35`$  
+**Factory:**
 [`disc_bv()`](https://jlmelville.github.io/funconstrain/reference/disc_bv.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Let $`h=1/(n+1)`$, $`t_i=ih`$, and set the boundary values
 $`x_0=x_{n+1}=0`$. For $`i=1,\ldots,n`$,
@@ -659,15 +626,13 @@ $`x_0=x_{n+1}=0`$. For $`i=1,\ldots,n`$,
 r_i(x)=2x_i-x_{i-1}-x_{i+1}+\frac{h^2}{2}(x_i+t_i+1)^3.
 ```
 
-The standard start is $`x_i^{(0)}=t_i(t_i-1)`$.
+**Start:** $`x_i^{(0)}=t_i(t_i-1)`$
 
 ## 29. Discrete Integral Equation Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=35`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=35`$  
+**Factory:**
 [`disc_ie()`](https://jlmelville.github.io/funconstrain/reference/disc_ie.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Let $`h=1/(n+1)`$, $`t_i=ih`$, and $`q_j(x)=(x_j+t_j+1)^3`$. For
 $`i=1,\ldots,n`$,
@@ -679,15 +644,13 @@ r_i(x)=x_i+\frac{h}{2}\left\{
 \right\}.
 ```
 
-The standard start is $`x_i^{(0)}=t_i(t_i-1)`$.
+**Start:** $`x_i^{(0)}=t_i(t_i-1)`$
 
 ## 30. Broyden Tridiagonal Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=40`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=40`$  
+**Factory:**
 [`broyden_tri()`](https://jlmelville.github.io/funconstrain/reference/broyden_tri.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Set $`x_0=x_{n+1}=0`$. For $`i=1,\ldots,n`$,
 
@@ -695,15 +658,13 @@ Set $`x_0=x_{n+1}=0`$. For $`i=1,\ldots,n`$,
 r_i(x)=(3-2x_i)x_i-x_{i-1}-2x_{i+1}+1.
 ```
 
-The standard start is $`x^{(0)}=(-1,\ldots,-1)`$.
+**Start:** $`x^{(0)}=(-1,\ldots,-1)`$
 
 ## 31. Broyden Banded Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=40`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=40`$  
+**Factory:**
 [`broyden_band()`](https://jlmelville.github.io/funconstrain/reference/broyden_band.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For each $`i=1,\ldots,n`$, define
 
@@ -717,15 +678,13 @@ Then
 r_i(x)=x_i(2+5x_i^2)+1-\sum_{j\in B_i}x_j(1+x_j).
 ```
 
-The standard start is $`x^{(0)}=(-1,\ldots,-1)`$.
+**Start:** $`x^{(0)}=(-1,\ldots,-1)`$
 
 ## 32. Linear Function - Full Rank
 
-Package domain: $`n\ge1`$, $`m\ge n`$; package defaults $`n=45`$,
-$`m=100`$. Package routes:
+**Dimensions:** $`n\ge1`$, $`m\ge n`$; defaults $`n=45`$, $`m=100`$  
+**Factory:**
 [`linfun_fr()`](https://jlmelville.github.io/funconstrain/reference/linfun_fr.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Define $`c(x)=1+(2/m)\sum_{j=1}^{n}x_j`$. Then
 
@@ -737,15 +696,13 @@ x_i-c(x),&i=1,\ldots,n,\\
 \end{cases}
 ```
 
-The standard start is $`x^{(0)}=(1,\ldots,1)`$.
+**Start:** $`x^{(0)}=(1,\ldots,1)`$
 
 ## 33. Linear Function - Rank 1
 
-Package domain: $`n\ge1`$, $`m\ge n`$; package defaults $`n=45`$,
-$`m=100`$. Package routes:
+**Dimensions:** $`n\ge1`$, $`m\ge n`$; defaults $`n=45`$, $`m=100`$  
+**Factory:**
 [`linfun_r1()`](https://jlmelville.github.io/funconstrain/reference/linfun_r1.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 For $`i=1,\ldots,m`$,
 
@@ -753,15 +710,13 @@ For $`i=1,\ldots,m`$,
 r_i(x)=i\sum_{j=1}^{n}jx_j-1.
 ```
 
-The standard start is $`x^{(0)}=(1,\ldots,1)`$.
+**Start:** $`x^{(0)}=(1,\ldots,1)`$
 
 ## 34. Linear Function - Rank 1 with Zero Columns and Rows
 
-Package domain: $`n\ge1`$, $`m\ge n`$; package defaults $`n=45`$,
-$`m=100`$. Package routes:
+**Dimensions:** $`n\ge1`$, $`m\ge n`$; defaults $`n=45`$, $`m=100`$  
+**Factory:**
 [`linfun_r1z()`](https://jlmelville.github.io/funconstrain/reference/linfun_r1z.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Define $`s(x)=\sum_{j=2}^{n-1}jx_j`$. The residuals are
 
@@ -773,16 +728,15 @@ r_m(x)&=-1.
 \end{aligned}
 ```
 
-For $`n\le2`$, the sum defining $`s(x)`$ is empty. The standard start is
-$`x^{(0)}=(1,\ldots,1)`$.
+**Edge case:** For $`n\le2`$, the sum defining $`s(x)`$ is empty.
+
+**Start:** $`x^{(0)}=(1,\ldots,1)`$
 
 ## 35. Chebyquad Function
 
-Package domain: $`n\ge1`$, $`m=n`$; package default $`n=50`$. Package
-routes:
+**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=50`$  
+**Factory:**
 [`chebyquad()`](https://jlmelville.github.io/funconstrain/reference/chebyquad.md)
-and the [`funconstrain_problem()`
-resolver](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
 
 Let $`T_i^*(u)=T_i(2u-1)`$ be the Chebyshev polynomial shifted to
 $`[0,1]`$, with
@@ -807,9 +761,9 @@ c_i=
 \end{cases}
 ```
 
-The standard start is $`x_j^{(0)}=j/(n+1)`$.
+**Package note:** MGH defines Chebyquad for $`m\ge n`$, with residual
+indices through $`m`$. The current package has no independent `m`
+control and implements only $`m=n`$; the narrower package domain is the
+supported contract here.
 
-MGH defines Chebyquad for $`m\ge n`$, with residual indices through
-$`m`$. The current package has no independent `m` control and implements
-only $`m=n`$; the narrower package domain is the supported contract
-here.
+**Start:** $`x_j^{(0)}=j/(n+1)`$
