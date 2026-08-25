@@ -1,0 +1,283 @@
+---
+title: "Getting started with resolved problems"
+description: >
+  Discover a test problem, resolve one exact configuration, run an optimizer,
+  and interpret its reference metadata.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+`funconstrain` provides the 35 nonlinear least-squares test problems from
+Moré, Garbow, and Hillstrom. The resolver is the simplest entry point for
+solver-neutral code: it turns a problem name and optional dimensions into one
+concrete starting point, a set of dimension-checked callbacks, and metadata
+describing the exact configuration.
+
+## Find a problem
+
+`funconstrain_catalog()` lists the available problems in paper order. Its
+columns distinguish fixed and variable parameter dimensions (`n`) and show
+whether the number of summand functions (`m`) can be configured.
+
+```{r catalog}
+library(funconstrain)
+
+catalog <- funconstrain_catalog()
+catalog[
+  catalog$name %in% c("rosen", "jenn_samp", "ex_rosen", "chebyquad"),
+  c(
+    "number", "name", "n_kind", "n_default", "m_configurable", "m_default"
+  )
+]
+```
+
+Names are matched exactly. This makes a selected problem unambiguous in
+scripts and saved experiment configurations.
+
+## Resolve one exact problem
+
+The Rosenbrock problem has fixed `n = 2` and `m = 2`, so no dimensions need to
+be supplied:
+
+```{r resolve-rosen}
+rosen_problem <- funconstrain_problem("rosen")
+names(rosen_problem)
+rosen_problem$x0
+rosen_problem$configuration
+```
+
+The resolved callbacks are:
+
+- `fn(x)`, the scalar objective;
+- `gr(x)`, its gradient;
+- `he(x)`, its Hessian; and
+- `fg(x)`, a combined objective-and-gradient calculation.
+
+Unlike the raw factory interface, a resolved `x0` is always a numeric vector.
+Each callback is pinned to the effective value of `n`, so an accidental vector
+of another length fails at the problem boundary.
+
+```{r resolved-contract, include=FALSE}
+rosen_at_start <- rosen_problem$fg(rosen_problem$x0)
+rosen_hessian <- rosen_problem$he(rosen_problem$x0)
+
+stopifnot(
+  identical(
+    names(rosen_problem),
+    c(
+      "fn", "gr", "he", "fg", "x0", "problem", "configuration", "reference"
+    )
+  ),
+  is.numeric(rosen_problem$x0),
+  length(rosen_problem$x0) == 2L,
+  length(rosen_at_start$fn) == 1L,
+  length(rosen_at_start$gr) == 2L,
+  identical(dim(rosen_hessian), c(2L, 2L))
+)
+```
+
+## Run an optimizer
+
+The callbacks can be passed directly to an optimizer. Here, `stats::optim()`
+uses its BFGS method and the analytic gradient:
+
+```{r optimize-rosen}
+fit <- stats::optim(
+  par = rosen_problem$x0,
+  fn = rosen_problem$fn,
+  gr = rosen_problem$gr,
+  method = "BFGS"
+)
+
+final_objective <- rosen_problem$fn(fit$par)
+gradient_inf_norm <- max(abs(rosen_problem$gr(fit$par)))
+
+data.frame(
+  convergence = fit$convergence,
+  final_objective = signif(final_objective, 3),
+  gradient_inf_norm = signif(gradient_inf_norm, 3)
+)
+```
+
+A convergence code of zero means that `stats::optim()` reports successful
+completion. The final objective and gradient infinity norm are evaluated
+again through the resolved problem, independently of the optimizer's stored
+objective value. Their small magnitudes provide a useful quality check for
+this run; exact values and iteration counts can vary across R versions and
+platforms.
+
+```{r optimize-rosen-check, include=FALSE}
+stopifnot(
+  identical(fit$convergence, 0L),
+  is.finite(final_objective),
+  final_objective < 1e-12,
+  is.finite(gradient_inf_norm),
+  gradient_inf_norm < 1e-6
+)
+```
+
+## Request dimensions explicitly
+
+For a variable-dimension problem, pass `n`. For a problem with configurable
+summand count, pass `m`:
+
+```{r configurations}
+extended <- funconstrain_problem("ex_rosen", n = 4)
+sampled <- funconstrain_problem("jenn_samp", m = 20)
+
+data.frame(
+  problem = c(extended$problem$name, sampled$problem$name),
+  requested = c("n = 4", "m = 20"),
+  effective_n = c(
+    extended$configuration$effective$n,
+    sampled$configuration$effective$n
+  ),
+  effective_m = c(
+    extended$configuration$effective$m,
+    sampled$configuration$effective$m
+  )
+)
+```
+
+`configuration$requested` records normalized values supplied by the caller;
+an omitted value remains `NULL`. `configuration$effective` records the
+concrete integer values used to create the starting point and callbacks. Here,
+Extended Rosenbrock derives `m = 4` from the requested `n = 4`, while Jennrich
+and Sampson combines the requested `m = 20` with its default `n = 2`.
+
+```{r configuration-check, include=FALSE}
+stopifnot(
+  identical(extended$configuration$requested, list(n = 4L, m = NULL)),
+  identical(extended$configuration$effective, list(n = 4L, m = 4L)),
+  identical(sampled$configuration$requested, list(n = NULL, m = 20L)),
+  identical(sampled$configuration$effective, list(n = 2L, m = 20L))
+)
+```
+
+## Decide whether a reference applies
+
+Each resolved problem has separate `fmin` and `xmin` reference records. A
+record contains a `value`, a `status`, a machine-readable `reason`, and
+`source_configuration`, the encoded configuration rule associated with the
+record. The status says whether a value is available and whether that rule
+establishes applicability. The table below is built from four current problem
+configurations.
+
+```{r reference-data, include=FALSE}
+reference_cases <- list(
+  "rosen (defaults)" = rosen_problem,
+  "ex_rosen (n = 4)" = extended,
+  "jenn_samp (m = 20)" = sampled,
+  "box_3d (defaults)" = funconstrain_problem("box_3d")
+)
+
+format_source_configuration <- function(configuration) {
+  if (length(configuration) == 0L) {
+    return("all supported configurations")
+  }
+
+  paste(
+    names(configuration),
+    unlist(configuration, use.names = FALSE),
+    sep = " = ",
+    collapse = ", "
+  )
+}
+
+reference_table <- do.call(
+  rbind,
+  lapply(names(reference_cases), function(case_name) {
+    records <- reference_cases[[case_name]]$reference
+    data.frame(
+      problem = case_name,
+      reference = names(records),
+      status = vapply(records, `[[`, character(1L), "status"),
+      value_stored = ifelse(
+        vapply(records, function(record) !is.null(record$value), logical(1L)),
+        "yes",
+        "no"
+      ),
+      source_configuration = vapply(
+        records,
+        function(record) {
+          format_source_configuration(record$source_configuration)
+        },
+        character(1L)
+      ),
+      row.names = NULL
+    )
+  })
+)
+```
+
+```{r reference-table, echo=FALSE}
+knitr::kable(
+  reference_table,
+  col.names = c(
+    "Problem configuration",
+    "Reference",
+    "Status",
+    "Value stored",
+    "Source configuration"
+  )
+)
+```
+
+Interpret the four possible statuses before using a stored value as a target:
+
+- `applicable`: the value applies to the effective configuration;
+- `not_applicable`: the stored value is retained for inspection, but its
+  source configuration does not match this problem instance;
+- `unavailable`: the package has no stored value, so `value` is `NULL`; and
+- `unknown`: a value is stored, but the package has not encoded enough
+  information to decide applicability.
+
+No current catalogue entry returns `unknown`, but it remains part of the
+public record vocabulary so consumers do not have to treat missing knowledge
+as either applicable or inapplicable. Notice also that `fmin` and `xmin` can
+have different statuses: at `ex_rosen(n = 4)`, the minimum value applies but
+the stored minimizer is for `n = 8`. Always inspect the status of the specific
+reference you intend to use.
+
+```{r reference-check, include=FALSE}
+stopifnot(
+  identical(
+    reference_table$status,
+    c(
+      "applicable", "applicable",
+      "applicable", "not_applicable",
+      "not_applicable", "not_applicable",
+      "applicable", "unavailable"
+    )
+  ),
+  identical(
+    reference_cases[["box_3d (defaults)"]]$reference$xmin$value,
+    NULL
+  )
+)
+
+default_references <- lapply(
+  catalog$name,
+  function(name) funconstrain_problem(name)$reference
+)
+default_statuses <- unlist(lapply(
+  default_references,
+  function(records) vapply(records, `[[`, character(1L), "status")
+))
+stopifnot(!"unknown" %in% default_statuses)
+```
+
+## When to use a raw factory
+
+Direct factories such as `rosen()` remain useful when you want to inspect the
+lower-level problem definition or manage dimensions yourself. Their starting
+point is a numeric vector for fixed-dimension problems and a function for
+variable-dimension problems. The resolver is usually more convenient for
+solver-neutral code because it returns one numeric start, pinned callbacks,
+and explicit configuration and reference metadata.
+
+See the [problem resolver reference](../reference/funconstrain_catalog.html)
+for the complete return contract. To run the problems through the optional
+`optimx` bridge, continue with [Using the optimx Bridge](optimx-bridge.html).

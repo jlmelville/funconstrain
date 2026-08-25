@@ -3,7 +3,10 @@ template:
   bootstrap: 5
 
 articles:
-- title: Guides
+- title: Core guides
+  contents:
+  - articles/getting-started
+- title: Integrations and contributed background
   contents:
   - articles/optimx-bridge
   - RunFunconstrainTests

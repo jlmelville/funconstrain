@@ -5,10 +5,11 @@ An R Package of Functions for Testing Unconstrained Numerical Optimization.
 [![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V)](https://codecov.io/gh/jlmelville/funconstrain)
 
-`funconstrain` is a pure R implementation of the 35 test functions in the paper by
-[Moré, Garbow, and Hillstrom](https://doi.org/10.1145/355934.355936) useful (to varying degrees)
-for testing unconstrained numerical optimization methods, e.g. those implementing the likes of
-steepest descent, Newton, BFGS, L-BFGS, conjugate gradient and so on.
+`funconstrain` is a pure R implementation of the 35 test functions in the
+paper by
+[Moré, Garbow, and Hillstrom](https://doi.org/10.1145/355934.355936), useful
+(to varying degrees) for testing unconstrained numerical optimization methods
+such as steepest descent, Newton, BFGS, L-BFGS, and conjugate gradient.
 
 ## Install
 
@@ -23,42 +24,42 @@ pak::pak("jlmelville/funconstrain")
 package?funconstrain
 ```
 
-## Examples
+The [getting-started
+article](https://jlmelville.github.io/funconstrain/articles/getting-started.html)
+shows how to discover problems, resolve dimensions, run an optimizer, and
+interpret stored references.
 
-It's pretty simple. You call a function named after the test problem at hand, and get back a list.
-That list contains functions that implement the objective, gradient, Hessian, and combined
-objective-plus-gradient calculation; a suggested starting point, which is also a function if the
-test problem supports different dimensionalities and is a plain numeric vector otherwise; and
-reported `fmin` and `xmin` references from the source material. For problems
-with variable `n` or configurable `m`, these stored references may apply only
-to the configuration described in the factory documentation and are not
-recalculated for other choices. In some cases, `fmin` applies more broadly than
-the stored `xmin`.
+## Quick start
+
+Use `funconstrain_problem()` to resolve a named problem to one numeric starting
+point, dimension-checked callbacks, and metadata for the effective
+configuration:
 
 ```R
 library(funconstrain)
 
-# The famous Rosenbrock function is a problem with two parameters
-rbrock <- rosen()
+problem <- funconstrain_problem("rosen")
+result <- stats::optim(
+  par = problem$x0,
+  fn = problem$fn,
+  gr = problem$gr,
+  method = "BFGS"
+)
 
-# rbrock is a list containing fn, gr, he, fg, x0, fmin, and xmin
-# Pass them to an optimization method:
-res <- stats::optim(par = rbrock$x0, fn = rbrock$fn, gr = rbrock$gr, method = "L-BFGS-B")
-# Or feel free to ignore the suggested starting point and use your own:
-res <- stats::optim(par = c(1.2, 1.2), fn = rbrock$fn, gr = rbrock$gr, method = "L-BFGS-B")
-
-# The Chebyquad function is defined for multiple parameters (any n > 0)
-cheby <- chebyquad()
-
-# To use different values of n, we provide it to the starting point x0, which is a function now that n can
-# take multiple values for this test set.
-# A five-parameter version:
-res_n5 <- stats::optim(par = cheby$x0(n = 5), fn = cheby$fn, gr = cheby$gr, method = "L-BFGS-B")
-# And a 10-parameter version:
-res_n10 <- stats::optim(par = cheby$x0(n = 10), fn = cheby$fn, gr = cheby$gr, method = "L-BFGS-B")
+result$convergence
+problem$fn(result$par)
+max(abs(problem$gr(result$par)))
 ```
 
-The package and function documentation contain more examples.
+Direct factories remain available when you want the lower-level interface:
+
+```R
+raw_problem <- rosen()
+names(raw_problem)
+```
+
+See `?funconstrain_catalog` for the resolver contract and
+`package?funconstrain` for the raw factory contract and full function list.
 
 ## Why do this?
 
