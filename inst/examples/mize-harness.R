@@ -59,7 +59,7 @@ run_mize_problem <- function(
   method = "BFGS",
   controls = list()
 ) {
-  minimum_mize_version <- "0.2.5.9001"
+  minimum_mize_version <- "0.2.5.9002"
   installed_mize <- requireNamespace("mize", quietly = TRUE)
   if (
     !installed_mize ||
@@ -144,7 +144,9 @@ run_mize_problem <- function(
       "converged",
       "terminate",
       "nf",
-      "ng"
+      "ng",
+      "nh",
+      "nhi"
     )
     missing_fields <- setdiff(required_result_fields, names(result))
     if (length(missing_fields) > 0L) {
@@ -203,6 +205,8 @@ run_mize_problem <- function(
       native = list(
         nf = if (is.null(result)) NULL else result$nf,
         ng = if (is.null(result)) NULL else result$ng,
+        nh = if (is.null(result)) NULL else result$nh,
+        nhi = if (is.null(result)) NULL else result$nhi,
         iter = if (is.null(result)) NULL else result[["iter"]]
       ),
       physical = counted$counts()
