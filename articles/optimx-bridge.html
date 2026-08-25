@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Using the optimx Bridge • funconstrain</title>
+<title>Using the optimx bridge • funconstrain</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using the optimx Bridge">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using the optimx bridge">
 <meta name="description" content="A short entry point for running funconstrain test problems through optimx.">
 <meta property="og:description" content="A short entry point for running funconstrain test problems through optimx.">
 </head>
@@ -53,7 +53,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Using the optimx Bridge</h1>
+      <h1>Using the optimx bridge</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/jlmelville/funconstrain/blob/master/vignettes/articles/optimx-bridge.Rmd" class="external-link"><code>vignettes/articles/optimx-bridge.Rmd</code></a></small>
@@ -77,7 +77,7 @@ package optimx</a>.</p>
 through <code>optimx</code>, including the objective, gradient, Hessian,
 starting point, bounds, and selected method metadata.</p>
 <p><code><a href="../reference/fufnrun.html">fufnrun()</a></code> reads a four-line RFO specification file and
-runs the selected test problems and methods. The package includes
+runs the selected test problems and methods. The source tree includes
 <code>vignettes/RFO.txt</code> as a compact example:</p>
 <pre class="text"><code>testsink240408A.txt
 1, 9, 9, 1, 6:8, 35
@@ -85,7 +85,8 @@ c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")
 FALSE</code></pre>
 <p>The lines specify the sink file name, test problem numbers,
 <code>optimx</code> methods, and whether experimental bounds constraints
-should be used.</p>
+should be used. Duplicate problem numbers and method names are reduced
+to their first occurrence before running.</p>
 </div>
 <div class="section level2">
 <h2 id="optional-packages">Optional packages<a class="anchor" aria-label="anchor" href="#optional-packages"></a>

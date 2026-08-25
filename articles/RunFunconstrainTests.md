@@ -33,10 +33,12 @@ translated into R by James Melville in the R package `funconstrain`
 provided the function and its gradient given a set of suitable input
 parameters, the present author added code to compute the Hessian for
 each test function. This allows Newton-like solvers to be applied.
-`funconstrain` also provides suggested initial parameter vectors for
-each of the 35 test functions. However, where there are multiple input
-possibilities, just one is provided, for example when the test function
-has a variable number of parameters.
+`funconstrain` also provides suggested starting points for each of the
+35 test functions. Fixed-dimension problems return a numeric vector;
+variable-dimension problems return a function that constructs a start
+for a requested dimension. The
+[`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md)
+bridge chooses one historical dimension for each test problem.
 
 What is then missing is the link between `funconstrain` and the tools in
 `optimx`, which this article aims to provide.
@@ -46,8 +48,9 @@ What is then missing is the link between `funconstrain` and the tools in
 Most of the test functions in Moré et al. (1981) are sums of squares of
 nonlinear functions. While `n` is the number of parameters, we may have
 a different number of functions squared in the summation. Call this `m`.
-This may be altered to give different variations of a given function, so
-`m` must be provided.
+Some test problems allow `m` to vary;
+[`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md)
+uses the default supplied by each factory.
 
 Many of the solvers in `optimx` are capable of handling bounds
 constraints on the `n` parameters. That is parameter `i` must satisfy
@@ -56,15 +59,15 @@ constraints on the `n` parameters. That is parameter `i` must satisfy
 
 where `prm` is the parameter vector and `lower` and `upper` are vectors
 of numbers providing lower and upper bounds. Methods in `optimx` that
-can handle masks are listed in the character vector `bdmeth` returned by
-the function `optimx::ctrldefault(n)`. Note that a number of parameters
-`n` must nominally be provided to `ctrldefault()` but generally `n` can
-be specified as 2 to get the default settings for `optimx`. At time of
-writing
+can handle bounds are listed in the character vector `bdmeth` returned
+by the function `optimx::ctrldefault(n)`. A number of parameters `n`
+must nominally be provided to `ctrldefault()`, but `n = 2` can be used
+to inspect the current defaults:
 
-    bdmeth <- c("L-BFGS-B", "nlminb", "lbfgsb3c", "Rcgmin", "Rtnmin", "nvm",
-                "Rvmmin", "bobyqa", "nmkb", "hjkb", "hjn", "snewtonm", "ncg",
-                "slsqp", "tnewt", "nlnm", "snewtm", "spg")`
+``` r
+
+optimx::ctrldefault(2)$bdmeth
+```
 
 Note that to use the `lbfgsb3c`, and `lbfgs` methods, you must install
 the [lbfgsb3c](https://cran.r-project.org/package=lbfgsb3c) and
@@ -81,10 +84,12 @@ code. However, only a few optimization solvers handle masks. The
 function
 [`optimx::ctrldefault()`](https://rdrr.io/pkg/optimx/man/ctrldefault.html)
 returns a value `maskmeth` with a list of solvers that do handle the
-situation where lower and upper bounds coincide. At the time of writing
-this is specified as
+situation where lower and upper bounds coincide:
 
-`maskmeth <- c("Rcgmin", "nvm", "hjn", "ncg", "snewtonm", "nlminb", "L-BFGS-B")`
+``` r
+
+optimx::ctrldefault(2)$maskmeth
+```
 
 With the above in mind, the function
 [`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md)
@@ -123,17 +128,20 @@ The lines of the above file provide the following information:
   via [`sink()`](https://rdrr.io/r/base/sink.html).
 - line 2 says that test functions 1, 6, 7, 8, and 35 are to be used.
   Note that we can use the colon “:” when giving a contiguous range of
-  function numbers. These numbers – by referring back to the vector
-  `funnam` at the top of function
-  [`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md)
-  – specify functions “rosen”, “jenn-samp”, “helical”, “bard” and
-  “chebyquad”. Using the function numbers. Appendix A lists the numbers
-  and corresponding names. The specification `1:35` uses all test
-  functions. The program removes duplicate problem numbers and sorts the
-  list in ascending order.
+  function numbers. These numbers map through the package problem
+  catalogue to
+  [`rosen()`](https://jlmelville.github.io/funconstrain/reference/rosen.md),
+  [`jenn_samp()`](https://jlmelville.github.io/funconstrain/reference/jenn_samp.md),
+  [`helical()`](https://jlmelville.github.io/funconstrain/reference/helical.md),
+  [`bard()`](https://jlmelville.github.io/funconstrain/reference/bard.md),
+  and
+  [`chebyquad()`](https://jlmelville.github.io/funconstrain/reference/chebyquad.md).
+  Appendix A lists the numbers and corresponding names. The
+  specification `1:35` uses all test functions. The program removes
+  duplicate problem numbers and sorts the list in ascending order.
 - line 3 gives an R character vector of the solver methods to be
-  applied. At the time of writing, there is no check for duplicate
-  entries in the vector.
+  applied. As with the problem numbers, duplicate method names are
+  reduced to their first occurrence.
 - line 4 is `TRUE` if the experimental bounds constraints are to be
   applied.
 
@@ -168,21 +176,12 @@ c("nlm", "nlminb", "snewtm")
 FALSE
 ```
 
-The classic WOOD test function returns results
-
-``` text
-Problem: wood 
-       p1 s1 p2 s2 p3 s3 p4 s4        value fevals gevals hevals conv kkt1 kkt2 xtime
-nlminb  1     1     1     1    6.637402e-29     55     44     44    0 TRUE TRUE 0.001
-snewtm  1     1     1     1    3.930599e-27     71     49     48    0 TRUE TRUE 0.004
-nlm     1     1     1     1    1.004941e-16    354    354    354    0 TRUE TRUE 0.005
-END : wood 
-```
-
-Here we see different performance of three methods. Method `snewtm` is a
+In the recorded WOOD run, all three methods returned the point
+`(1, 1, 1, 1)`, an objective below `1e-15`, convergence code zero, and
+passing first- and second-order KKT checks. Method `snewtm` is a
 stabilized Newton method which is part of package `optimx`. While
-intended mainly as a didactic exercise, this solver has done well on
-this problem.
+intended mainly as a didactic exercise, this solver reached the expected
+solution on this problem.
 
 ### Bounded parameters
 
@@ -194,19 +193,17 @@ constraints via the specification script:
     c("nlm", "nlminb", "snewtm")
     TRUE
 
-For the WOOD function, the results are now
+For the WOOD function, the bounded run returned the following structural
+summary:
 
-    Problem: wood 
-    Non-bounds methods requested:[1] "nlm"
-             p1 s1   p2 s2   p3 s3   p4 s4   value fevals gevals hevals conv  kkt1 kkt2 xtime
-    nlminb -0.9  U -0.9  U -0.9  U -0.9  U 707.199      7      6      6    0 FALSE TRUE 0.000
-    snewtm -0.9  U -0.9  U -0.9  U -0.9  U 707.199      6      5      4    0 FALSE TRUE 0.001
-    END : wood 
+| Method | Parameters | Bound status | Objective | Convergence | KKT 1 | KKT 2 |
+|:---|:---|:---|---:|---:|:---|:---|
+| `nlminb` | `(-0.9, -0.9, -0.9, -0.9)` | all `U` | 707.2 | 0 | `FALSE` | `TRUE` |
+| `snewtm` | `(-0.9, -0.9, -0.9, -0.9)` | all `U` | 707.2 | 0 | `FALSE` | `TRUE` |
 
-Note that method `nml` is not set up to handle bounds and is
-automatically dropped by function `opm()`. We also see that the solution
-found (in both cases) is at the upper bound on all parameters, which is
-indicated by the status (i.e. “s”) columns of the output table.
+Method `nlm` is not set up to handle bounds and is automatically dropped
+by `opm()`. Both retained methods stop at the upper bound on every
+parameter, indicated by `U` in the status columns.
 
 ## Appendix A: function numbers and names
 

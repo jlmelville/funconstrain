@@ -1,4 +1,4 @@
-# Using the optimx Bridge
+# Using the optimx bridge
 
 The `optimx` bridge is optional. It is useful when you want to run the
 `funconstrain` test functions through the solvers supported by `optimx`,
@@ -18,7 +18,7 @@ selected method metadata.
 
 [`fufnrun()`](https://jlmelville.github.io/funconstrain/reference/fufnrun.md)
 reads a four-line RFO specification file and runs the selected test
-problems and methods. The package includes `vignettes/RFO.txt` as a
+problems and methods. The source tree includes `vignettes/RFO.txt` as a
 compact example:
 
 ``` text
@@ -30,6 +30,8 @@ FALSE
 
 The lines specify the sink file name, test problem numbers, `optimx`
 methods, and whether experimental bounds constraints should be used.
+Duplicate problem numbers and method names are reduced to their first
+occurrence before running.
 
 ## Optional packages
 
