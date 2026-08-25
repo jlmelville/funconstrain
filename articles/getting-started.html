@@ -113,70 +113,63 @@ order. Here <code>n</code> is the number of parameters and
 <span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  number <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">number</span>,</span>
-<span>  name <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">name</span>,</span>
-<span>  title <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">title</span>,</span>
-<span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
-<span>    <span class="va">catalog_view</span><span class="op">$</span><span class="va">n_kind</span> <span class="op">==</span> <span class="st">"fixed"</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">catalog_view</span><span class="op">$</span><span class="va">n_default</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"variable; default "</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">n_default</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
-<span>    <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_configurable</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"choose; default "</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_default</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"fixed or follows n; default "</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_default</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  row.names <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  Problem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">catalog_view</span><span class="op">$</span><span class="va">title</span>, <span class="st">" ("</span>, <span class="va">catalog_view</span><span class="op">$</span><span class="va">name</span>, <span class="st">")"</span><span class="op">)</span>,</span>
+<span>  `Default n` <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">n_default</span>,</span>
+<span>  `Can choose n?` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">catalog_view</span><span class="op">$</span><span class="va">n_kind</span> <span class="op">==</span> <span class="st">"variable"</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span>,</span>
+<span>  `Default m` <span class="op">=</span> <span class="va">catalog_view</span><span class="op">$</span><span class="va">m_default</span>,</span>
+<span>  `Can choose m?` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">catalog_view</span><span class="op">$</span><span class="va">m_configurable</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="7%">
-<col width="10%">
-<col width="30%">
-<col width="21%">
-<col width="31%">
+<col width="46%">
+<col width="11%">
+<col width="15%">
+<col width="11%">
+<col width="15%">
 </colgroup>
 <thead><tr class="header">
-<th align="right">number</th>
-<th align="left">name</th>
-<th align="left">title</th>
-<th align="left">n</th>
-<th align="left">m</th>
+<th align="left">Problem</th>
+<th align="right">Default n</th>
+<th align="left">Can choose n?</th>
+<th align="right">Default m</th>
+<th align="left">Can choose m?</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
-<td align="left">rosen</td>
-<td align="left">Rosenbrock Function</td>
-<td align="left">2</td>
-<td align="left">fixed or follows n; default 2</td>
+<td align="left">Rosenbrock Function (rosen)</td>
+<td align="right">2</td>
+<td align="left">no</td>
+<td align="right">2</td>
+<td align="left">no</td>
 </tr>
 <tr class="even">
-<td align="right">6</td>
-<td align="left">jenn_samp</td>
-<td align="left">Jennrich and Sampson Function</td>
-<td align="left">2</td>
-<td align="left">choose; default 10</td>
+<td align="left">Jennrich and Sampson Function (jenn_samp)</td>
+<td align="right">2</td>
+<td align="left">no</td>
+<td align="right">10</td>
+<td align="left">yes</td>
 </tr>
 <tr class="odd">
-<td align="right">21</td>
-<td align="left">ex_rosen</td>
-<td align="left">Extended Rosenbrock Function</td>
-<td align="left">variable; default 8</td>
-<td align="left">fixed or follows n; default 8</td>
+<td align="left">Extended Rosenbrock Function (ex_rosen)</td>
+<td align="right">8</td>
+<td align="left">yes</td>
+<td align="right">8</td>
+<td align="left">no</td>
 </tr>
 <tr class="even">
-<td align="right">35</td>
-<td align="left">chebyquad</td>
-<td align="left">Chebyquad Function</td>
-<td align="left">variable; default 50</td>
-<td align="left">fixed or follows n; default 50</td>
+<td align="left">Chebyquad Function (chebyquad)</td>
+<td align="right">50</td>
+<td align="left">yes</td>
+<td align="right">50</td>
+<td align="left">no</td>
 </tr>
 </tbody>
 </table>
 <p>The <a href="problem-definitions.html">mathematical definitions</a>
-give the supported dimensions, standard start, and equations for every
-catalogue entry.</p>
+give the exact supported dimensions, standard start, and equations for
+every catalogue entry.</p>
 </div>
 <div class="section level2">
 <h2 id="choose-n-or-m">Choose <code>n</code> or <code>m</code><a class="anchor" aria-label="anchor" href="#choose-n-or-m"></a>
@@ -204,7 +197,7 @@ problem whose residual count can be chosen independently, supply
 <span><span class="co">#&gt; 1  ex_rosen    n = 4 4  4</span></span>
 <span><span class="co">#&gt; 2 jenn_samp   m = 20 2 20</span></span></code></pre></div>
 <p>Extended Rosenbrock derives <code>m = 4</code> from the chosen
-<code>n = 4</code>. Jennrich and Sampson keeps its fixed
+<code>n = 4</code>. The Jennrich–Sampson problem keeps its fixed
 <code>n = 2</code> and uses the requested <code>m = 20</code>.</p>
 </div>
 <div class="section level2">
@@ -245,7 +238,7 @@ Extended Rosenbrock at <code>n = 4</code> shows why:</p>
 <span><span class="co">#&gt; 2 Minimizer location not_applicable         TRUE</span></span></code></pre></div>
 <p>The minimum value zero applies at <code>n = 4</code>, while the
 stored minimizer belongs to the package’s <code>n = 8</code> example.
-Check the status of the particular reference you intend to use. The <a href="../reference/funconstrain_problem.html"><code>funconstrain_problem()</code>
+Check the status of the particular reference you intend to use. The <a href="../reference/funconstrain_catalog.html"><code>funconstrain_problem()</code>
 reference</a> documents the complete status and diagnostic
 vocabulary.</p>
 </div>

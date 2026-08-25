@@ -58,34 +58,27 @@ catalog_view <- catalog[
 ]
 
 knitr::kable(data.frame(
-  number = catalog_view$number,
-  name = catalog_view$name,
-  title = catalog_view$title,
-  n = ifelse(
-    catalog_view$n_kind == "fixed",
-    as.character(catalog_view$n_default),
-    paste0("variable; default ", catalog_view$n_default)
-  ),
-  m = ifelse(
-    catalog_view$m_configurable,
-    paste0("choose; default ", catalog_view$m_default),
-    paste0("fixed or follows n; default ", catalog_view$m_default)
-  ),
-  row.names = NULL
+  Problem = paste0(catalog_view$title, " (", catalog_view$name, ")"),
+  `Default n` = catalog_view$n_default,
+  `Can choose n?` = ifelse(catalog_view$n_kind == "variable", "yes", "no"),
+  `Default m` = catalog_view$m_default,
+  `Can choose m?` = ifelse(catalog_view$m_configurable, "yes", "no"),
+  row.names = NULL,
+  check.names = FALSE
 ))
 ```
 
-| number | name | title | n | m |
-|---:|:---|:---|:---|:---|
-| 1 | rosen | Rosenbrock Function | 2 | fixed or follows n; default 2 |
-| 6 | jenn_samp | Jennrich and Sampson Function | 2 | choose; default 10 |
-| 21 | ex_rosen | Extended Rosenbrock Function | variable; default 8 | fixed or follows n; default 8 |
-| 35 | chebyquad | Chebyquad Function | variable; default 50 | fixed or follows n; default 50 |
+| Problem | Default n | Can choose n? | Default m | Can choose m? |
+|:---|---:|:---|---:|:---|
+| Rosenbrock Function (rosen) | 2 | no | 2 | no |
+| Jennrich and Sampson Function (jenn_samp) | 2 | no | 10 | yes |
+| Extended Rosenbrock Function (ex_rosen) | 8 | yes | 8 | no |
+| Chebyquad Function (chebyquad) | 50 | yes | 50 | no |
 
 The [mathematical
 definitions](https://jlmelville.github.io/funconstrain/articles/problem-definitions.md)
-give the supported dimensions, standard start, and equations for every
-catalogue entry.
+give the exact supported dimensions, standard start, and equations for
+every catalogue entry.
 
 ## Choose `n` or `m`
 
@@ -114,8 +107,9 @@ data.frame(
 #> 2 jenn_samp   m = 20 2 20
 ```
 
-Extended Rosenbrock derives `m = 4` from the chosen `n = 4`. Jennrich
-and Sampson keeps its fixed `n = 2` and uses the requested `m = 20`.
+Extended Rosenbrock derives `m = 4` from the chosen `n = 4`. The
+Jennrich–Sampson problem keeps its fixed `n = 2` and uses the requested
+`m = 20`.
 
 ## Check a reference before using it
 
@@ -163,7 +157,7 @@ data.frame(
 The minimum value zero applies at `n = 4`, while the stored minimizer
 belongs to the package’s `n = 8` example. Check the status of the
 particular reference you intend to use. The [`funconstrain_problem()`
-reference](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md)
+reference](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md)
 documents the complete status and diagnostic vocabulary.
 
 ## Next steps

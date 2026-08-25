@@ -8,13 +8,12 @@ throughout. The authors’ [Algorithm 566
 source](https://netlib.org/toms/566.gz) is a second primary source for
 resolving typographical and indexing ambiguities.
 
-The equations come from those sources; the supported dimensions and
-defaults come from the current package. When those surfaces differ, the
-package’s narrower contract is stated explicitly. To run a problem, see
-[Getting started with
+The formulas follow those sources; the dimensions and defaults describe
+the current package. Where `funconstrain` supports a narrower range,
+that range is shown. To run a problem, see [Getting started with
 funconstrain](https://jlmelville.github.io/funconstrain/articles/getting-started.md)
 or the [`funconstrain_problem()`
-reference](https://jlmelville.github.io/funconstrain/reference/funconstrain_problem.md).
+reference](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md).
 
 For $`x=(x_1,\ldots,x_n)\in\mathbb{R}^n`$, every problem below defines
 $`m`$ residuals. The scalar callback returned by the package is

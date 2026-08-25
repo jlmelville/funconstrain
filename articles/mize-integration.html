@@ -68,7 +68,7 @@ optimization as it progresses, and then use a small harness to repeat
 the same setup consistently.</p>
 <blockquote>
 <p><strong>Version requirement.</strong> These examples use GitHub
-development <code>mize</code> 0.2.5.9001 or later. Install it with:</p>
+development <code>mize</code> 0.2.5.9002 or later. Install it with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jlmelville/mize"</span><span class="op">)</span></span></code></pre></div>
 </blockquote>
@@ -106,19 +106,28 @@ development <code>mize</code> 0.2.5.9001 or later. Install it with:</p>
 <span>  iterations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">iter</span>,</span>
 <span>  objective_evaluations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">nf</span>,</span>
 <span>  gradient_evaluations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">ng</span>,</span>
+<span>  hessian_evaluations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">nh</span>,</span>
+<span>  inverse_hessian_evaluations <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">nhi</span>,</span>
 <span>  final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">f</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  gradient_inf_norm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">ginfn</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;      status stopped_by iterations objective_evaluations gradient_evaluations</span></span>
 <span><span class="co">#&gt; 1 converged   ginf_tol         38                    48                   48</span></span>
-<span><span class="co">#&gt;   final_objective gradient_inf_norm</span></span>
-<span><span class="co">#&gt; 1        5.59e-16          6.23e-07</span></span></code></pre></div>
+<span><span class="co">#&gt;   hessian_evaluations inverse_hessian_evaluations final_objective</span></span>
+<span><span class="co">#&gt; 1                   0                           0        5.59e-16</span></span>
+<span><span class="co">#&gt;   gradient_inf_norm</span></span>
+<span><span class="co">#&gt; 1          6.23e-07</span></span></code></pre></div>
 <p><code>mize</code> reports that the gradient infinity-norm tolerance
 stopped this run. The small final objective and gradient norm provide a
 useful check that the returned point is good for this problem.</p>
 <p>The callback list is a direct name-for-name match except for the
 Hessian: <code>funconstrain</code> calls it <code>he</code>, while
-<code>mize</code> calls it <code>hs</code>.</p>
+<code>mize</code> calls it <code>hs</code>. BFGS does not use the
+Hessian; <code>hs</code> is included so the same callback list can also
+be passed to Hessian-based methods. Consequently <code>fit$nh</code> is
+zero. <code>fit$nhi</code> is also zero because this adapter does not
+supply an inverse-Hessian callback; BFGS updates its approximation
+internally rather than calling one.</p>
 </div>
 <div class="section level2">
 <h2 id="follow-the-optimization">Follow the optimization<a class="anchor" aria-label="anchor" href="#follow-the-optimization"></a>
@@ -126,7 +135,10 @@ Hessian: <code>funconstrain</code> calls it <code>he</code>, while
 <p>With <code>store_progress = TRUE</code>, <code>mize</code> records
 the initial state and then one row per outer iteration. The objective
 trace shows the rapid early decrease and the smaller improvements near
-the solution.</p>
+the solution. Progress storage does not request an otherwise-unneeded
+objective value for the starting row, so the article evaluates that
+value once for the plot. This display-only call is outside the objective
+count in <code>fit$nf</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">objective_trace</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">progress</span><span class="op">$</span><span class="va">f</span></span>
 <span><span class="va">objective_trace</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">problem</span><span class="op">$</span><span class="fu">fn</span><span class="op">(</span><span class="va">problem</span><span class="op">$</span><span class="va">x0</span><span class="op">)</span></span>
@@ -146,8 +158,9 @@ by the value at each outer iteration.
 </p>
 </div>
 <p>The plot uses outer iteration to show the trajectory. The result
-table above reports objective and gradient evaluations because methods
-can do different amounts of work inside one iteration.</p>
+table above reports objective, gradient, Hessian, and inverse-Hessian
+evaluations because methods can do different amounts of work inside one
+iteration.</p>
 </div>
 <div class="section level2">
 <h2 id="repeat-runs-consistently">Repeat runs consistently<a class="anchor" aria-label="anchor" href="#repeat-runs-consistently"></a>
@@ -167,14 +180,14 @@ sourceable example harness:</p>
 <p>Declare the problems and dimensions you want to run. Use
 <code>NA</code> to accept a default dimension:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">manifest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">problem_set</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rosen"</span>, <span class="st">"ex_rosen"</span>, <span class="st">"jenn_samp"</span><span class="op">)</span>,</span>
 <span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA_integer_</span>, <span class="fl">4L</span>, <span class="cn">NA_integer_</span><span class="op">)</span>,</span>
 <span>  m <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA_integer_</span>, <span class="cn">NA_integer_</span>, <span class="fl">20L</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">suite</span> <span class="op">&lt;-</span> <span class="fu">run_mize_suite</span><span class="op">(</span></span>
-<span>  <span class="va">manifest</span>,</span>
+<span>  <span class="va">problem_set</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"BFGS"</span>,</span>
 <span>  controls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    max_iter <span class="op">=</span> <span class="fl">50</span>,</span>
@@ -210,13 +223,17 @@ sourceable example harness:</p>
 <span><span class="co">#&gt; 1        5.59e-16          6.23e-07</span></span>
 <span><span class="co">#&gt; 2        9.65e-24          1.02e-11</span></span>
 <span><span class="co">#&gt; 3        1.45e+03          4.70e-07</span></span></code></pre></div>
-<p>All three runs use the same method and stopping rule. The chosen rows
-exercise a fixed problem, an explicit parameter dimension, and an
-explicit residual count.</p>
+<p>All three runs use the same method and stopping rule. The same
+harness handles a fixed problem, a chosen parameter dimension, and a
+chosen residual count. Objective values are problem-specific, so compare
+each run with its own start or applicable reference rather than
+comparing final objectives across rows.</p>
 <p>The table uses the stopping status and evaluation totals reported by
-<code>mize</code>. The final objective and gradient norm are checked
-afterward with the original problem callbacks so every row receives the
-same final-quality calculation.</p>
+<code>mize</code>. The harness also retains <code>nh</code> and
+<code>nhi</code> in <code>run$work$native</code>; both are zero for
+these BFGS runs. The final objective and gradient norm are checked
+afterward with the original problem callbacks, outside the optimizer’s
+counts, so every row receives the same final-quality calculation.</p>
 </div>
 <div class="section level2">
 <h2 id="reproduce-a-run">Reproduce a run<a class="anchor" aria-label="anchor" href="#reproduce-a-run"></a>
@@ -233,6 +250,7 @@ report:</p>
 <span>    <span class="st">"Problem"</span>,</span>
 <span>    <span class="st">"Dimensions"</span>,</span>
 <span>    <span class="st">"Method"</span>,</span>
+<span>    <span class="st">"R version"</span>,</span>
 <span>    <span class="st">"funconstrain"</span>,</span>
 <span>    <span class="st">"mize"</span>,</span>
 <span>    <span class="st">"mize commit"</span>,</span>
@@ -245,6 +263,7 @@ report:</p>
 <span>      <span class="st">", m = "</span>, <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">method</span>,</span>
+<span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">r_version</span>,</span>
 <span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">funconstrain_version</span>,</span>
 <span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">mize_version</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">mize_commit</span>, <span class="fl">1L</span>, <span class="fl">12L</span><span class="op">)</span>,</span>
@@ -252,14 +271,17 @@ report:</p>
 <span>  <span class="op">)</span>,</span>
 <span>  row.names <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;          field               value</span></span>
-<span><span class="co">#&gt; 1      Problem Rosenbrock Function</span></span>
-<span><span class="co">#&gt; 2   Dimensions        n = 2, m = 2</span></span>
-<span><span class="co">#&gt; 3       Method                BFGS</span></span>
-<span><span class="co">#&gt; 4 funconstrain               0.1.1</span></span>
-<span><span class="co">#&gt; 5         mize          0.2.5.9001</span></span>
-<span><span class="co">#&gt; 6  mize commit        6f975bc78977</span></span>
-<span><span class="co">#&gt; 7   R platform x86_64-pc-linux-gnu</span></span></code></pre></div>
+<span><span class="co">#&gt;          field                        value</span></span>
+<span><span class="co">#&gt; 1      Problem          Rosenbrock Function</span></span>
+<span><span class="co">#&gt; 2   Dimensions                 n = 2, m = 2</span></span>
+<span><span class="co">#&gt; 3       Method                         BFGS</span></span>
+<span><span class="co">#&gt; 4    R version R version 4.6.1 (2026-06-24)</span></span>
+<span><span class="co">#&gt; 5 funconstrain                        0.1.1</span></span>
+<span><span class="co">#&gt; 6         mize                   0.2.5.9002</span></span>
+<span><span class="co">#&gt; 7  mize commit                 2a7472882f5b</span></span>
+<span><span class="co">#&gt; 8   R platform          x86_64-pc-linux-gnu</span></span></code></pre></div>
+<p>The result also retains the complete supplied control list in
+<code>rosen_run$controls</code>.</p>
 <p>For optimizer behavior and method selection, continue with the <a href="https://jlmelville.github.io/mize/" class="external-link"><code>mize</code>
 documentation</a>. For problem dimensions and stored references, see <a href="getting-started.html">Getting started with funconstrain</a> and <a href="problem-definitions.html">Mathematical definitions of the test
 problems</a>.</p>

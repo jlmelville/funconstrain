@@ -7,7 +7,7 @@ progresses, and then use a small harness to repeat the same setup
 consistently.
 
 > **Version requirement.** These examples use GitHub development `mize`
-> 0.2.5.9001 or later. Install it with:
+> 0.2.5.9002 or later. Install it with:
 >
 > ``` r
 >
@@ -48,13 +48,17 @@ data.frame(
   iterations = fit$iter,
   objective_evaluations = fit$nf,
   gradient_evaluations = fit$ng,
+  hessian_evaluations = fit$nh,
+  inverse_hessian_evaluations = fit$nhi,
   final_objective = signif(fit$f, 3),
   gradient_inf_norm = signif(fit$ginfn, 3)
 )
 #>      status stopped_by iterations objective_evaluations gradient_evaluations
 #> 1 converged   ginf_tol         38                    48                   48
-#>   final_objective gradient_inf_norm
-#> 1        5.59e-16          6.23e-07
+#>   hessian_evaluations inverse_hessian_evaluations final_objective
+#> 1                   0                           0        5.59e-16
+#>   gradient_inf_norm
+#> 1          6.23e-07
 ```
 
 `mize` reports that the gradient infinity-norm tolerance stopped this
@@ -62,13 +66,21 @@ run. The small final objective and gradient norm provide a useful check
 that the returned point is good for this problem.
 
 The callback list is a direct name-for-name match except for the
-Hessian: `funconstrain` calls it `he`, while `mize` calls it `hs`.
+Hessian: `funconstrain` calls it `he`, while `mize` calls it `hs`. BFGS
+does not use the Hessian; `hs` is included so the same callback list can
+also be passed to Hessian-based methods. Consequently `fit$nh` is zero.
+`fit$nhi` is also zero because this adapter does not supply an
+inverse-Hessian callback; BFGS updates its approximation internally
+rather than calling one.
 
 ## Follow the optimization
 
 With `store_progress = TRUE`, `mize` records the initial state and then
 one row per outer iteration. The objective trace shows the rapid early
-decrease and the smaller improvements near the solution.
+decrease and the smaller improvements near the solution. Progress
+storage does not request an otherwise-unneeded objective value for the
+starting row, so the article evaluates that value once for the plot.
+This display-only call is outside the objective count in `fit$nf`.
 
 ``` r
 
@@ -93,8 +105,9 @@ BFGS objective trace for Rosenbrock. The initial objective is followed
 by the value at each outer iteration.
 
 The plot uses outer iteration to show the trajectory. The result table
-above reports objective and gradient evaluations because methods can do
-different amounts of work inside one iteration.
+above reports objective, gradient, Hessian, and inverse-Hessian
+evaluations because methods can do different amounts of work inside one
+iteration.
 
 ## Repeat runs consistently
 
@@ -119,14 +132,14 @@ a default dimension:
 
 ``` r
 
-manifest <- data.frame(
+problem_set <- data.frame(
   name = c("rosen", "ex_rosen", "jenn_samp"),
   n = c(NA_integer_, 4L, NA_integer_),
   m = c(NA_integer_, NA_integer_, 20L)
 )
 
 suite <- run_mize_suite(
-  manifest,
+  problem_set,
   method = "BFGS",
   controls = list(
     max_iter = 50,
@@ -164,14 +177,18 @@ suite_table
 #> 3        1.45e+03          4.70e-07
 ```
 
-All three runs use the same method and stopping rule. The chosen rows
-exercise a fixed problem, an explicit parameter dimension, and an
-explicit residual count.
+All three runs use the same method and stopping rule. The same harness
+handles a fixed problem, a chosen parameter dimension, and a chosen
+residual count. Objective values are problem-specific, so compare each
+run with its own start or applicable reference rather than comparing
+final objectives across rows.
 
 The table uses the stopping status and evaluation totals reported by
-`mize`. The final objective and gradient norm are checked afterward with
-the original problem callbacks so every row receives the same
-final-quality calculation.
+`mize`. The harness also retains `nh` and `nhi` in `run$work$native`;
+both are zero for these BFGS runs. The final objective and gradient norm
+are checked afterward with the original problem callbacks, outside the
+optimizer’s counts, so every row receives the same final-quality
+calculation.
 
 ## Reproduce a run
 
@@ -188,6 +205,7 @@ data.frame(
     "Problem",
     "Dimensions",
     "Method",
+    "R version",
     "funconstrain",
     "mize",
     "mize commit",
@@ -200,6 +218,7 @@ data.frame(
       ", m = ", rosen_run$problem$configuration$effective$m
     ),
     rosen_run$method,
+    rosen_run$provenance$r_version,
     rosen_run$provenance$funconstrain_version,
     rosen_run$provenance$mize_version,
     substr(rosen_run$provenance$mize_commit, 1L, 12L),
@@ -207,15 +226,19 @@ data.frame(
   ),
   row.names = NULL
 )
-#>          field               value
-#> 1      Problem Rosenbrock Function
-#> 2   Dimensions        n = 2, m = 2
-#> 3       Method                BFGS
-#> 4 funconstrain               0.1.1
-#> 5         mize          0.2.5.9001
-#> 6  mize commit        6f975bc78977
-#> 7   R platform x86_64-pc-linux-gnu
+#>          field                        value
+#> 1      Problem          Rosenbrock Function
+#> 2   Dimensions                 n = 2, m = 2
+#> 3       Method                         BFGS
+#> 4    R version R version 4.6.1 (2026-06-24)
+#> 5 funconstrain                        0.1.1
+#> 6         mize                   0.2.5.9002
+#> 7  mize commit                 2a7472882f5b
+#> 8   R platform          x86_64-pc-linux-gnu
 ```
+
+The result also retains the complete supplied control list in
+`rosen_run$controls`.
 
 For optimizer behavior and method selection, continue with the [`mize`
 documentation](https://jlmelville.github.io/mize/). For problem
