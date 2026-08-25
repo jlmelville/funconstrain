@@ -280,4 +280,4 @@ and explicit configuration and reference metadata.
 
 See the [problem resolver reference](../reference/funconstrain_catalog.html)
 for the complete return contract. To run the problems through the optional
-`optimx` bridge, continue with [Using the optimx Bridge](optimx-bridge.html).
+`optimx` bridge, continue with [Using the optimx bridge](optimx-bridge.html).

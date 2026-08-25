@@ -1,5 +1,5 @@
 ---
-title: "Using the optimx Bridge"
+title: "Using the optimx bridge"
 description: >
   A short entry point for running funconstrain test problems through optimx.
 ---
@@ -19,7 +19,7 @@ including the objective, gradient, Hessian, starting point, bounds, and selected
 method metadata.
 
 `fufnrun()` reads a four-line RFO specification file and runs the selected test
-problems and methods. The package includes `vignettes/RFO.txt` as a compact
+problems and methods. The source tree includes `vignettes/RFO.txt` as a compact
 example:
 
 ```text
@@ -30,7 +30,8 @@ FALSE
 ```
 
 The lines specify the sink file name, test problem numbers, `optimx` methods,
-and whether experimental bounds constraints should be used.
+and whether experimental bounds constraints should be used. Duplicate problem
+numbers and method names are reduced to their first occurrence before running.
 
 ## Optional packages
 

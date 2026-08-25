@@ -3,7 +3,7 @@
 An R Package of Functions for Testing Unconstrained Numerical Optimization.
 
 [![R-CMD-check](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jlmelville/funconstrain/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V)](https://codecov.io/gh/jlmelville/funconstrain)
+[![codecov](https://codecov.io/gh/jlmelville/funconstrain/graph/badge.svg?token=eR44zzwo9V)](https://app.codecov.io/gh/jlmelville/funconstrain)
 
 `funconstrain` is a pure R implementation of the 35 test functions in the
 paper by
@@ -64,7 +64,7 @@ See `?funconstrain_catalog` for the resolver contract and
 ## Why do this?
 
 For testing numerical optimization routines, the go-to set of test problems is
-[CUTEst](https://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki). However, if you aren't compiling
+[CUTEst](https://github.com/ralna/CUTEst). However, if you aren't compiling
 and linking to it directly, you'd have to write a parser for the SIF file format it uses. Neither
 of those possibilities appealed.
 
@@ -106,15 +106,15 @@ values inside loops.
 
 ## See also
 
-- The aforementioned [CUTEst](https://ccpforge.cse.rl.ac.uk/gf/project/cutest/wiki). I believe all
+- The aforementioned [CUTEst](https://github.com/ralna/CUTEst). I believe all
 or nearly all of the test problems in this package are implemented in CUTEst, but I make no
 representation that you will get the same results (if there are any differences, assume it's a bug
 in `funconstrain`).
-- I made ample use of the excellent [Derivative Calculator](http://www.derivative-calculator.net)
+- I made ample use of the excellent [Derivative Calculator](https://www.derivative-calculator.net/)
 to calculate the analytical gradients.
 - Shameless plug: I wrote this package to test [mize](https://github.com/jlmelville/mize), an R
 package for doing numerical optimization.
 
 ## License
 
-[MIT License](http://opensource.org/licenses/MIT).
+[MIT License](https://opensource.org/licenses/MIT).
