@@ -6,6 +6,7 @@ articles:
 - title: Core guides
   contents:
   - articles/getting-started
+  - articles/problem-definitions
 - title: Integrations and contributed background
   contents:
   - articles/mize-integration

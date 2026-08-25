@@ -1,0 +1,773 @@
+---
+title: "Mathematical definitions of the test problems"
+description: >
+  Residual equations, supported dimensions, and standard starting points for
+  all 35 Moré--Garbow--Hillstrom problems in funconstrain.
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+
+library(funconstrain)
+catalog <- funconstrain_catalog()
+stopifnot(
+  nrow(catalog) == 35L,
+  identical(catalog$number, seq_len(35L)),
+  !anyDuplicated(catalog$name)
+)
+```
+
+This article gives the mathematical definitions implemented by
+`funconstrain`. It restates the test problems in Section 3 of
+[Moré, Garbow, and Hillstrom
+(1981)](https://doi.org/10.1145/355934.355936) using one notation throughout.
+The authors' [Algorithm 566 source](https://netlib.org/toms/566.gz) is a
+second primary source for resolving typographical and indexing ambiguities.
+
+The equations come from those sources; the supported dimensions and defaults
+come from the current package. When those surfaces differ, the package's
+narrower contract is stated explicitly. For discovery, callback use, and
+reference metadata, see [Getting started with resolved
+problems](getting-started.html).
+
+For $x=(x_1,\ldots,x_n)\in\mathbb{R}^n$, every problem below defines
+$m$ residuals. The scalar callback returned by the package is
+
+\[
+F(x)=\sum_{i=1}^{m}r_i(x)^2,
+\qquad \texttt{problem\$fn(x)}=F(x).
+\]
+
+Indices in the equations are one-based. A sum over an empty index range is
+zero. $x^{(0)}$ denotes the standard starting point. Gradients, Hessians,
+minima, and solver comparisons are deliberately left to the factory reference
+pages and solver-focused articles.
+
+## Problem index
+
+1. [Rosenbrock Function](#problem-01-rosen)
+2. [Freudenstein and Roth Function](#problem-02-freud-roth)
+3. [Powell Badly Scaled Function](#problem-03-powell-bs)
+4. [Brown Badly Scaled Function](#problem-04-brown-bs)
+5. [Beale Function](#problem-05-beale)
+6. [Jennrich and Sampson Function](#problem-06-jenn-samp)
+7. [Helical Valley Function](#problem-07-helical)
+8. [Bard Function](#problem-08-bard)
+9. [Gaussian Function](#problem-09-gauss)
+10. [Meyer Function](#problem-10-meyer)
+11. [Gulf Research and Development Function](#problem-11-gulf)
+12. [Box Three-Dimensional Function](#problem-12-box-3d)
+13. [Powell Singular Function](#problem-13-powell-s)
+14. [Wood Function](#problem-14-wood)
+15. [Kowalik and Osborne Function](#problem-15-kow-osb)
+16. [Brown and Dennis Function](#problem-16-brown-den)
+17. [Osborne 1 Function](#problem-17-osborne-1)
+18. [Biggs EXP6 Function](#problem-18-biggs-exp6)
+19. [Osborne 2 Function](#problem-19-osborne-2)
+20. [Watson Function](#problem-20-watson)
+21. [Extended Rosenbrock Function](#problem-21-ex-rosen)
+22. [Extended Powell Function](#problem-22-ex-powell)
+23. [Penalty Function I](#problem-23-penalty-1)
+24. [Penalty Function II](#problem-24-penalty-2)
+25. [Variably Dimensioned Function](#problem-25-var-dim)
+26. [Trigonometric Function](#problem-26-trigon)
+27. [Brown Almost-Linear Function](#problem-27-brown-al)
+28. [Discrete Boundary Value Function](#problem-28-disc-bv)
+29. [Discrete Integral Equation Function](#problem-29-disc-ie)
+30. [Broyden Tridiagonal Function](#problem-30-broyden-tri)
+31. [Broyden Banded Function](#problem-31-broyden-band)
+32. [Linear Function - Full Rank](#problem-32-linfun-fr)
+33. [Linear Function - Rank 1](#problem-33-linfun-r1)
+34. [Linear Function - Rank 1 with Zero Columns and Rows](#problem-34-linfun-r1z)
+35. [Chebyquad Function](#problem-35-chebyquad)
+
+## 1. Rosenbrock Function {#problem-01-rosen}
+
+Package domain: $n=2$, $m=2$. Package routes:
+[`rosen()`](../reference/rosen.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_1(x)&=10(x_2-x_1^2),\\
+r_2(x)&=1-x_1.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(-1.2,1)$.
+
+## 2. Freudenstein and Roth Function {#problem-02-freud-roth}
+
+Package domain: $n=2$, $m=2$. Package routes:
+[`freud_roth()`](../reference/freud_roth.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_1(x)&=-13+x_1+\{(5-x_2)x_2-2\}x_2,\\
+r_2(x)&=-29+x_1+\{(1+x_2)x_2-14\}x_2.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(1/2,-2)$.
+
+## 3. Powell Badly Scaled Function {#problem-03-powell-bs}
+
+Package domain: $n=2$, $m=2$. Package routes:
+[`powell_bs()`](../reference/powell_bs.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_1(x)&=10^4x_1x_2-1,\\
+r_2(x)&=e^{-x_1}+e^{-x_2}-1.0001.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(0,1)$.
+
+## 4. Brown Badly Scaled Function {#problem-04-brown-bs}
+
+Package domain: $n=2$, $m=3$. Package routes:
+[`brown_bs()`](../reference/brown_bs.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_1(x)&=x_1-10^6,\\
+r_2(x)&=x_2-2\times10^{-6},\\
+r_3(x)&=x_1x_2-2.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(1,1)$.
+
+## 5. Beale Function {#problem-05-beale}
+
+Package domain: $n=2$, $m=3$. Package routes:
+[`beale()`](../reference/beale.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,2,3$, let $(c_1,c_2,c_3)=(1.5,2.25,2.625)$. Then
+
+\[
+r_i(x)=c_i-x_1(1-x_2^i).
+\]
+
+The standard start is $x^{(0)}=(1,1)$.
+
+## 6. Jennrich and Sampson Function {#problem-06-jenn-samp}
+
+Package domain: $n=2$, $m\ge2$; package default $m=10$. Package routes:
+[`jenn_samp()`](../reference/jenn_samp.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,m$,
+
+\[
+r_i(x)=2+2i-e^{ix_1}-e^{ix_2}.
+\]
+
+The standard start is $x^{(0)}=(0.3,0.4)$.
+
+## 7. Helical Valley Function {#problem-07-helical}
+
+Package domain: $n=3$, $m=3$. Package routes:
+[`helical()`](../reference/helical.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Away from $(x_1,x_2)=(0,0)$, define
+
+\[
+\theta(x_1,x_2)=
+\begin{cases}
+\dfrac{1}{2\pi}\tan^{-1}(x_2/x_1),&x_1>0,\\[4pt]
+\dfrac{1}{2\pi}\tan^{-1}(x_2/x_1)+\dfrac12,&x_1<0,\\[4pt]
+\dfrac14\operatorname{sgn}(x_2),&x_1=0.
+\end{cases}
+\]
+
+The residuals are
+
+\[
+\begin{aligned}
+r_1(x)&=10\{x_3-10\theta(x_1,x_2)\},\\
+r_2(x)&=10\{(x_1^2+x_2^2)^{1/2}-1\},\\
+r_3(x)&=x_3.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(-1,0,0)$. The package rejects the origin,
+where the objective is undefined.
+
+## 8. Bard Function {#problem-08-bard}
+
+Package domain: $n=3$, $m=15$. Package routes:
+[`bard()`](../reference/bard.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,15$, set $v_i=16-i$, $w_i=\min(i,v_i)$, and
+
+\[
+\begin{aligned}
+(y_1,\ldots,y_{15})={}&(0.14,0.18,0.22,0.25,0.29,0.32,0.35,0.39,\\
+&0.37,0.58,0.73,0.96,1.34,2.10,4.39).
+\end{aligned}
+\]
+
+Then
+
+\[
+r_i(x)=y_i-\left(x_1+\frac{i}{v_ix_2+w_ix_3}\right).
+\]
+
+The standard start is $x^{(0)}=(1,1,1)$.
+
+## 9. Gaussian Function {#problem-09-gauss}
+
+Package domain: $n=3$, $m=15$. Package routes:
+[`gauss()`](../reference/gauss.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,15$, set $t_i=(8-i)/2$ and
+
+\[
+\begin{aligned}
+(y_1,\ldots,y_{15})={}&(0.0009,0.0044,0.0175,0.0540,0.1295,\\
+&0.2420,0.3521,0.3989,0.3521,0.2420,\\
+&0.1295,0.0540,0.0175,0.0044,0.0009).
+\end{aligned}
+\]
+
+Then
+
+\[
+r_i(x)=x_1\exp\left\{-\frac{x_2}{2}(t_i-x_3)^2\right\}-y_i.
+\]
+
+The standard start is $x^{(0)}=(0.4,1,0)$.
+
+## 10. Meyer Function {#problem-10-meyer}
+
+Package domain: $n=3$, $m=16$. Package routes:
+[`meyer()`](../reference/meyer.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,16$, set $t_i=45+5i$ and
+
+\[
+\begin{aligned}
+(y_1,\ldots,y_{16})={}&(34780,28610,23650,19630,16370,13720,11540,9744,\\
+&8261,7030,6005,5147,4427,3820,3307,2872).
+\end{aligned}
+\]
+
+Then
+
+\[
+r_i(x)=x_1\exp\left(\frac{x_2}{t_i+x_3}\right)-y_i.
+\]
+
+The standard start is $x^{(0)}=(0.02,4000,250)$.
+
+## 11. Gulf Research and Development Function {#problem-11-gulf}
+
+Package domain: $n=3$, $3\le m\le100$; package default $m=99$.
+Package routes: [`gulf()`](../reference/gulf.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,m$, define
+
+\[
+t_i=\frac{i}{100},\qquad
+y_i=25+\{-50\log(t_i)\}^{2/3}.
+\]
+
+The residual is
+
+\[
+r_i(x)=\exp\left\{-\frac{|x_2-y_i|^{x_3}}{x_1}\right\}-t_i.
+\]
+
+The standard start is $x^{(0)}=(5,2.5,0.15)$. The published equation has a
+typographical glyph where the subtraction in $|x_2-y_i|$ should appear; the
+corrected form above agrees with the authors' Algorithm 566 source and the
+package.
+
+## 12. Box Three-Dimensional Function {#problem-12-box-3d}
+
+Package domain: $n=3$, $m\ge3$; package default $m=20$. Package routes:
+[`box_3d()`](../reference/box_3d.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,m$, let $t_i=i/10$. Then
+
+\[
+r_i(x)=e^{-t_ix_1}-e^{-t_ix_2}-x_3(e^{-t_i}-e^{-i}).
+\]
+
+The standard start is $x^{(0)}=(0,10,20)$.
+
+## 13. Powell Singular Function {#problem-13-powell-s}
+
+Package domain: $n=4$, $m=4$. Package routes:
+[`powell_s()`](../reference/powell_s.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_1(x)&=x_1+10x_2,\\
+r_2(x)&=\sqrt5(x_3-x_4),\\
+r_3(x)&=(x_2-2x_3)^2,\\
+r_4(x)&=\sqrt{10}(x_1-x_4)^2.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(3,-1,0,1)$.
+
+## 14. Wood Function {#problem-14-wood}
+
+Package domain: $n=4$, $m=6$. Package routes:
+[`wood()`](../reference/wood.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_1(x)&=10(x_2-x_1^2),&r_2(x)&=1-x_1,\\
+r_3(x)&=\sqrt{90}(x_4-x_3^2),&r_4(x)&=1-x_3,\\
+r_5(x)&=\sqrt{10}(x_2+x_4-2),&
+r_6(x)&=(x_2-x_4)/\sqrt{10}.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(-3,-1,-3,-1)$.
+
+## 15. Kowalik and Osborne Function {#problem-15-kow-osb}
+
+Package domain: $n=4$, $m=11$. Package routes:
+[`kow_osb()`](../reference/kow_osb.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+The data are
+
+\[
+\begin{aligned}
+(y_1,\ldots,y_{11})={}&(0.1957,0.1947,0.1735,0.1600,0.0844,0.0627,\\
+&0.0456,0.0342,0.0323,0.0235,0.0246),\\
+(u_1,\ldots,u_{11})={}&(4,2,1,0.5,0.25,0.167,0.125,0.1,\\
+&0.0833,0.0714,0.0625).
+\end{aligned}
+\]
+
+For $i=1,\ldots,11$,
+
+\[
+r_i(x)=y_i-x_1\frac{u_i(u_i+x_2)}{u_i(u_i+x_3)+x_4}.
+\]
+
+The standard start is $x^{(0)}=(0.25,0.39,0.415,0.39)$.
+
+## 16. Brown and Dennis Function {#problem-16-brown-den}
+
+Package domain: $n=4$, $m\ge4$; package default $m=20$. Package routes:
+[`brown_den()`](../reference/brown_den.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,m$, let $t_i=i/5$ and define
+
+\[
+\begin{aligned}
+a_i(x)&=x_1+t_ix_2-e^{t_i},\\
+b_i(x)&=x_3+x_4\sin(t_i)-\cos(t_i),\\
+r_i(x)&=a_i(x)^2+b_i(x)^2.
+\end{aligned}
+\]
+
+Thus this problem squares $a_i^2+b_i^2$ once more in the shared objective
+$F(x)=\sum_i r_i(x)^2$. The standard start is
+$x^{(0)}=(25,5,-5,1)$.
+
+## 17. Osborne 1 Function {#problem-17-osborne-1}
+
+Package domain: $n=5$, $m=33$. Package routes:
+[`osborne_1()`](../reference/osborne_1.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Let $t_i=10(i-1)$ and define the observations in consecutive blocks:
+
+\[
+\begin{aligned}
+(y_1,\ldots,y_8)&=(0.844,0.908,0.932,0.936,0.925,0.908,0.881,0.850),\\
+(y_9,\ldots,y_{16})&=(0.818,0.784,0.751,0.718,0.685,0.658,0.628,0.603),\\
+(y_{17},\ldots,y_{24})&=(0.580,0.558,0.538,0.522,0.506,0.490,0.478,0.467),\\
+(y_{25},\ldots,y_{32})&=(0.457,0.448,0.438,0.431,0.424,0.420,0.414,0.411),\\
+y_{33}&=0.406.
+\end{aligned}
+\]
+
+For $i=1,\ldots,33$,
+
+\[
+r_i(x)=y_i-\{x_1+x_2e^{-t_ix_4}+x_3e^{-t_ix_5}\}.
+\]
+
+The standard start is $x^{(0)}=(0.5,1.5,-1,0.01,0.02)$.
+
+## 18. Biggs EXP6 Function {#problem-18-biggs-exp6}
+
+Package domain: $n=6$, $m\ge6$; package default $m=13$. Package routes:
+[`biggs_exp6()`](../reference/biggs_exp6.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,m$, let $t_i=i/10$ and
+
+\[
+y_i=e^{-t_i}-5e^{-10t_i}+3e^{-4t_i}.
+\]
+
+Then
+
+\[
+r_i(x)=x_3e^{-t_ix_1}-x_4e^{-t_ix_2}+x_6e^{-t_ix_5}-y_i.
+\]
+
+The standard start is $x^{(0)}=(1,2,1,1,1,1)$.
+
+## 19. Osborne 2 Function {#problem-19-osborne-2}
+
+Package domain: $n=11$, $m=65$. Package routes:
+[`osborne_2()`](../reference/osborne_2.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Let $t_i=(i-1)/10$. The observations, in consecutive blocks, are
+
+\[
+\begin{aligned}
+(y_1,\ldots,y_8)&=(1.366,1.191,1.112,1.013,0.991,0.885,0.831,0.847),\\
+(y_9,\ldots,y_{16})&=(0.786,0.725,0.746,0.679,0.608,0.655,0.616,0.606),\\
+(y_{17},\ldots,y_{24})&=(0.602,0.626,0.651,0.724,0.649,0.649,0.694,0.644),\\
+(y_{25},\ldots,y_{32})&=(0.624,0.661,0.612,0.558,0.533,0.495,0.500,0.423),\\
+(y_{33},\ldots,y_{40})&=(0.395,0.375,0.372,0.391,0.396,0.405,0.428,0.429),\\
+(y_{41},\ldots,y_{48})&=(0.523,0.562,0.607,0.653,0.672,0.708,0.633,0.668),\\
+(y_{49},\ldots,y_{56})&=(0.645,0.632,0.591,0.559,0.597,0.625,0.739,0.710),\\
+(y_{57},\ldots,y_{64})&=(0.729,0.720,0.636,0.581,0.428,0.292,0.162,0.098),\\
+y_{65}&=0.054.
+\end{aligned}
+\]
+
+For $i=1,\ldots,65$,
+
+\[
+\begin{aligned}
+r_i(x)=y_i-&\{x_1e^{-t_ix_5}+x_2e^{-x_6(t_i-x_9)^2}\\
+&+x_3e^{-x_7(t_i-x_{10})^2}+x_4e^{-x_8(t_i-x_{11})^2}\}.
+\end{aligned}
+\]
+
+The standard start is
+$x^{(0)}=(1.3,0.65,0.65,0.7,0.6,3,5,7,2,4.5,5.5)$.
+
+## 20. Watson Function {#problem-20-watson}
+
+Package domain: $2\le n\le31$, $m=31$; package default $n=6$.
+Package routes: [`watson()`](../reference/watson.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,29$, define
+
+\[
+\begin{aligned}
+t_i&=i/29,\\
+a_i(x)&=\sum_{j=2}^{n}(j-1)x_jt_i^{j-2},\\
+b_i(x)&=\sum_{j=1}^{n}x_jt_i^{j-1}.
+\end{aligned}
+\]
+
+The residuals are
+
+\[
+\begin{aligned}
+r_i(x)&=a_i(x)-b_i(x)^2-1,&&i=1,\ldots,29,\\
+r_{30}(x)&=x_1,\\
+r_{31}(x)&=x_2-x_1^2-1.
+\end{aligned}
+\]
+
+The standard start is $x^{(0)}=(0,\ldots,0)$.
+
+## 21. Extended Rosenbrock Function {#problem-21-ex-rosen}
+
+Package domain: even $n\ge2$, $m=n$; package default $n=8$. Package
+routes: [`ex_rosen()`](../reference/ex_rosen.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $k=1,\ldots,n/2$,
+
+\[
+\begin{aligned}
+r_{2k-1}(x)&=10(x_{2k}-x_{2k-1}^2),\\
+r_{2k}(x)&=1-x_{2k-1}.
+\end{aligned}
+\]
+
+The standard start repeats $(-1.2,1)$ exactly $n/2$ times.
+
+## 22. Extended Powell Function {#problem-22-ex-powell}
+
+Package domain: $n\ge4$ and divisible by 4, $m=n$; package default
+$n=20$. Package routes: [`ex_powell()`](../reference/ex_powell.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $k=1,\ldots,n/4$, let $a=4k-3$. Then
+
+\[
+\begin{aligned}
+r_a(x)&=x_a+10x_{a+1},\\
+r_{a+1}(x)&=\sqrt5(x_{a+2}-x_{a+3}),\\
+r_{a+2}(x)&=(x_{a+1}-2x_{a+2})^2,\\
+r_{a+3}(x)&=\sqrt{10}(x_a-x_{a+3})^2.
+\end{aligned}
+\]
+
+The standard start repeats $(3,-1,0,1)$ exactly $n/4$ times. MGH calls
+this the “Extended Powell singular” problem; the package title is shortened.
+
+## 23. Penalty Function I {#problem-23-penalty-1}
+
+Package domain: $n\ge1$, $m=n+1$; package default $n=25$. Package routes:
+[`penalty_1()`](../reference/penalty_1.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+With $a=10^{-5}$,
+
+\[
+\begin{aligned}
+r_j(x)&=\sqrt{a}(x_j-1),&&j=1,\ldots,n,\\
+r_{n+1}(x)&=\sum_{j=1}^{n}x_j^2-\frac14.
+\end{aligned}
+\]
+
+The standard start is $x_j^{(0)}=j$.
+
+## 24. Penalty Function II {#problem-24-penalty-2}
+
+Package domain: $n\ge1$, $m=2n$; package default $n=25$. Package routes:
+[`penalty_2()`](../reference/penalty_2.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+With $a=10^{-5}$, the residuals are
+
+\[
+\begin{aligned}
+r_1(x)&=x_1-0.2,\\
+r_i(x)&=\sqrt a\{e^{x_i/10}+e^{x_{i-1}/10}-e^{i/10}-e^{(i-1)/10}\},
+&&i=2,\ldots,n,\\
+r_{n+i-1}(x)&=\sqrt a\{e^{x_i/10}-e^{-0.1}\},
+&&i=2,\ldots,n,\\
+r_{2n}(x)&=\sum_{j=1}^{n}(n-j+1)x_j^2-1.
+\end{aligned}
+\]
+
+For $n=1$, the two middle ranges are empty. The standard start is
+$x_j^{(0)}=1/2$.
+
+## 25. Variably Dimensioned Function {#problem-25-var-dim}
+
+Package domain: $n\ge1$, $m=n+2$; package default $n=30$. Package routes:
+[`var_dim()`](../reference/var_dim.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Define $s(x)=\sum_{j=1}^{n}j(x_j-1)$. Then
+
+\[
+\begin{aligned}
+r_j(x)&=x_j-1,&&j=1,\ldots,n,\\
+r_{n+1}(x)&=s(x),\\
+r_{n+2}(x)&=s(x)^2.
+\end{aligned}
+\]
+
+The standard start is $x_j^{(0)}=1-j/n$.
+
+## 26. Trigonometric Function {#problem-26-trigon}
+
+Package domain: $n\ge1$, $m=n$; package default $n=30$. Package routes:
+[`trigon()`](../reference/trigon.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,n$,
+
+\[
+r_i(x)=n-\sum_{j=1}^{n}\cos(x_j)+i\{1-\cos(x_i)\}-\sin(x_i).
+\]
+
+The standard start is $x_j^{(0)}=1/n$.
+
+## 27. Brown Almost-Linear Function {#problem-27-brown-al}
+
+Package domain: $n\ge1$, $m=n$; package default $n=30$. Package routes:
+[`brown_al()`](../reference/brown_al.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+\[
+\begin{aligned}
+r_i(x)&=x_i+\sum_{j=1}^{n}x_j-(n+1),&&i=1,\ldots,n-1,\\
+r_n(x)&=\prod_{j=1}^{n}x_j-1.
+\end{aligned}
+\]
+
+For $n=1$, the first range is empty. The standard start is
+$x_j^{(0)}=1/2$.
+
+## 28. Discrete Boundary Value Function {#problem-28-disc-bv}
+
+Package domain: $n\ge1$, $m=n$; package default $n=35$. Package routes:
+[`disc_bv()`](../reference/disc_bv.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Let $h=1/(n+1)$, $t_i=ih$, and set the boundary values
+$x_0=x_{n+1}=0$. For $i=1,\ldots,n$,
+
+\[
+r_i(x)=2x_i-x_{i-1}-x_{i+1}+\frac{h^2}{2}(x_i+t_i+1)^3.
+\]
+
+The standard start is $x_i^{(0)}=t_i(t_i-1)$.
+
+## 29. Discrete Integral Equation Function {#problem-29-disc-ie}
+
+Package domain: $n\ge1$, $m=n$; package default $n=35$. Package routes:
+[`disc_ie()`](../reference/disc_ie.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Let $h=1/(n+1)$, $t_i=ih$, and $q_j(x)=(x_j+t_j+1)^3$. For
+$i=1,\ldots,n$,
+
+\[
+r_i(x)=x_i+\frac{h}{2}\left\{
+(1-t_i)\sum_{j=1}^{i}t_jq_j(x)
++t_i\sum_{j=i+1}^{n}(1-t_j)q_j(x)
+\right\}.
+\]
+
+The standard start is $x_i^{(0)}=t_i(t_i-1)$.
+
+## 30. Broyden Tridiagonal Function {#problem-30-broyden-tri}
+
+Package domain: $n\ge1$, $m=n$; package default $n=40$. Package routes:
+[`broyden_tri()`](../reference/broyden_tri.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Set $x_0=x_{n+1}=0$. For $i=1,\ldots,n$,
+
+\[
+r_i(x)=(3-2x_i)x_i-x_{i-1}-2x_{i+1}+1.
+\]
+
+The standard start is $x^{(0)}=(-1,\ldots,-1)$.
+
+## 31. Broyden Banded Function {#problem-31-broyden-band}
+
+Package domain: $n\ge1$, $m=n$; package default $n=40$. Package routes:
+[`broyden_band()`](../reference/broyden_band.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For each $i=1,\ldots,n$, define
+
+\[
+B_i=\{j:\max(1,i-5)\le j\le\min(n,i+1),\ j\ne i\}.
+\]
+
+Then
+
+\[
+r_i(x)=x_i(2+5x_i^2)+1-\sum_{j\in B_i}x_j(1+x_j).
+\]
+
+The standard start is $x^{(0)}=(-1,\ldots,-1)$.
+
+## 32. Linear Function - Full Rank {#problem-32-linfun-fr}
+
+Package domain: $n\ge1$, $m\ge n$; package defaults $n=45$, $m=100$.
+Package routes: [`linfun_fr()`](../reference/linfun_fr.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Define $c(x)=1+(2/m)\sum_{j=1}^{n}x_j$. Then
+
+\[
+r_i(x)=
+\begin{cases}
+x_i-c(x),&i=1,\ldots,n,\\
+-c(x),&i=n+1,\ldots,m.
+\end{cases}
+\]
+
+The standard start is $x^{(0)}=(1,\ldots,1)$.
+
+## 33. Linear Function - Rank 1 {#problem-33-linfun-r1}
+
+Package domain: $n\ge1$, $m\ge n$; package defaults $n=45$, $m=100$.
+Package routes: [`linfun_r1()`](../reference/linfun_r1.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+For $i=1,\ldots,m$,
+
+\[
+r_i(x)=i\sum_{j=1}^{n}jx_j-1.
+\]
+
+The standard start is $x^{(0)}=(1,\ldots,1)$.
+
+## 34. Linear Function - Rank 1 with Zero Columns and Rows {#problem-34-linfun-r1z}
+
+Package domain: $n\ge1$, $m\ge n$; package defaults $n=45$, $m=100$.
+Package routes: [`linfun_r1z()`](../reference/linfun_r1z.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Define $s(x)=\sum_{j=2}^{n-1}jx_j$. The residuals are
+
+\[
+\begin{aligned}
+r_1(x)&=-1,\\
+r_i(x)&=(i-1)s(x)-1,&&i=2,\ldots,m-1,\\
+r_m(x)&=-1.
+\end{aligned}
+\]
+
+For $n\le2$, the sum defining $s(x)$ is empty. The standard start is
+$x^{(0)}=(1,\ldots,1)$.
+
+## 35. Chebyquad Function {#problem-35-chebyquad}
+
+Package domain: $n\ge1$, $m=n$; package default $n=50$. Package routes:
+[`chebyquad()`](../reference/chebyquad.html) and the
+[`funconstrain_problem()` resolver](../reference/funconstrain_problem.html).
+
+Let $T_i^*(u)=T_i(2u-1)$ be the Chebyshev polynomial shifted to $[0,1]$,
+with
+
+\[
+\begin{aligned}
+T_0^*(u)&=1,\\
+T_1^*(u)&=2u-1,\\
+T_i^*(u)&=2(2u-1)T_{i-1}^*(u)-T_{i-2}^*(u).
+\end{aligned}
+\]
+
+For $i=1,\ldots,n$,
+
+\[
+r_i(x)=\frac1n\sum_{j=1}^{n}T_i^*(x_j)-c_i,
+\qquad
+c_i=
+\begin{cases}
+0,&i\text{ odd},\\
+-1/(i^2-1),&i\text{ even}.
+\end{cases}
+\]
+
+The standard start is $x_j^{(0)}=j/(n+1)$.
+
+MGH defines Chebyquad for $m\ge n$, with residual indices through $m$.
+The current package has no independent `m` control and implements only
+$m=n$; the narrower package domain is the supported contract here.
