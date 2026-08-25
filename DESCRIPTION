@@ -21,11 +21,17 @@ Suggests:
     rmarkdown,
     pkgdown,
     lbfgs,
-    lbfgsb3c
+    lbfgsb3c,
+    mize (>= 0.2.5.9001)
 URL: https://jlmelville.github.io/funconstrain/,
     https://github.com/jlmelville/funconstrain
 BugReports: https://github.com/jlmelville/funconstrain/issues
 VignetteBuilder: knitr
-Config/Needs/website: pkgdown
+Config/Needs/check: jlmelville/mize
+Config/Needs/coverage: jlmelville/mize
+Config/Needs/lint: jlmelville/mize
+Config/Needs/website:
+    pkgdown,
+    jlmelville/mize
 Config/roxygen2/version: 8.1.0
 Config/testthat/edition: 3
