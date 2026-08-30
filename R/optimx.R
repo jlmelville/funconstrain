@@ -10,9 +10,13 @@ fufn <- function(fnum) {
   if (is.null(fnum)) {
     stop("ffn needs a function number fnum")
   }
-  if ((fnum < 1) || (fnum > 35)) {
-    stop("fnum must be in [1, 35]")
-  }
+  fnum <- validate_dimension(
+    fnum,
+    problem = "fufn",
+    min = 1L,
+    max = 35L,
+    label = "fnum"
+  )
   require_optimx()
 
   manifest <- funconstrain_problem_manifest()

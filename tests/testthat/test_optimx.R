@@ -60,6 +60,43 @@ test_that("fufn and fufnrun report missing optimx clearly", {
   )
 })
 
+test_that("fufn validates problem numbers before requiring optimx", {
+  malformed <- list(
+    missing = NA_integer_,
+    character = "1",
+    vector = c(1, 2),
+    fractional = 1.5,
+    infinite = Inf,
+    logical = TRUE
+  )
+  actual <- c(
+    null = capture_error_message(fufn(NULL)),
+    vapply(
+      malformed,
+      function(fnum) {
+        capture_error_message(fufn(fnum))
+      },
+      character(1L)
+    ),
+    below_range = capture_error_message(fufn(0)),
+    above_range = capture_error_message(fufn(36))
+  )
+  expected <- c(
+    null = "ffn needs a function number fnum",
+    setNames(
+      rep(
+        "fufn: fnum must be a finite whole-number scalar",
+        length(malformed)
+      ),
+      names(malformed)
+    ),
+    below_range = "fufn: fnum is outside the allowed range",
+    above_range = "fufn: fnum is outside the allowed range"
+  )
+
+  expect_identical(actual, expected)
+})
+
 test_that("fufn returns each supported method once", {
   testthat::skip_if_not_installed("optimx")
 

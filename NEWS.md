@@ -15,6 +15,8 @@
   release installs no longer need GitHub commit metadata.
 - Removed the duplicate `"L-BFGS-B"` entry from the optimizer methods returned
   by `fufn()`.
+- `fufn()` now rejects malformed, non-whole, and out-of-range problem numbers
+  with clear validation errors.
 - Documentation has been clarified for problems with configurable dimensions and the reported minima.
 
 # funconstrain 0.1.0
