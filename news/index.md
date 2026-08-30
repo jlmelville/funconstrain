@@ -26,6 +26,9 @@
   when `m` is omitted.
 - Updated the mize integration harness and article for stable mize
   0.3.0; release installs no longer need GitHub commit metadata.
+- Removed the duplicate `"L-BFGS-B"` entry from the optimizer methods
+  returned by
+  [`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md).
 - Documentation has been clarified for problems with configurable
   dimensions and the reported minima.
 
