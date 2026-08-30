@@ -29,6 +29,9 @@
 - Removed the duplicate `"L-BFGS-B"` entry from the optimizer methods
   returned by
   [`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md).
+- [`fufn()`](https://jlmelville.github.io/funconstrain/reference/fufn.md)
+  now rejects malformed, non-whole, and out-of-range problem numbers
+  with clear validation errors.
 - Documentation has been clarified for problems with configurable
   dimensions and the reported minima.
 

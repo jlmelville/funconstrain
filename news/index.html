@@ -44,6 +44,8 @@
 <li>Extended <code><a href="../reference/chebyquad.html">chebyquad()</a></code> to support the full <code>m &gt;= n</code> problem family while retaining <code>m = n</code> when <code>m</code> is omitted.</li>
 <li>Updated the mize integration harness and article for stable mize 0.3.0; release installs no longer need GitHub commit metadata.</li>
 <li>Removed the duplicate <code>"L-BFGS-B"</code> entry from the optimizer methods returned by <code><a href="../reference/fufn.html">fufn()</a></code>.</li>
+<li>
+<code><a href="../reference/fufn.html">fufn()</a></code> now rejects malformed, non-whole, and out-of-range problem numbers with clear validation errors.</li>
 <li>Documentation has been clarified for problems with configurable dimensions and the reported minima.</li>
 </ul></div>
 </div>
