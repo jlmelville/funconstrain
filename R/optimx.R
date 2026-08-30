@@ -233,7 +233,7 @@ optimx_available <- function() {
 optimx_bounded_methods <- function() {
   methods <- optimx::ctrldefault(2)$bdmeth
   methods <- methods[methods != "lbfgsb3c"]
-  c(methods, "L-BFGS-B")
+  unique(c(methods, "L-BFGS-B"))
 }
 
 require_optimx <- function() {

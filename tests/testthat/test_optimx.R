@@ -84,6 +84,15 @@ test_that("fufn returns optimx-ready data for a problem", {
   expect_identical(tfun$ameth, method_fixture)
 })
 
+test_that("fufn returns each supported method once", {
+  testthat::skip_if_not_installed("optimx")
+
+  methods <- fufn(1)$ameth
+
+  expect_identical(anyDuplicated(methods), 0L)
+  expect_equal(sum(methods == "L-BFGS-B"), 1)
+})
+
 test_that("fufn dispatch table returns coherent data for every problem", {
   method_fixture <- c("nlminb", "Rvmmin", "L-BFGS-B")
   testthat::local_mocked_bindings(
