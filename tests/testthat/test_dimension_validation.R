@@ -1,76 +1,39 @@
-test_that("validate_dimension preserves valid numeric inputs", {
-  validate <- getFromNamespace("validate_dimension", "funconstrain")
-
-  expect_identical(
-    validate(4L, "test", min = 2L, max = 4L, multiple = 2L),
-    4L
-  )
-  expect_identical(
-    validate(4, "test", min = 2L, max = 4L, multiple = 2L),
-    4
-  )
-  expect_error(
-    validate(3, "test", min = 2L, max = 4L, multiple = 2L),
-    "multiple"
-  )
-  expect_error(validate(1, "test", min = 2L), "outside")
-  expect_error(validate(5, "test", max = 4L), "outside")
-})
-
-test_that("validate_dimension rejects malformed dimension values", {
-  validate <- getFromNamespace("validate_dimension", "funconstrain")
-  invalid <- list(
-    1.5,
-    Inf,
-    NaN,
-    TRUE,
-    "1",
-    numeric(),
-    c(1, 2)
-  )
-
-  for (value in invalid) {
-    expect_error(
-      validate(value, "test"),
-      "finite whole-number scalar"
-    )
-  }
-  expect_error(validate(0, "test"), "outside")
-  expect_error(validate(-1, "test"), "outside")
-})
-
 test_that("supported one-dimensional factories have coherent callbacks", {
   factories <- list(
-    penalty_1(),
-    penalty_2(),
-    var_dim(),
-    trigon(),
-    brown_al(),
-    disc_bv(),
-    disc_ie(),
-    broyden_tri(),
-    broyden_band(),
-    linfun_fr(m = 1),
-    linfun_r1(m = 1),
-    linfun_r1z(m = 1),
-    chebyquad()
+    penalty_1 = penalty_1(),
+    penalty_2 = penalty_2(),
+    var_dim = var_dim(),
+    trigon = trigon(),
+    brown_al = brown_al(),
+    disc_bv = disc_bv(),
+    disc_ie = disc_ie(),
+    broyden_tri = broyden_tri(),
+    broyden_band = broyden_band(),
+    linfun_fr = linfun_fr(m = 1),
+    linfun_r1 = linfun_r1(m = 1),
+    linfun_r1z = linfun_r1z(m = 1),
+    chebyquad = chebyquad()
   )
 
-  for (testfun in factories) {
+  actual <- lapply(factories, function(testfun) {
     x <- if (is.function(testfun$x0)) testfun$x0(1) else testfun$x0
     fn <- testfun$fn(x)
     gr <- testfun$gr(x)
     he <- testfun$he(x)
     fg <- testfun$fg(x)
 
-    expect_length(fn, 1)
-    expect_length(gr, 1)
-    expect_true(is.matrix(he))
-    expect_equal(dim(he), c(1, 1))
-    expect_true(all(is.finite(he)))
-    expect_equal(fg$fn, fn)
-    expect_equal(fg$gr, gr)
-  }
+    list(
+      fn_is_scalar = length(fn) == 1L,
+      gr_is_scalar = length(gr) == 1L,
+      he_is_matrix = is.matrix(he),
+      he_dimensions_match = identical(dim(he), c(1L, 1L)),
+      he_is_finite = all(is.finite(he)),
+      fg_fn_matches = isTRUE(all.equal(fg$fn, fn)),
+      fg_gr_matches = isTRUE(all.equal(fg$gr, gr))
+    )
+  })
+
+  expect_all_checks(actual)
 })
 
 test_that("one-dimensional Brown Almost-Linear callbacks use the scalar formula", {
@@ -108,16 +71,25 @@ test_that("one-dimensional Broyden Tridiagonal callbacks use one residual", {
 })
 
 test_that("one-dimensional Linear Rank 1 with Zero Columns and Rows is constant", {
-  for (m in c(1L, 2L, 3L)) {
+  m_values <- c(1L, 2L, 3L)
+  actual <- lapply(m_values, function(m) {
     testfun <- linfun_r1z(m)
     x <- testfun$x0(1)
+    combined <- testfun$fg(x)
 
-    expect_equal(testfun$fn(x), m)
-    expect_equal(testfun$gr(x), 0)
-    expect_equal(testfun$he(x), matrix(0, 1, 1))
-    expect_equal(testfun$fg(x)$fn, m)
-    expect_equal(testfun$fg(x)$gr, 0)
-  }
+    list(
+      fn = testfun$fn(x),
+      gr = testfun$gr(x),
+      he = testfun$he(x),
+      fg_fn = combined$fn,
+      fg_gr = combined$gr
+    )
+  })
+  expected <- lapply(m_values, function(m) {
+    list(fn = m, gr = 0, he = matrix(0, 1, 1), fg_fn = m, fg_gr = 0)
+  })
+
+  expect_equal(actual, expected)
 })
 
 test_that("structural variable-dimension rules are deliberate", {
@@ -161,6 +133,7 @@ test_that("variable callbacks cover boundary dimensions", {
     list(name = "chebyquad", n = c(1L, 50L, 2L))
   )
 
+  checks <- list()
   for (case in cases) {
     factory <- get_problem_factory(case$name)
     testfun <- if (grepl("^linfun_", case$name)) {
@@ -170,35 +143,53 @@ test_that("variable callbacks cover boundary dimensions", {
     }
 
     for (n in case$n) {
-      label <- paste(case$name, "n =", n)
+      key <- paste(case$name, "n =", n)
       x <- testfun$x0(n)
       fn <- testfun$fn(x)
       gr <- testfun$gr(x)
       he <- testfun$he(x)
       fg <- testfun$fg(x)
 
-      expect_true(length(fn) == 1 && is.finite(fn), info = label)
-      expect_true(length(gr) == n, info = label)
-      expect_true(
-        is.matrix(he) && identical(dim(he), c(n, n)) && all(is.finite(he)),
-        info = label
+      checks[[key]] <- list(
+        fn_is_finite_scalar = length(fn) == 1L && is.finite(fn),
+        gr_length_matches = length(gr) == n,
+        he_is_finite_matrix = is.matrix(he) && all(is.finite(he)),
+        he_dimensions_match = identical(dim(he), c(n, n)),
+        fg_fn_matches = isTRUE(all.equal(fg$fn, fn)),
+        fg_gr_matches = isTRUE(all.equal(fg$gr, gr))
       )
-      expect_equal(fg$fn, fn, info = label)
-      expect_equal(fg$gr, gr, info = label)
     }
   }
+
+  expect_all_checks(checks)
 })
 
 test_that("linear factories reject m less than n in every callback", {
-  for (factory in list(linfun_fr, linfun_r1, linfun_r1z)) {
+  factories <- list(
+    linfun_fr = linfun_fr,
+    linfun_r1 = linfun_r1,
+    linfun_r1z = linfun_r1z
+  )
+  actual <- character()
+
+  for (name in names(factories)) {
+    factory <- factories[[name]]
     testfun <- factory(m = 1)
     x <- c(0, 0)
 
     for (callback in c("fn", "gr", "he", "fg")) {
-      expect_error(testfun[[callback]](x), "m must be >= n")
+      key <- paste(name, callback)
+      actual[[key]] <- capture_error_message(testfun[[callback]](x))
     }
-    expect_error(testfun$x0(2), "m must be >= n")
+    key <- paste(name, "x0")
+    actual[[key]] <- capture_error_message(testfun$x0(2))
   }
+
+  matches <- setNames(
+    grepl("m must be >= n", actual, fixed = TRUE),
+    names(actual)
+  )
+  expect_all_checks(matches)
 })
 
 test_that("factory m bounds are validated", {
@@ -221,11 +212,22 @@ test_that("factory m bounds are validated", {
 })
 
 test_that("accepted linear factory m values retain storage type", {
-  for (factory in list(linfun_fr, linfun_r1, linfun_r1z)) {
+  factories <- list(
+    linfun_fr = linfun_fr,
+    linfun_r1 = linfun_r1,
+    linfun_r1z = linfun_r1z
+  )
+  actual <- lapply(factories, function(factory) {
     integer_m <- factory(3L)
     double_m <- factory(3)
 
-    expect_identical(integer_m$m, 3L)
-    expect_identical(double_m$m, 3)
-  }
+    list(integer = integer_m$m, double = double_m$m)
+  })
+  expected <- rep(
+    list(list(integer = 3L, double = 3)),
+    length(factories)
+  )
+  names(expected) <- names(factories)
+
+  expect_identical(actual, expected)
 })

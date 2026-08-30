@@ -18,18 +18,28 @@ test_that("optimx parser helpers expand ranges and method strings", {
   parse_test_integers <- getFromNamespace("parse_test_integers", "funconstrain")
   parse_methods <- getFromNamespace("parse_methods", "funconstrain")
 
-  expect_identical(expand_ranges("1:3"), 1:3)
-  expect_identical(expand_ranges("3:1"), 3:1)
-  expect_identical(expand_ranges("5"), 5L)
-
-  expect_identical(parse_test_integers("1, 3:5, 7"), c(1L, 3L, 4L, 5L, 7L))
-  expect_identical(parse_test_integers("2:4, 4, 2"), c(2L, 3L, 4L, 4L, 2L))
-
-  expect_identical(
-    parse_methods('c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")'),
-    c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")
+  actual <- list(
+    ascending_range = expand_ranges("1:3"),
+    descending_range = expand_ranges("3:1"),
+    scalar = expand_ranges("5"),
+    mixed_integer_specification = parse_test_integers("1, 3:5, 7"),
+    repeated_integer_specification = parse_test_integers("2:4, 4, 2"),
+    methods = parse_methods(
+      'c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")'
+    ),
+    no_methods = parse_methods("no quoted methods")
   )
-  expect_identical(parse_methods("no quoted methods"), character())
+  expected <- list(
+    ascending_range = 1:3,
+    descending_range = 3:1,
+    scalar = 5L,
+    mixed_integer_specification = c(1L, 3L, 4L, 5L, 7L),
+    repeated_integer_specification = c(2L, 3L, 4L, 4L, 2L),
+    methods = c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs"),
+    no_methods = character()
+  )
+
+  expect_identical(actual, expected)
 })
 
 test_that("fufn and fufnrun report missing optimx clearly", {
@@ -48,40 +58,6 @@ test_that("fufn and fufnrun report missing optimx clearly", {
     "optimx package is required, please install it",
     fixed = TRUE
   )
-})
-
-test_that("fufn returns optimx-ready data for a problem", {
-  method_fixture <- c("nlminb", "Rvmmin", "L-BFGS-B")
-  testthat::local_mocked_bindings(
-    require_optimx = function() NULL,
-    optimx_bounded_methods = function() method_fixture,
-    .package = "funconstrain"
-  )
-
-  tfun <- fufn(1)
-
-  expect_named(
-    tfun,
-    c(
-      "npar",
-      "fffn",
-      "ffgr",
-      "ffhe",
-      "x0",
-      "lo",
-      "up",
-      "mask",
-      "fname",
-      "ameth"
-    )
-  )
-  expect_equal(tfun$npar, 2)
-  expect_identical(tfun$fname, "rosen")
-  expect_true(is.function(tfun$fffn))
-  expect_true(is.function(tfun$ffgr))
-  expect_true(is.function(tfun$ffhe))
-  expect_equal(tfun$x0, rosen()$x0)
-  expect_identical(tfun$ameth, method_fixture)
 })
 
 test_that("fufn returns each supported method once", {
@@ -194,7 +170,7 @@ test_that("fufn dispatch table returns coherent data for every problem", {
     "ameth"
   )
 
-  for (i in seq_len(nrow(expected))) {
+  checks <- lapply(seq_len(nrow(expected)), function(i) {
     case <- expected[i, ]
     tfun <- fufn(case$fnum)
     factory <- getExportedValue("funconstrain", case$fname)
@@ -220,68 +196,51 @@ test_that("fufn dispatch table returns coherent data for every problem", {
       method_fixture
     }
 
-    expect_named(tfun, expected_fields, info = case$fname)
-    expect_identical(tfun$fname, case$fname, info = case$fname)
-    expect_equal(tfun$npar, case$npar, info = case$fname)
-    expect_identical(
-      typeof(tfun$npar),
-      "double",
-      info = paste(case$fname, "npar")
+    list(
+      fields_match = identical(names(tfun), expected_fields),
+      fname_matches = identical(tfun$fname, case$fname),
+      npar_matches = isTRUE(all.equal(tfun$npar, case$npar)),
+      npar_is_double = identical(typeof(tfun$npar), "double"),
+      mask_is_integer = identical(typeof(tfun$mask), "integer"),
+      x0_matches = isTRUE(all.equal(tfun$x0, direct_x0)),
+      lower_matches = isTRUE(all.equal(tfun$lo, expected_lo)),
+      upper_matches = isTRUE(all.equal(tfun$up, expected_up)),
+      methods_match = identical(tfun$ameth, expected_methods),
+      x0_length_matches = length(tfun$x0) == tfun$npar,
+      lower_length_matches = length(tfun$lo) == tfun$npar,
+      upper_length_matches = length(tfun$up) == tfun$npar,
+      mask_length_matches = length(tfun$mask) == tfun$npar,
+      bounds_contain_x0 = all(tfun$lo <= tfun$x0) &&
+        all(tfun$x0 <= tfun$up),
+      callbacks_are_functions = all(vapply(
+        tfun[c("fffn", "ffgr", "ffhe")],
+        is.function,
+        logical(1L)
+      )),
+      fn_is_scalar = length(tfun$fffn(tfun$x0)) == 1L,
+      fn_matches = isTRUE(all.equal(
+        tfun$fffn(tfun$x0),
+        direct$fn(direct_x0)
+      )),
+      gr_length_matches = length(tfun$ffgr(tfun$x0)) == tfun$npar,
+      gr_matches = isTRUE(all.equal(
+        tfun$ffgr(tfun$x0),
+        direct$gr(direct_x0)
+      )),
+      hessian_is_matrix = is.matrix(hessian),
+      hessian_dimensions_match = isTRUE(all.equal(
+        dim(hessian),
+        c(tfun$npar, tfun$npar)
+      )),
+      l_bfgs_b_matches = identical(
+        "L-BFGS-B" %in% tfun$ameth,
+        case$has_l_bfgs_b
+      )
     )
-    expect_identical(
-      typeof(tfun$mask),
-      "integer",
-      info = paste(case$fname, "mask")
-    )
-    expect_equal(tfun$x0, direct_x0, info = paste(case$fname, "x0"))
-    expect_equal(tfun$lo, expected_lo, info = paste(case$fname, "lo"))
-    expect_equal(tfun$up, expected_up, info = paste(case$fname, "up"))
-    expect_identical(
-      tfun$ameth,
-      expected_methods,
-      info = paste(case$fname, "ameth")
-    )
-    expect_equal(length(tfun$x0), tfun$npar, info = paste(case$fname, "x0"))
-    expect_equal(length(tfun$lo), tfun$npar, info = paste(case$fname, "lo"))
-    expect_equal(length(tfun$up), tfun$npar, info = paste(case$fname, "up"))
-    expect_equal(length(tfun$mask), tfun$npar, info = paste(case$fname, "mask"))
-    expect_true(all(tfun$lo <= tfun$x0), info = paste(case$fname, "lo"))
-    expect_true(all(tfun$x0 <= tfun$up), info = paste(case$fname, "up"))
-    expect_true(is.function(tfun$fffn), info = paste(case$fname, "fffn"))
-    expect_true(is.function(tfun$ffgr), info = paste(case$fname, "ffgr"))
-    expect_true(is.function(tfun$ffhe), info = paste(case$fname, "ffhe"))
-    expect_equal(
-      length(tfun$fffn(tfun$x0)),
-      1,
-      info = paste(case$fname, "fffn")
-    )
-    expect_equal(
-      tfun$fffn(tfun$x0),
-      direct$fn(direct_x0),
-      info = paste(case$fname, "direct fn")
-    )
-    expect_equal(
-      length(tfun$ffgr(tfun$x0)),
-      tfun$npar,
-      info = paste(case$fname, "ffgr")
-    )
-    expect_equal(
-      tfun$ffgr(tfun$x0),
-      direct$gr(direct_x0),
-      info = paste(case$fname, "direct gr")
-    )
-    expect_true(is.matrix(hessian), info = paste(case$fname, "ffhe"))
-    expect_equal(
-      dim(hessian),
-      c(tfun$npar, tfun$npar),
-      info = paste(case$fname, "ffhe")
-    )
-    expect_identical(
-      "L-BFGS-B" %in% tfun$ameth,
-      case$has_l_bfgs_b,
-      info = paste(case$fname, "ameth")
-    )
-  }
+  })
+  names(checks) <- expected$fname
+
+  expect_all_checks(checks)
 })
 
 test_that("fufn retains the factories' variable-dimension callbacks", {

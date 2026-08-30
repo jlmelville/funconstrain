@@ -34,11 +34,29 @@ expect_gfd <- function(testfun, par, tolerance = 1e-6, tol = NULL) {
 }
 
 problem_factory_names <- function() {
-  manifest <- getFromNamespace(
-    "funconstrain_problem_manifest",
-    "funconstrain"
-  )()
-  manifest$name
+  funconstrain_catalog()$name
+}
+
+capture_error_message <- function(expr) {
+  tryCatch(
+    {
+      force(expr)
+      NA_character_
+    },
+    error = conditionMessage
+  )
+}
+
+expect_all_checks <- function(checks) {
+  results <- unlist(checks, recursive = TRUE, use.names = TRUE)
+  stopifnot(
+    is.logical(results),
+    !is.null(names(results)),
+    all(nzchar(names(results)))
+  )
+
+  failed <- names(results)[is.na(results) | !results]
+  expect_identical(failed, character())
 }
 
 problem_factory_core_fields <- function() {
@@ -82,9 +100,23 @@ expect_hfd <- function(
   tolerance = 1e-6,
   rel_eps = .Machine$double.eps^(1 / 4)
 ) {
+  analytic <- testfun$he(par)
+  n <- length(par)
   expect_equal(
-    testfun$he(par),
-    hessian_fd(par, testfun$gr, rel_eps),
+    list(
+      value = analytic,
+      is_matrix = is.matrix(analytic),
+      is_numeric = is.numeric(analytic),
+      dimensions = dim(analytic),
+      is_symmetric = is.matrix(analytic) && isSymmetric(analytic)
+    ),
+    list(
+      value = hessian_fd(par, testfun$gr, rel_eps),
+      is_matrix = TRUE,
+      is_numeric = TRUE,
+      dimensions = c(n, n),
+      is_symmetric = TRUE
+    ),
     tolerance = tolerance
   )
 }

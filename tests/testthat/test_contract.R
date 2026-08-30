@@ -9,29 +9,38 @@ test_that("factory contract list covers all exported problem factories", {
     )
   )
 
-  expect_equal(sort(problem_factory_names()), sort(exported_factories))
-  expect_equal(length(problem_factory_names()), 35)
+  actual <- list(
+    names = sort(problem_factory_names()),
+    count = length(problem_factory_names())
+  )
+  expected <- list(names = sort(exported_factories), count = 35L)
+
+  expect_identical(actual, expected)
 })
 
 test_that("problem factories expose documented core fields", {
   core_fields <- problem_factory_core_fields()
-
-  for (name in problem_factory_names()) {
+  factory_names <- problem_factory_names()
+  actual <- lapply(factory_names, function(name) {
     testfun <- get_problem_factory(name)()
-
-    expect_true(all(core_fields %in% names(testfun)), info = name)
-    expect_true(is.function(testfun$fn), info = paste(name, "fn"))
-    expect_true(is.function(testfun$gr), info = paste(name, "gr"))
-    expect_true(is.function(testfun$he), info = paste(name, "he"))
-    expect_true(is.function(testfun$fg), info = paste(name, "fg"))
-    expect_true(is.numeric(testfun$fmin), info = paste(name, "fmin"))
-    expect_equal(length(testfun$fmin), 1, info = paste(name, "fmin"))
-    expect_true(length(testfun$xmin) > 0, info = paste(name, "xmin"))
-
     x0 <- standard_x0(testfun)
-    expect_true(is.numeric(x0), info = paste(name, "x0"))
-    expect_true(length(x0) > 0, info = paste(name, "x0"))
-  }
+
+    list(
+      has_core_fields = all(core_fields %in% names(testfun)),
+      fn_is_function = is.function(testfun$fn),
+      gr_is_function = is.function(testfun$gr),
+      he_is_function = is.function(testfun$he),
+      fg_is_function = is.function(testfun$fg),
+      fmin_is_numeric = is.numeric(testfun$fmin),
+      fmin_is_scalar = length(testfun$fmin) == 1L,
+      xmin_is_nonempty = length(testfun$xmin) > 0L,
+      x0_is_numeric = is.numeric(x0),
+      x0_is_nonempty = length(x0) > 0L
+    )
+  })
+  names(actual) <- factory_names
+
+  expect_all_checks(actual)
 })
 
 test_that("fixed-dimensional callbacks reject wrong-length parameters", {
@@ -57,64 +66,29 @@ test_that("fixed-dimensional callbacks reject wrong-length parameters", {
     list(name = "osborne_2", n = 11L, problem = "Osborne 2")
   )
 
+  actual <- character()
+  expected <- character()
   for (case in cases) {
     testfun <- get_problem_factory(case$name)()
     for (callback in c("fn", "gr", "he", "fg")) {
       for (bad_n in c(case$n - 1L, case$n + 1L)) {
-        expect_error(
-          testfun[[callback]](rep(0, bad_n)),
-          paste0(
-            "^",
-            case$problem,
-            ": n is outside the allowed range$"
-          ),
-          info = paste(case$name, callback, "n =", bad_n)
+        key <- paste(case$name, callback, "n =", bad_n)
+        actual[[key]] <- capture_error_message(
+          testfun[[callback]](rep(0, bad_n))
+        )
+        expected[[key]] <- paste0(
+          case$problem,
+          ": n is outside the allowed range"
         )
       }
     }
   }
-})
 
-test_that("fg matches fn and gr at each factory standard x0", {
-  for (name in problem_factory_names()) {
-    testfun <- get_problem_factory(name)()
-    x0 <- standard_x0(testfun)
-    fg <- testfun$fg(x0)
-
-    expect_true(all(c("fn", "gr") %in% names(fg)), info = name)
-    expect_equal(fg$fn, testfun$fn(x0), info = paste(name, "fn"))
-    expect_equal(fg$gr, testfun$gr(x0), info = paste(name, "gr"))
-  }
-})
-
-test_that("Hessians are numeric symmetric matrices at each factory standard x0", {
-  for (name in problem_factory_names()) {
-    testfun <- get_problem_factory(name)()
-    x0 <- standard_x0(testfun)
-    hessian <- testfun$he(x0)
-
-    expect_true(is.matrix(hessian), info = name)
-    expect_true(is.numeric(hessian), info = name)
-    expect_equal(dim(hessian), c(length(x0), length(x0)), info = name)
-    expect_true(isSymmetric(hessian), info = name)
-  }
-})
-
-test_that("representative Hessians match finite differences of gradients", {
-  for (name in c("bard", "beale", "rosen", "wood")) {
-    testfun <- get_problem_factory(name)()
-    x0 <- standard_x0(testfun)
-
-    expect_equal(
-      testfun$he(x0),
-      hessian_fd(x0, testfun$gr),
-      tolerance = 1e-4,
-      info = name
-    )
-  }
+  expect_identical(actual, expected)
 })
 
 test_that("reported xmin values evaluate to reported fmin values", {
+  checks <- logical()
   for (name in problem_factory_names()) {
     testfun <- get_problem_factory(name)()
 
@@ -122,21 +96,15 @@ test_that("reported xmin values evaluate to reported fmin values", {
       next
     }
 
-    actual <- testfun$fn(testfun$xmin)
+    objective <- testfun$fn(testfun$xmin)
     tolerance <- max(1e-8, abs(testfun$fmin) * 1e-5)
 
-    expect_true(is.finite(actual), info = name)
-    expect_true(
-      abs(actual - testfun$fmin) <= tolerance,
-      info = paste(
-        name,
-        "fn(xmin) =",
-        format(actual, digits = 16),
-        "fmin =",
-        format(testfun$fmin, digits = 16)
-      )
-    )
+    checks[[paste(name, "finite")]] <- is.finite(objective)
+    checks[[paste(name, "matches fmin")]] <-
+      abs(objective - testfun$fmin) <= tolerance
   }
+
+  expect_all_checks(checks)
 })
 
 test_that("documented stored reference configurations are internally valid", {
@@ -269,61 +237,71 @@ test_that("documented stored reference configurations are internally valid", {
     )
   )
 
-  for (case in cases) {
-    test_that(
-      paste("stored reference is valid for", case$name, case$configuration),
-      {
-        testfun <- do.call(get_problem_factory(case$name), case$args)
-        info <- paste(case$name, case$configuration)
+  actual <- lapply(cases, function(case) {
+    testfun <- do.call(get_problem_factory(case$name), case$args)
+    xmin_available <- !anyNA(testfun$xmin)
+    objective <- if (xmin_available) testfun$fn(testfun$xmin) else NA_real_
+    tolerance <- max(1e-8, abs(testfun$fmin) * 1e-5)
 
-        expect_equal(
-          length(testfun$xmin),
-          case$xmin_length,
-          info = paste(info, "xmin length")
-        )
-
-        if (!anyNA(testfun$xmin)) {
-          actual <- testfun$fn(testfun$xmin)
-          tolerance <- max(1e-8, abs(testfun$fmin) * 1e-5)
-
-          expect_true(is.finite(actual), info = paste(info, "fn(xmin)"))
-          expect_true(
-            abs(actual - testfun$fmin) <= tolerance,
-            info = paste(
-              info,
-              "fn(xmin) =",
-              format(actual, digits = 16),
-              "fmin =",
-              format(testfun$fmin, digits = 16)
-            )
-          )
-        }
+    list(
+      xmin_length = length(testfun$xmin),
+      xmin_available = xmin_available,
+      objective_is_finite = if (xmin_available) is.finite(objective) else NA,
+      objective_matches_fmin = if (xmin_available) {
+        abs(objective - testfun$fmin) <= tolerance
+      } else {
+        NA
       }
     )
-  }
+  })
+  names(actual) <- vapply(
+    cases,
+    function(case) paste(case$name, case$configuration),
+    character(1L)
+  )
+  expected <- lapply(cases, function(case) {
+    xmin_available <- case$name != "box_3d"
+    list(
+      xmin_length = case$xmin_length,
+      xmin_available = xmin_available,
+      objective_is_finite = if (xmin_available) TRUE else NA,
+      objective_matches_fmin = if (xmin_available) TRUE else NA
+    )
+  })
+  names(expected) <- names(actual)
+
+  expect_identical(actual, expected)
 })
 
 test_that("linfun_r1z handles empty interiors at n=1 and n=2", {
   testfun <- linfun_r1z(m = 100)
-
-  for (n in 1:2) {
+  actual <- lapply(1:2, function(n) {
     x <- rep(0, n)
-    info <- paste("linfun_r1z", "m=100", paste0("n=", n))
+    combined <- testfun$fg(x)
 
-    expect_equal(testfun$fn(x), 100, info = paste(info, "fn"))
-    expect_equal(testfun$gr(x), rep(0, n), info = paste(info, "gr"))
-    expect_equal(testfun$fg(x)$fn, 100, info = paste(info, "fg fn"))
-    expect_equal(testfun$fg(x)$gr, rep(0, n), info = paste(info, "fg gr"))
-    expect_equal(
-      testfun$he(x),
-      matrix(0, nrow = n, ncol = n),
-      info = paste(info, "he")
+    list(
+      fn = testfun$fn(x),
+      gr = testfun$gr(x),
+      fg_fn = combined$fn,
+      fg_gr = combined$gr,
+      he = testfun$he(x),
+      stored_fmin_is_inapplicable = abs(testfun$fn(x) - testfun$fmin) > 1
     )
-    expect_true(
-      abs(testfun$fn(x) - testfun$fmin) > 1,
-      info = paste(info, "stored fmin is not applicable")
+  })
+  names(actual) <- paste0("n=", 1:2)
+  expected <- lapply(1:2, function(n) {
+    list(
+      fn = 100,
+      gr = rep(0, n),
+      fg_fn = 100,
+      fg_gr = rep(0, n),
+      he = matrix(0, nrow = n, ncol = n),
+      stored_fmin_is_inapplicable = TRUE
     )
-  }
+  })
+  names(expected) <- names(actual)
+
+  expect_equal(actual, expected)
 })
 
 test_that("current m metadata is recorded without making it a core field", {

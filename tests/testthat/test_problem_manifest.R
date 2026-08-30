@@ -80,61 +80,73 @@ test_that("internal manifest is the authoritative ordered factory registry", {
     )
   )
 
-  expect_s3_class(manifest, "data.frame")
-  expect_equal(nrow(manifest), 35L)
-  expect_identical(manifest$number, seq_len(35L))
-  expect_equal(length(unique(manifest$name)), 35L)
-  expect_identical(manifest$name, names(expected_titles))
-  expect_identical(setNames(manifest$title, manifest$name), expected_titles)
-  expect_setequal(manifest$name, exported_factories)
-  expect_identical(problem_factory_names(), manifest$name)
+  actual <- list(
+    is_data_frame = is.data.frame(manifest),
+    row_count = nrow(manifest),
+    number = manifest$number,
+    unique_name_count = length(unique(manifest$name)),
+    name = manifest$name,
+    title = setNames(manifest$title, manifest$name),
+    exported_factories = sort(manifest$name),
+    helper_names = problem_factory_names()
+  )
+  expected <- list(
+    is_data_frame = TRUE,
+    row_count = 35L,
+    number = seq_len(35L),
+    unique_name_count = 35L,
+    name = names(expected_titles),
+    title = expected_titles,
+    exported_factories = sort(exported_factories),
+    helper_names = manifest$name
+  )
+
+  expect_identical(actual, expected)
 })
 
 test_that("manifest defaults agree with current factory behavior", {
   manifest <- problem_manifest()
-
-  for (i in seq_len(nrow(manifest))) {
+  checks <- lapply(seq_len(nrow(manifest)), function(i) {
     spec <- manifest[i, ]
     factory <- get_problem_factory(spec$name)
     testfun <- factory()
-    info <- spec$name
-
-    expect_identical(
-      is.function(testfun$x0),
-      spec$n_kind == "variable",
-      info = paste(info, "n kind")
-    )
-
     x0 <- standard_x0(testfun)
-    expect_equal(length(x0), spec$n_default, info = paste(info, "default n"))
-
     has_m_argument <- "m" %in% names(formals(factory))
-    expect_identical(
-      has_m_argument,
-      spec$m_kind == "configurable",
-      info = paste(info, "m kind")
-    )
-
-    if (has_m_argument) {
+    m_formal_matches <- if (has_m_argument) {
       if (!is.na(spec$m_n_multiplier)) {
-        expect_null(formals(factory)$m, info = paste(info, "derived default m"))
+        is.null(formals(factory)$m)
       } else {
-        expect_equal(
-          formals(factory)$m,
-          spec$m_default,
-          info = paste(info, "default m")
-        )
+        isTRUE(all.equal(formals(factory)$m, spec$m_default))
       }
+    } else {
+      TRUE
+    }
+    derived_default_matches <- if (!is.na(spec$m_n_multiplier)) {
+      isTRUE(all.equal(
+        spec$m_default,
+        spec$m_n_multiplier * spec$n_default + spec$m_n_offset
+      ))
+    } else {
+      TRUE
     }
 
-    if (!is.na(spec$m_n_multiplier)) {
-      expect_equal(
-        spec$m_default,
-        spec$m_n_multiplier * spec$n_default + spec$m_n_offset,
-        info = paste(info, "derived default m")
-      )
-    }
-  }
+    list(
+      n_kind_matches = identical(
+        is.function(testfun$x0),
+        spec$n_kind == "variable"
+      ),
+      default_n_matches = identical(length(x0), spec$n_default),
+      m_kind_matches = identical(
+        has_m_argument,
+        spec$m_kind == "configurable"
+      ),
+      m_formal_matches = m_formal_matches,
+      derived_default_matches = derived_default_matches
+    )
+  })
+  names(checks) <- manifest$name
+
+  expect_all_checks(checks)
 })
 
 test_that("fixed and formula-derived m rules match the MGH definitions", {
@@ -188,6 +200,7 @@ test_that("fixed and formula-derived m rules match the MGH definitions", {
 test_that("manifest n rules agree with starting-point validation", {
   manifest <- problem_manifest()
   variable <- manifest[manifest$n_kind == "variable", ]
+  checks <- logical()
 
   for (i in seq_len(nrow(variable))) {
     spec <- variable[i, ]
@@ -197,89 +210,99 @@ test_that("manifest n rules agree with starting-point validation", {
     } else {
       factory()
     }
-    info <- spec$name
-
-    expect_equal(length(testfun$x0(spec$n_min)), spec$n_min, info = info)
-    expect_error(testfun$x0(spec$n_min - 1L), info = paste(info, "below min"))
+    checks[[paste(spec$name, "minimum")]] <-
+      length(testfun$x0(spec$n_min)) == spec$n_min
+    checks[[paste(spec$name, "below minimum")]] <- !is.na(
+      capture_error_message(testfun$x0(spec$n_min - 1L))
+    )
 
     if (is.finite(spec$n_max)) {
-      expect_equal(length(testfun$x0(spec$n_max)), spec$n_max, info = info)
-      expect_error(
-        testfun$x0(spec$n_max + 1L),
-        info = paste(info, "above max")
+      checks[[paste(spec$name, "maximum")]] <-
+        length(testfun$x0(spec$n_max)) == spec$n_max
+      checks[[paste(spec$name, "above maximum")]] <- !is.na(
+        capture_error_message(testfun$x0(spec$n_max + 1L))
       )
     }
 
     if (spec$n_multiple > 1L) {
-      expect_error(
-        testfun$x0(spec$n_min + 1L),
+      checks[[paste(spec$name, "required multiple")]] <- grepl(
         "multiple",
-        info = paste(info, "required multiple")
+        capture_error_message(testfun$x0(spec$n_min + 1L)),
+        fixed = TRUE
       )
     }
   }
+
+  expect_all_checks(checks)
 })
 
 test_that("manifest configurable m rules agree with factory validation", {
   manifest <- problem_manifest()
   configurable <- manifest[manifest$m_kind == "configurable", ]
+  checks <- logical()
 
   for (i in seq_len(nrow(configurable))) {
     spec <- configurable[i, ]
     factory <- get_problem_factory(spec$name)
-    info <- spec$name
-
-    expect_silent(factory(spec$m_min))
-    expect_error(factory(spec$m_min - 1L), info = paste(info, "below min"))
+    checks[[paste(spec$name, "minimum")]] <- is.na(
+      capture_error_message(factory(spec$m_min))
+    )
+    checks[[paste(spec$name, "below minimum")]] <- !is.na(
+      capture_error_message(factory(spec$m_min - 1L))
+    )
 
     if (is.finite(spec$m_max)) {
-      expect_silent(factory(spec$m_max))
-      expect_error(
-        factory(spec$m_max + 1L),
-        info = paste(info, "above max")
+      checks[[paste(spec$name, "maximum")]] <- is.na(
+        capture_error_message(factory(spec$m_max))
+      )
+      checks[[paste(spec$name, "above maximum")]] <- !is.na(
+        capture_error_message(factory(spec$m_max + 1L))
       )
     }
 
     if (spec$m_gte_n && spec$n_kind == "variable") {
       testfun <- factory(spec$m_min)
-      expect_equal(length(testfun$x0(spec$m_min)), spec$m_min, info = info)
-      expect_error(
-        testfun$x0(spec$m_min + 1L),
+      checks[[paste(spec$name, "m equals n")]] <-
+        length(testfun$x0(spec$m_min)) == spec$m_min
+      checks[[paste(spec$name, "m below n")]] <- grepl(
         "m must be >= n",
-        info = paste(info, "m >= n")
+        capture_error_message(testfun$x0(spec$m_min + 1L)),
+        fixed = TRUE
       )
     }
   }
+
+  expect_all_checks(checks)
 })
 
 test_that("manifest reference rules have a small coherent vocabulary", {
   manifest <- problem_manifest()
   allowed_availability <- c("stored", "unavailable", "unknown")
   allowed_configuration <- c("n", "n_min", "n_max", "m", "m_min", "m_max")
+  checks <- logical()
 
   for (field in c("fmin_reference", "xmin_reference")) {
     for (i in seq_len(nrow(manifest))) {
       spec <- manifest[i, ]
       rule <- spec[[field]][[1L]]
-      info <- paste(spec$name, field)
+      key <- paste(spec$name, field)
 
-      expect_named(
-        rule,
-        c("availability", "source_configuration", "reason"),
-        info = info
+      checks[[paste(key, "fields")]] <- identical(
+        names(rule),
+        c("availability", "source_configuration", "reason")
       )
-      expect_true(rule$availability %in% allowed_availability, info = info)
-      expect_true(is.list(rule$source_configuration), info = info)
-      expect_true(
-        all(names(rule$source_configuration) %in% allowed_configuration),
-        info = info
-      )
+      checks[[paste(key, "availability")]] <-
+        rule$availability %in% allowed_availability
+      checks[[paste(key, "configuration type")]] <-
+        is.list(rule$source_configuration)
+      checks[[paste(key, "configuration fields")]] <-
+        all(names(rule$source_configuration) %in% allowed_configuration)
 
       if (rule$availability == "stored") {
-        expect_null(rule$reason, info = info)
+        checks[[paste(key, "reason")]] <- is.null(rule$reason)
       } else {
-        expect_true(is.character(rule$reason), info = info)
-        expect_equal(length(rule$reason), 1L, info = info)
+        checks[[paste(key, "reason type")]] <- is.character(rule$reason)
+        checks[[paste(key, "reason length")]] <- length(rule$reason) == 1L
       }
     }
   }
@@ -297,12 +320,14 @@ test_that("manifest reference rules have a small coherent vocabulary", {
     "availability"
   )
 
-  expect_true(all(fmin_availability == "stored"))
-  expect_identical(
+  checks[["all fmin references stored"]] <- all(fmin_availability == "stored")
+  checks[["box_3d xmin unavailable"]] <- identical(
     manifest$name[xmin_availability == "unavailable"],
     "box_3d"
   )
-  expect_false(any(xmin_availability == "unknown"))
+  checks[["no unknown xmin references"]] <- !any(xmin_availability == "unknown")
+
+  expect_all_checks(checks)
 })
 
 test_that("reference applicability is keyed to the documented problems", {
@@ -392,6 +417,7 @@ test_that("reference applicability is keyed to the documented problems", {
 
 test_that("stored reference configurations agree with factory literals", {
   manifest <- problem_manifest()
+  checks <- logical()
 
   for (i in seq_len(nrow(manifest))) {
     spec <- manifest[i, ]
@@ -399,19 +425,22 @@ test_that("stored reference configurations agree with factory literals", {
     reference_m <- reference_configuration_value(xmin_rule, "m")
     factory <- get_problem_factory(spec$name)
     testfun <- if (is.null(reference_m)) factory() else factory(reference_m)
-    info <- spec$name
 
     if (xmin_rule$availability == "unavailable") {
-      expect_true(anyNA(testfun$xmin), info = info)
+      checks[[paste(spec$name, "xmin unavailable")]] <- anyNA(testfun$xmin)
       next
     }
 
-    expect_false(anyNA(testfun$xmin), info = info)
+    checks[[paste(spec$name, "xmin available")]] <- !anyNA(testfun$xmin)
     reference_n <- reference_configuration_value(xmin_rule, "n")
     if (!is.null(reference_n)) {
-      expect_equal(length(testfun$xmin), reference_n, info = info)
+      checks[[paste(spec$name, "reference n")]] <-
+        length(testfun$xmin) == reference_n
     } else if (spec$n_kind == "fixed") {
-      expect_equal(length(testfun$xmin), spec$n_default, info = info)
+      checks[[paste(spec$name, "fixed n")]] <-
+        length(testfun$xmin) == spec$n_default
     }
   }
+
+  expect_all_checks(checks)
 })
