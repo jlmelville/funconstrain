@@ -5,8 +5,15 @@ Test function 35 from the Moré, Garbow and Hillstrom paper.
 ## Usage
 
 ``` r
-chebyquad()
+chebyquad(m = NULL)
 ```
+
+## Arguments
+
+- m:
+
+  Number of summand functions in the objective function. `NULL` uses
+  `m = n`; otherwise, `m` must be equal to or greater than `n`.
 
 ## Value
 
@@ -55,7 +62,7 @@ The objective function is the sum of `m` functions, each of `n`
 parameters.
 
 - Dimensions: Number of parameters `n` variable, number of summand
-  functions `m = n`.
+  functions `m >= n`.
 
 - Minima: `f = 0` for `m = n`, `1 <= n <= 7` and `n = 9`;
   `f = 3.51687...e-3` for `m = n = 8`; `f = 6.50395...e-3` for
@@ -89,4 +96,10 @@ res_8 <- stats::optim(cheb$x0(8), cheb$fn, cheb$gr, method = "L-BFGS-B")
 # Create your own 4 variable starting point
 res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), cheb$fn, cheb$gr, method =
 "L-BFGS-B")
+
+# Use 7 summand functions with 4 parameters
+cheb_m7 <- chebyquad(m = 7)
+res_n4_m7 <- stats::optim(
+  cheb_m7$x0(4), cheb_m7$fn, cheb_m7$gr, method = "L-BFGS-B"
+)
 ```

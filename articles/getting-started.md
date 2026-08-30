@@ -73,7 +73,7 @@ knitr::kable(data.frame(
 | Rosenbrock Function (rosen) | 2 | no | 2 | no |
 | Jennrich and Sampson Function (jenn_samp) | 2 | no | 10 | yes |
 | Extended Rosenbrock Function (ex_rosen) | 8 | yes | 8 | no |
-| Chebyquad Function (chebyquad) | 50 | yes | 50 | no |
+| Chebyquad Function (chebyquad) | 50 | yes | 50 | yes |
 
 The [mathematical
 definitions](https://jlmelville.github.io/funconstrain/articles/problem-definitions.md)

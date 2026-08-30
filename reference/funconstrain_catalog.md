@@ -78,7 +78,7 @@ catalog[c(1, 20, 35), ]
 #>    number      name               title   n_kind n_default m_configurable
 #> 1       1     rosen Rosenbrock Function    fixed         2          FALSE
 #> 20     20    watson     Watson Function variable         6          FALSE
-#> 35     35 chebyquad  Chebyquad Function variable        50          FALSE
+#> 35     35 chebyquad  Chebyquad Function variable        50           TRUE
 #>    m_default
 #> 1          2
 #> 20        31

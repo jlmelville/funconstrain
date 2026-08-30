@@ -6,8 +6,8 @@ will fit Rosenbrock with BFGS, look at the optimization as it
 progresses, and then use a small harness to repeat the same setup
 consistently.
 
-> **Version requirement.** These examples use GitHub development `mize`
-> 0.2.5.9002 or later. Install it with:
+> **Version requirement.** These examples use `mize` 0.3.0 or later.
+> Install the current version with:
 >
 > ``` r
 >
@@ -193,12 +193,19 @@ calculation.
 ## Reproduce a run
 
 Each harness result retains the supplied controls, problem dimensions,
-package versions, platform, and development `mize` commit. A compact
-summary is often enough for a report:
+package versions and platform. Installs from GitHub also retain the
+`mize` source commit; release installs may not include commit metadata.
+A compact summary is often enough for a report:
 
 ``` r
 
 rosen_run <- suite$runs$rosen
+mize_commit <- rosen_run$provenance$mize_commit
+if (is.na(mize_commit)) {
+  mize_commit <- "not recorded for this install"
+} else {
+  mize_commit <- substr(mize_commit, 1L, 12L)
+}
 
 data.frame(
   field = c(
@@ -221,7 +228,7 @@ data.frame(
     rosen_run$provenance$r_version,
     rosen_run$provenance$funconstrain_version,
     rosen_run$provenance$mize_version,
-    substr(rosen_run$provenance$mize_commit, 1L, 12L),
+    mize_commit,
     rosen_run$provenance$platform
   ),
   row.names = NULL
@@ -232,8 +239,8 @@ data.frame(
 #> 3       Method                         BFGS
 #> 4    R version R version 4.6.1 (2026-06-24)
 #> 5 funconstrain                        0.1.1
-#> 6         mize                   0.2.5.9002
-#> 7  mize commit                 5ec90ec3dbc5
+#> 6         mize                        0.3.0
+#> 7  mize commit                 7c002b4f4a58
 #> 8   R platform          x86_64-pc-linux-gnu
 ```
 

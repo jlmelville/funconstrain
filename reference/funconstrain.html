@@ -224,9 +224,8 @@ Testing unconstrained optimization software.
 <span class="r-in"><span><span class="va">res_m20</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="va">gulf_m20</span><span class="op">$</span><span class="va">x0</span>, fn <span class="op">=</span> <span class="va">gulf_m20</span><span class="op">$</span><span class="va">fn</span>, gr <span class="op">=</span></span></span>
 <span class="r-in"><span><span class="va">gulf_m20</span><span class="op">$</span><span class="va">gr</span>, method <span class="op">=</span> <span class="st">"L-BFGS-B"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Fixed m, multiple n</span></span></span>
-<span class="r-in"><span><span class="co"># The Chebyquad function is defined for variable values of n, but the value</span></span></span>
-<span class="r-in"><span><span class="co"># of m is fixed</span></span></span>
+<span class="r-in"><span><span class="co"># Derived m, multiple n</span></span></span>
+<span class="r-in"><span><span class="co"># Chebyquad supports variable n and defaults to m = n.</span></span></span>
 <span class="r-in"><span><span class="va">cheby</span> <span class="op">&lt;-</span> <span class="fu"><a href="chebyquad.html">chebyquad</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># To use different values of n, we provide it to the starting point x0, which</span></span></span>
@@ -237,6 +236,13 @@ Testing unconstrained optimization software.
 <span class="r-in"><span><span class="co"># And a 10-parameter version:</span></span></span>
 <span class="r-in"><span><span class="va">res_n10</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span>par <span class="op">=</span> <span class="va">cheby</span><span class="op">$</span><span class="fu">x0</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, fn <span class="op">=</span> <span class="va">cheby</span><span class="op">$</span><span class="va">fn</span>, gr <span class="op">=</span> <span class="va">cheby</span><span class="op">$</span><span class="va">gr</span>,</span></span>
 <span class="r-in"><span>method <span class="op">=</span> <span class="st">"L-BFGS-B"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Set m independently by passing it to the factory, subject to m &gt;= n.</span></span></span>
+<span class="r-in"><span><span class="va">cheby_m10</span> <span class="op">&lt;-</span> <span class="fu"><a href="chebyquad.html">chebyquad</a></span><span class="op">(</span>m <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res_m10_n5</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  par <span class="op">=</span> <span class="va">cheby_m10</span><span class="op">$</span><span class="fu">x0</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, fn <span class="op">=</span> <span class="va">cheby_m10</span><span class="op">$</span><span class="va">fn</span>, gr <span class="op">=</span> <span class="va">cheby_m10</span><span class="op">$</span><span class="va">gr</span>,</span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="st">"L-BFGS-B"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple m, multiple n</span></span></span>
 <span class="r-in"><span><span class="co"># The linear function full rank function requires both m and n to be</span></span></span>

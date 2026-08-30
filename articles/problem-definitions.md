@@ -733,7 +733,7 @@ r_m(x)&=-1.
 
 ## 35. Chebyquad Function
 
-**Dimensions:** $`n\ge1`$, $`m=n`$; default $`n=50`$  
+**Dimensions:** $`n\ge1`$, $`m\ge n`$; default $`n=50`$ and $`m=n`$  
 **Factory:**
 [`chebyquad()`](https://jlmelville.github.io/funconstrain/reference/chebyquad.md)
 
@@ -748,7 +748,7 @@ T_i^*(u)&=2(2u-1)T_{i-1}^*(u)-T_{i-2}^*(u).
 \end{aligned}
 ```
 
-For $`i=1,\ldots,n`$,
+For $`i=1,\ldots,m`$,
 
 ``` math
 r_i(x)=\frac1n\sum_{j=1}^{n}T_i^*(x_j)-c_i,
@@ -760,9 +760,9 @@ c_i=
 \end{cases}
 ```
 
-**Package note:** MGH defines Chebyquad for $`m\ge n`$, with residual
-indices through $`m`$. The current package has no independent `m`
-control and implements only $`m=n`$; the narrower package domain is the
-supported contract here.
+Calling
+[`chebyquad()`](https://jlmelville.github.io/funconstrain/reference/chebyquad.md)
+derives $`m=n`$ from the parameter-vector length. Pass an explicit `m`
+to the factory to use an overdetermined instance with $`m>n`$.
 
 **Start:** $`x_j^{(0)}=j/(n+1)`$
