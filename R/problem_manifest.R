@@ -186,7 +186,7 @@ funconstrain_problem_manifest <- function() {
       rep("fixed", 2L),
       rep("derived", 11L),
       rep("configurable", 3L),
-      "derived"
+      "configurable"
     ),
     m_default = c(
       2L,
@@ -247,8 +247,7 @@ funconstrain_problem_manifest <- function() {
       65L,
       31L,
       rep(NA_integer_, 11L),
-      rep(1L, 3L),
-      NA_integer_
+      rep(1L, 4L)
     ),
     m_max = c(
       2L,
@@ -272,14 +271,12 @@ funconstrain_problem_manifest <- function() {
       65L,
       31L,
       rep(NA_real_, 11L),
-      rep(Inf, 3L),
-      NA_real_
+      rep(Inf, 4L)
     ),
     m_multiple = c(
       rep(1L, 20L),
       rep(NA_integer_, 11L),
-      rep(1L, 3L),
-      NA_integer_
+      rep(1L, 4L)
     ),
     m_n_multiplier = c(
       rep(NA_integer_, 20L),
@@ -318,8 +315,7 @@ funconstrain_problem_manifest <- function() {
       FALSE,
       TRUE,
       rep(FALSE, 13L),
-      rep(TRUE, 3L),
-      FALSE
+      rep(TRUE, 4L)
     ),
     fmin_reference = I(list(
       reference_rule(),
@@ -356,7 +352,7 @@ funconstrain_problem_manifest <- function() {
       reference_rule(source_configuration = list(n = 4L, m = 100L)),
       reference_rule(source_configuration = list(m = 100L)),
       reference_rule(source_configuration = list(n_min = 3L, m = 100L)),
-      reference_rule(source_configuration = list(n = 8L))
+      reference_rule(source_configuration = list(n = 8L, m = 8L))
     )),
     xmin_reference = I(list(
       reference_rule(),
@@ -396,7 +392,7 @@ funconstrain_problem_manifest <- function() {
       reference_rule(source_configuration = list(n = 4L, m = 100L)),
       reference_rule(source_configuration = list(n = 5L, m = 100L)),
       reference_rule(source_configuration = list(n = 5L, m = 100L)),
-      reference_rule(source_configuration = list(n = 8L))
+      reference_rule(source_configuration = list(n = 8L, m = 8L))
     )),
     stringsAsFactors = FALSE
   )

@@ -4,7 +4,11 @@
 \alias{chebyquad}
 \title{Chebyquad Function}
 \usage{
-chebyquad()
+chebyquad(m = NULL)
+}
+\arguments{
+\item{m}{Number of summand functions in the objective function. \code{NULL} uses
+\code{m = n}; otherwise, \code{m} must be equal to or greater than \code{n}.}
 }
 \value{
 A list containing the core problem contract:
@@ -43,7 +47,7 @@ The objective function is the sum of \code{m} functions, each of \code{n}
 parameters.
 \itemize{
 \item Dimensions: Number of parameters \code{n} variable, number of
-summand functions \code{m = n}.
+summand functions \code{m >= n}.
 \item Minima: \code{f = 0} for \code{m = n}, \verb{1 <= n <= 7} and \code{n = 9};
 \verb{f = 3.51687...e-3} for \code{m = n = 8};
 \verb{f = 6.50395...e-3} for \code{m = n = 10}. The returned \code{fmin} and \code{xmin}
@@ -65,6 +69,12 @@ res_8 <- stats::optim(cheb$x0(8), cheb$fn, cheb$gr, method = "L-BFGS-B")
 # Create your own 4 variable starting point
 res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), cheb$fn, cheb$gr, method =
 "L-BFGS-B")
+
+# Use 7 summand functions with 4 parameters
+cheb_m7 <- chebyquad(m = 7)
+res_n4_m7 <- stats::optim(
+  cheb_m7$x0(4), cheb_m7$fn, cheb_m7$gr, method = "L-BFGS-B"
+)
 }
 \references{
 Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).

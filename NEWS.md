@@ -9,6 +9,10 @@
 - Corrected the standard starting points for `disc_bv()` and `disc_ie()`.
 - Improved dimension and input validation, including consistent errors where
   Hessians are undefined.
+- Extended `chebyquad()` to support the full `m >= n` problem family while
+  retaining `m = n` when `m` is omitted.
+- Updated the mize integration harness and article for stable mize 0.3.0;
+  release installs no longer need GitHub commit metadata.
 - Documentation has been clarified for problems with configurable dimensions and the reported minima.
 
 # funconstrain 0.1.0

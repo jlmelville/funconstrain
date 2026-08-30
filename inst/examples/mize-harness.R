@@ -59,14 +59,14 @@ run_mize_problem <- function(
   method = "BFGS",
   controls = list()
 ) {
-  minimum_mize_version <- "0.2.5.9002"
+  minimum_mize_version <- "0.3.0"
   installed_mize <- requireNamespace("mize", quietly = TRUE)
   if (
     !installed_mize ||
       utils::packageVersion("mize") < minimum_mize_version
   ) {
     stop(
-      "run_mize_problem() requires GitHub mize >= ",
+      "run_mize_problem() requires mize >= ",
       minimum_mize_version,
       "; install it with pak::pak(\"jlmelville/mize\")",
       call. = FALSE

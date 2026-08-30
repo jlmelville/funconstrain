@@ -194,7 +194,7 @@ resolve_m <- function(m, n, spec) {
 }
 
 default_m <- function(n, spec) {
-  if (spec$m_kind == "derived") {
+  if (!is.na(spec$m_n_multiplier)) {
     value <- spec$m_n_multiplier * n + spec$m_n_offset
     return(validate_resolver_dimension(
       value,

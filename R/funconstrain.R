@@ -168,9 +168,8 @@
 #' res_m20 <- stats::optim(par = gulf_m20$x0, fn = gulf_m20$fn, gr =
 #' gulf_m20$gr, method = "L-BFGS-B")
 #'
-#' # Fixed m, multiple n
-#' # The Chebyquad function is defined for variable values of n, but the value
-#' # of m is fixed
+#' # Derived m, multiple n
+#' # Chebyquad supports variable n and defaults to m = n.
 #' cheby <- chebyquad()
 #'
 #' # To use different values of n, we provide it to the starting point x0, which
@@ -181,6 +180,13 @@
 #' # And a 10-parameter version:
 #' res_n10 <- stats::optim(par = cheby$x0(n = 10), fn = cheby$fn, gr = cheby$gr,
 #' method = "L-BFGS-B")
+#'
+#' # Set m independently by passing it to the factory, subject to m >= n.
+#' cheby_m10 <- chebyquad(m = 10)
+#' res_m10_n5 <- stats::optim(
+#'   par = cheby_m10$x0(n = 5), fn = cheby_m10$fn, gr = cheby_m10$gr,
+#'   method = "L-BFGS-B"
+#' )
 #'
 #' # Multiple m, multiple n
 #' # The linear function full rank function requires both m and n to be

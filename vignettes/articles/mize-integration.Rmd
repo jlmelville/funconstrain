@@ -7,7 +7,7 @@ description: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-stopifnot(utils::packageVersion("mize") >= "0.2.5.9002")
+stopifnot(utils::packageVersion("mize") >= "0.3.0")
 ```
 
 `funconstrain` supplies the test problem; [`mize`](https://jlmelville.github.io/mize/)
@@ -15,8 +15,8 @@ supplies the optimizer. We will fit Rosenbrock with BFGS, look at the
 optimization as it progresses, and then use a small harness to repeat the same
 setup consistently.
 
-> **Version requirement.** These examples use GitHub development `mize`
-> 0.2.5.9002 or later. Install it with:
+> **Version requirement.** These examples use `mize` 0.3.0 or later. Install
+> the current version with:
 >
 > ```r
 > pak::pak("jlmelville/mize")
@@ -222,11 +222,18 @@ row receives the same final-quality calculation.
 ## Reproduce a run
 
 Each harness result retains the supplied controls, problem dimensions, package
-versions, platform, and development `mize` commit. A compact summary is often
-enough for a report:
+versions and platform. Installs from GitHub also retain the `mize` source
+commit; release installs may not include commit metadata. A compact summary is
+often enough for a report:
 
 ```{r provenance}
 rosen_run <- suite$runs$rosen
+mize_commit <- rosen_run$provenance$mize_commit
+if (is.na(mize_commit)) {
+  mize_commit <- "not recorded for this install"
+} else {
+  mize_commit <- substr(mize_commit, 1L, 12L)
+}
 
 data.frame(
   field = c(
@@ -249,7 +256,7 @@ data.frame(
     rosen_run$provenance$r_version,
     rosen_run$provenance$funconstrain_version,
     rosen_run$provenance$mize_version,
-    substr(rosen_run$provenance$mize_commit, 1L, 12L),
+    mize_commit,
     rosen_run$provenance$platform
   ),
   row.names = NULL

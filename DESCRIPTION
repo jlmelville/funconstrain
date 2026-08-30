@@ -22,7 +22,7 @@ Suggests:
     pkgdown,
     lbfgs,
     lbfgsb3c,
-    mize (>= 0.2.5.9001)
+    mize (>= 0.3.0)
 URL: https://jlmelville.github.io/funconstrain/,
     https://github.com/jlmelville/funconstrain
 BugReports: https://github.com/jlmelville/funconstrain/issues

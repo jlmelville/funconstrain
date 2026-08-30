@@ -58,6 +58,23 @@ min_x10 <- c(
   0.9403801
 )
 
+chebyquad_objective <- function(par, m) {
+  y <- 2 * par - 1
+  residuals <- vapply(
+    seq_len(m),
+    function(i) {
+      value <- mean(cos(i * acos(y)))
+      if (i %% 2L == 0L) {
+        value <- value + 1 / (i^2 - 1)
+      }
+      value
+    },
+    numeric(1L)
+  )
+
+  sum(residuals^2)
+}
+
 
 testfun <- chebyquad()
 
@@ -78,6 +95,56 @@ test_that("Off-start derivatives match finite differences", {
   fg <- testfun$fg(par)
   expect_equal(fg$fn, testfun$fn(par))
   expect_equal(fg$gr, testfun$gr(par))
+})
+test_that("Explicit square m matches the dynamic default", {
+  par <- c(0.12, 0.37, 0.64, 0.91)
+  explicit <- chebyquad(m = length(par))
+
+  expect_equal(explicit$fn(par), testfun$fn(par))
+  expect_equal(explicit$gr(par), testfun$gr(par))
+  expect_equal(explicit$he(par), testfun$he(par))
+  expect_equal(explicit$fg(par), testfun$fg(par))
+})
+test_that("Overdetermined objectives and derivatives match independent oracles", {
+  cases <- list(
+    list(par = 0.31, m = 4L),
+    list(par = c(0.12, 0.37, 0.64, 0.91), m = 7L),
+    list(par = seq(0.08, 0.92, length.out = 8L), m = 12L)
+  )
+
+  for (case in cases) {
+    overdetermined <- chebyquad(m = case$m)
+    info <- paste0("n=", length(case$par), ", m=", case$m)
+
+    expect_equal(
+      overdetermined$fn(case$par),
+      chebyquad_objective(case$par, case$m),
+      tolerance = 1e-12,
+      info = info
+    )
+    expect_gfd(overdetermined, case$par, tolerance = 1e-6)
+    expect_hfd(overdetermined, case$par, tolerance = 1e-5)
+    expect_true(isSymmetric(overdetermined$he(case$par)), info = info)
+
+    fg <- overdetermined$fg(case$par)
+    expect_equal(fg$fn, overdetermined$fn(case$par), info = info)
+    expect_equal(fg$gr, overdetermined$gr(case$par), info = info)
+  }
+})
+test_that("Explicit m is validated at factory and callback boundaries", {
+  for (bad_m in list(0, -1, 1.5, Inf, NA_real_, TRUE, c(4, 5))) {
+    expect_error(chebyquad(m = bad_m), "finite whole-number scalar|outside")
+  }
+
+  too_few_residuals <- chebyquad(m = 3)
+  for (callback in c("fn", "gr", "he", "fg")) {
+    expect_error(
+      too_few_residuals[[callback]](rep(0.2, 4)),
+      "m must be >= n",
+      info = callback
+    )
+  }
+  expect_error(too_few_residuals$x0(4), "m must be >= n")
 })
 test_that("Gradient is zero at stated minima", {
   expect_equal(testfun$gr(min_x1), rep(0, 1), tolerance = 1e-3)

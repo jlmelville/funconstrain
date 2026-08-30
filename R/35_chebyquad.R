@@ -6,7 +6,7 @@
 #' parameters.
 #'
 #' - Dimensions: Number of parameters `n` variable, number of
-#'   summand functions `m = n`.
+#'   summand functions `m >= n`.
 #' - Minima: `f = 0` for `m = n`, `1 <= n <= 7` and `n = 9`;
 #'   `f = 3.51687...e-3` for `m = n = 8`;
 #'   `f = 6.50395...e-3` for `m = n = 10`. The returned `fmin` and `xmin`
@@ -17,6 +17,8 @@
 #' the parameter vector passed to the objective and gradient functions that this
 #' function creates. See the 'Examples' section.
 #'
+#' @param m Number of summand functions in the objective function. `NULL` uses
+#'   `m = n`; otherwise, `m` must be equal to or greater than `n`.
 #' @template factory-return
 #' @references
 #' Moré, J. J., Garbow, B. S., & Hillstrom, K. E. (1981).
@@ -39,12 +41,33 @@
 #' # Create your own 4 variable starting point
 #' res_4 <- stats::optim(c(0.1, 0.2, 0.3, 0.4), cheb$fn, cheb$gr, method =
 #' "L-BFGS-B")
+#'
+#' # Use 7 summand functions with 4 parameters
+#' cheb_m7 <- chebyquad(m = 7)
+#' res_n4_m7 <- stats::optim(
+#'   cheb_m7$x0(4), cheb_m7$fn, cheb_m7$gr, method = "L-BFGS-B"
+#' )
 #' @export
-chebyquad <- function() {
+chebyquad <- function(m = NULL) {
+  if (!is.null(m)) {
+    m <- validate_dimension(m, "Chebyquad", label = "m")
+  }
+
+  effective_m <- function(n) {
+    if (is.null(m)) {
+      return(n)
+    }
+    if (m < n) {
+      stop("Chebyquad: m must be >= n")
+    }
+    m
+  }
+
   list(
     m = NA,
     fn = function(par) {
       n <- validate_dimension(length(par), "Chebyquad")
+      current_m <- effective_m(n)
 
       # y is the shifted x
       y <- 2 * par - 1
@@ -53,7 +76,7 @@ chebyquad <- function() {
       t1 <- y
       ti <- t1
       fsum <- 0
-      for (i in 1:n) {
+      for (i in seq_len(current_m)) {
         if (i > 1) {
           ti <- 2 * y * t1 - t0
           t0 <- t1
@@ -71,6 +94,7 @@ chebyquad <- function() {
     },
     gr = function(par) {
       n <- validate_dimension(length(par), "Chebyquad")
+      current_m <- effective_m(n)
 
       y <- 2 * par - 1
 
@@ -84,7 +108,7 @@ chebyquad <- function() {
 
       gi <- g1
       ti <- t1
-      for (i in 1:n) {
+      for (i in seq_len(current_m)) {
         if (i > 1) {
           # Gn = 2T_old + 2xG_old - G_old_old
           gi <- 2 * t1 + 2 * y * g1 - g0
@@ -112,14 +136,15 @@ chebyquad <- function() {
     },
     he = function(x) {
       n <- validate_dimension(length(x), "Chebyquad")
+      current_m <- effective_m(n)
       h <- matrix(0.0, nrow = n, ncol = n)
-      fvec <- rep(0.0, n)
-      gvec <- rep(0.0, n)
+      fvec <- rep(0.0, current_m)
+      gvec <- rep(0.0, current_m)
       for (j in 1:n) {
         t1 <- 1.0
         t2 <- 2.0 * x[j] - 1.0
         t <- 2.0 * t2
-        for (i in 1:n) {
+        for (i in seq_len(current_m)) {
           fvec[i] <- fvec[i] + t2
           th <- t * t2 - t1
           t1 <- t2
@@ -127,7 +152,7 @@ chebyquad <- function() {
         }
       }
       d1 <- 1.0 / n
-      for (i in 1:n) {
+      for (i in seq_len(current_m)) {
         fvec[i] <- d1 * fvec[i]
         if ((i %% 2) == 0) {
           fvec[i] <- fvec[i] + 1.0 / (i^2 - 1.0)
@@ -144,8 +169,8 @@ chebyquad <- function() {
         p1 <- 0.0
         p2 <- 0.0
         gvec[1] <- s2
-        if (n > 1) {
-          for (i in 2:n) {
+        if (current_m > 1) {
+          for (i in 2:current_m) {
             th <- 4.0 * t2 + t * s2 - s1
             s1 <- s2
             s2 <- th
@@ -169,7 +194,7 @@ chebyquad <- function() {
             tt <- 2.0 * tt2
             ss1 <- 0.0
             ss2 <- 2.0
-            for (i in 1:n) {
+            for (i in seq_len(current_m)) {
               h[k, j] <- h[k, j] + ss2 * gvec[i]
               tth <- 4.0 * tt2 + tt * ss2 - ss1
               ss1 <- ss2
@@ -196,6 +221,7 @@ chebyquad <- function() {
 
     fg = function(par) {
       n <- validate_dimension(length(par), "Chebyquad")
+      current_m <- effective_m(n)
 
       y <- 2 * par - 1
 
@@ -211,7 +237,7 @@ chebyquad <- function() {
 
       gi <- g1
       ti <- t1
-      for (i in 1:n) {
+      for (i in seq_len(current_m)) {
         if (i > 1) {
           # Gn = 2T_old + 2xG_old - G_old_old
           gi <- 2 * t1 + 2 * y * g1 - g0
@@ -244,6 +270,7 @@ chebyquad <- function() {
     },
     x0 = function(n = 50) {
       n <- validate_dimension(n, "Chebyquad")
+      effective_m(n)
 
       1:n / (n + 1)
     },

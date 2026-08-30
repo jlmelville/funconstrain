@@ -143,6 +143,22 @@ test_that("explicit valid dimensions are normalized and recorded", {
     list(n = 2L, m = 20L)
   )
 
+  chebyquad <- funconstrain_problem("chebyquad", n = 4, m = 7)
+  expect_identical(
+    chebyquad$configuration$requested,
+    list(n = 4L, m = 7L)
+  )
+  expect_identical(
+    chebyquad$configuration$effective,
+    list(n = 4L, m = 7L)
+  )
+  direct_chebyquad <- getExportedValue("funconstrain", "chebyquad")(m = 7)
+  par <- c(0.12, 0.37, 0.64, 0.91)
+  expect_equal(
+    chebyquad$fn(par),
+    direct_chebyquad$fn(par)
+  )
+
   derived <- funconstrain_problem("penalty_1", n = 4, m = 5)
   expect_identical(derived$configuration$effective, list(n = 4L, m = 5L))
 })
@@ -196,6 +212,10 @@ test_that("invalid explicit requests error without falling back", {
   expect_error(funconstrain_problem("penalty_1", n = 4, m = 6), "m is outside")
   expect_error(
     funconstrain_problem("linfun_fr", n = 11, m = 10),
+    "m must be greater than or equal to n"
+  )
+  expect_error(
+    funconstrain_problem("chebyquad", n = 4, m = 3),
     "m must be greater than or equal to n"
   )
 
@@ -305,6 +325,24 @@ test_that("reference records distinguish their public states", {
   expect_identical(mismatch$fmin$status, "not_applicable")
   expect_identical(mismatch$xmin$status, "not_applicable")
   expect_identical(mismatch$fmin$source_configuration, list(m = 10L))
+
+  chebyquad_square <- funconstrain_problem("chebyquad", n = 8, m = 8)
+  expect_identical(chebyquad_square$reference$fmin$status, "applicable")
+  expect_identical(chebyquad_square$reference$xmin$status, "applicable")
+  expect_identical(
+    chebyquad_square$reference$fmin$source_configuration,
+    list(n = 8L, m = 8L)
+  )
+
+  chebyquad_overdetermined <- funconstrain_problem("chebyquad", n = 8, m = 9)
+  expect_identical(
+    chebyquad_overdetermined$reference$fmin$status,
+    "not_applicable"
+  )
+  expect_identical(
+    chebyquad_overdetermined$reference$xmin$status,
+    "not_applicable"
+  )
 
   bounded <- funconstrain_problem("linfun_r1z", n = 2, m = 100)$reference
   expect_identical(bounded$fmin$status, "not_applicable")

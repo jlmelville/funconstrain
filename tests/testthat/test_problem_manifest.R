@@ -116,14 +116,18 @@ test_that("manifest defaults agree with current factory behavior", {
     )
 
     if (has_m_argument) {
-      expect_equal(
-        formals(factory)$m,
-        spec$m_default,
-        info = paste(info, "default m")
-      )
+      if (!is.na(spec$m_n_multiplier)) {
+        expect_null(formals(factory)$m, info = paste(info, "derived default m"))
+      } else {
+        expect_equal(
+          formals(factory)$m,
+          spec$m_default,
+          info = paste(info, "default m")
+        )
+      }
     }
 
-    if (spec$m_kind == "derived") {
+    if (!is.na(spec$m_n_multiplier)) {
       expect_equal(
         spec$m_default,
         spec$m_n_multiplier * spec$n_default + spec$m_n_offset,
@@ -133,7 +137,7 @@ test_that("manifest defaults agree with current factory behavior", {
   }
 })
 
-test_that("fixed and derived m rules are keyed to the MGH definitions", {
+test_that("fixed and formula-derived m rules match the MGH definitions", {
   manifest <- problem_manifest()
   expected_fixed <- c(
     rosen = 2L,
@@ -173,7 +177,7 @@ test_that("fixed and derived m rules are keyed to the MGH definitions", {
   )
 
   fixed <- manifest[manifest$m_kind == "fixed", ]
-  derived <- manifest[manifest$m_kind == "derived", ]
+  derived <- manifest[!is.na(manifest$m_n_multiplier), ]
 
   expect_identical(setNames(fixed$m_default, fixed$name), expected_fixed)
   expect_identical(derived$name, expected_derived$name)
@@ -329,7 +333,7 @@ test_that("reference applicability is keyed to the documented problems", {
     "stored:n=4,m=100",
     "stored:m=100",
     "stored:n_min=3,m=100",
-    "stored:n=8"
+    "stored:n=8,m=8"
   )
   expected_xmin[c(
     "jenn_samp",
@@ -370,7 +374,7 @@ test_that("reference applicability is keyed to the documented problems", {
     "stored:n=4,m=100",
     "stored:n=5,m=100",
     "stored:n=5,m=100",
-    "stored:n=8"
+    "stored:n=8,m=8"
   )
 
   actual_fmin <- setNames(

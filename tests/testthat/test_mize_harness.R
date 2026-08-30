@@ -11,7 +11,7 @@ load_mize_harness <- function() {
 }
 
 test_that("mize adapter maps callbacks and counts physical calls", {
-  testthat::skip_if_not_installed("mize", minimum_version = "0.2.5.9002")
+  testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
   problem <- funconstrain_problem("rosen")
 
@@ -31,7 +31,7 @@ test_that("mize adapter maps callbacks and counts physical calls", {
 })
 
 test_that("ordinary mize runs retain native and independent observations", {
-  testthat::skip_if_not_installed("mize", minimum_version = "0.2.5.9002")
+  testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
 
   run <- harness$run_mize_problem(
@@ -84,14 +84,17 @@ test_that("ordinary mize runs retain native and independent observations", {
   expect_identical(run$work$physical[["hs"]], 0L)
   expect_true(all(run$work$physical >= 0L))
   expect_true(
-    numeric_version(run$provenance$mize_version) >=
-      numeric_version("0.2.5.9002")
+    numeric_version(run$provenance$mize_version) >= numeric_version("0.3.0")
   )
-  expect_match(run$provenance$mize_commit, "^[0-9a-f]{40}$")
+  expect_type(run$provenance$mize_commit, "character")
+  expect_length(run$provenance$mize_commit, 1L)
+  if (!is.na(run$provenance$mize_commit)) {
+    expect_match(run$provenance$mize_commit, "^[0-9a-f]{40}$")
+  }
 })
 
 test_that("Hessian work retains native and physical count meanings", {
-  testthat::skip_if_not_installed("mize", minimum_version = "0.2.5.9002")
+  testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
 
   run <- harness$run_mize_problem(
@@ -118,7 +121,7 @@ test_that("Hessian work retains native and physical count meanings", {
 })
 
 test_that("hard budgets preserve absent native quality without fabrication", {
-  testthat::skip_if_not_installed("mize", minimum_version = "0.2.5.9002")
+  testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
 
   run <- harness$run_mize_problem(
@@ -145,7 +148,7 @@ test_that("hard budgets preserve absent native quality without fabrication", {
 })
 
 test_that("mize harness rejects ambiguous controls and resolves a small suite", {
-  testthat::skip_if_not_installed("mize", minimum_version = "0.2.5.9002")
+  testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
 
   expect_error(
