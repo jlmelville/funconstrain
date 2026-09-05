@@ -4,6 +4,24 @@
 
 ### Bug fixes and minor improvements
 
+- [`fufnrun()`](https://jlmelville.github.io/funconstrain/reference/fufnrun.md)
+  now rejects malformed configurations before creating or overwriting
+  the output file.
+- Fixed integer-overflow errors with integer parameter vectors and in
+  [`chebyquad()`](https://jlmelville.github.io/funconstrain/reference/chebyquad.md)
+  for large `m`.
+- Fixed the
+  [`beale()`](https://jlmelville.github.io/funconstrain/reference/beale.md)
+  Hessian when the second parameter is zero.
+- Corrected
+  [`gulf()`](https://jlmelville.github.io/funconstrain/reference/gulf.md)
+  gradients and Hessians at zero-distance observations, including
+  `m = 100`. Genuinely undefined derivatives now raise explicit errors.
+- Improved performance of
+  [`disc_ie()`](https://jlmelville.github.io/funconstrain/reference/disc_ie.md)
+  gradients and combined callbacks, and
+  [`brown_al()`](https://jlmelville.github.io/funconstrain/reference/brown_al.md)
+  Hessians, especially at larger dimensions.
 - Added
   [`funconstrain_catalog()`](https://jlmelville.github.io/funconstrain/reference/funconstrain_catalog.md)
   and
