@@ -73,8 +73,13 @@ brown_al <- function() {
     he = function(x) {
       x <- promote_integer(x)
       n <- validate_dimension(length(x), "Brown Almost-Linear")
-      m <- n
-      h <- matrix(0.0, nrow = n, ncol = n)
+      # Twice J'J for the n-1 linear residuals, J[i,j] = 1 + (i == j).
+      # Filling this constant contribution directly avoids cubic assembly.
+      h <- matrix(2 * (n + 1), nrow = n, ncol = n)
+      h[n, ] <- 2 * n
+      h[, n] <- 2 * n
+      diag(h) <- 2 * (n + 2)
+      h[n, n] <- 2 * (n - 1)
       pp <- matrix(0.0, nrow = (n + 1), ncol = (n + 1))
       # pp[i,j] = prod(i-1, j)  i,j in 1,(n+1)
       # prod(i,j) = pp[i+1,j] i in 0:n  j in 1:(n+1)
@@ -88,40 +93,15 @@ brown_al <- function() {
         pp[j + 1, n + 1] <- 1.0 #          prod(j,global_n+1) = 1.0_rk
       } #       end do
 
-      #       cat("pp\n")
-      #       print(pp)
-
-      for (i in 1:m) {
-        #       do i = 1, global_m
-        if (i == n) {
-          #          if ( i .eq. global_n ) then
-          for (j in 1:n) {
-            #             do j = 1, global_n
-            t1 <- pp[n + 1, 1] #          t1 = prod(global_n,1)
-            t <- t1 - 1.0 #                t = t1 - 1.0_rk
-            h[j, j] <- h[j, j] + 2.0 * (pp[j, 1] * pp[n + 1, j + 1])^2
-            #                h(j,j) = h(j,j) + 2.0_rk*( prod(j-1,1)*prod(global_n,j+1) )**2
-            if (j > 1) {
-              for (l in 1:(j - 1)) {
-                #                do l = 1, j-1
-                t2 <- pp[l, 1] * pp[j, l + 1] * pp[n + 1, j + 1]
-                #                  t2 = prod(l-1,1)*prod(j-1,l+1)*prod(global_n,j+1)
-                h[l, j] <- h[l, j] + 2.0 * t2 * (2.0 * t1 - 1.0)
-                #                  h(l,j) = h(l,j) + 2.0_rk*t2*( 2.0_rk*t1 - 1.0_rk )
-              } #                end do
-            }
-          }
-        } else {
-          for (j in 1:n) {
-            for (k in 1:j) {
-              if ((j == i) && (k == i)) {
-                h[k, j] <- h[k, j] + 8.0
-              } else if ((j == i) || (k == i)) {
-                h[k, j] <- h[k, j] + 4.0
-              } else {
-                h[k, j] <- h[k, j] + 2.0
-              }
-            }
+      t1 <- pp[n + 1, 1] # prod(global_n,1)
+      for (j in 1:n) {
+        h[j, j] <- h[j, j] + 2.0 * (pp[j, 1] * pp[n + 1, j + 1])^2
+        # h(j,j) += 2 * (prod(j-1,1) * prod(global_n,j+1))**2
+        if (j > 1) {
+          for (l in 1:(j - 1)) {
+            t2 <- pp[l, 1] * pp[j, l + 1] * pp[n + 1, j + 1]
+            # t2 = prod(l-1,1) * prod(j-1,l+1) * prod(global_n,j+1)
+            h[l, j] <- h[l, j] + 2.0 * t2 * (2.0 * t1 - 1.0)
           }
         }
       }
