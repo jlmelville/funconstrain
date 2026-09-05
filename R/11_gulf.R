@@ -69,7 +69,7 @@ gulf <- function(m = 99) {
 
       ti <- 1:m * 0.01
       y <- 25 + (-50 * log(ti))^p66
-      fi <- exp(-(abs(x2 - y)^x3) / x1) - ti
+      fi <- expm1(-(abs(x2 - y)^x3) / x1) + (1 - ti)
       sum(fi * fi)
     },
     gr = function(par) {
@@ -86,12 +86,22 @@ gulf <- function(m = 99) {
       ax2y <- abs(x2y)
       x2yz <- ax2y^x3
       e <- exp(-x2yz / x1)
-      fi <- e - ti
+      fi <- expm1(-x2yz / x1) + (1 - ti)
       efxyz2 <- 2 * e * fi * x2yz
 
+      # At zero distance the squared residual starts with |d|^(2*x3)
+      # for ti = 1, but with a constant plus |d|^x3 for interior observations.
+      zero <- which(x2y == 0)
+      if (any(x3 <= ifelse(ti[zero] == 1, 0.5, 1))) {
+        stop(
+          "Gulf: gradient is undefined at zero distance for this exponent",
+          call. = FALSE
+        )
+      }
+      nonzero <- x2y != 0
       dx <- sum(efxyz2 / (x1 * x1))
-      dy <- -sum(efxyz2 * x3 / (x1 * x2y))
-      dz <- -sum(efxyz2 * log(ax2y) / x1)
+      dy <- -sum(efxyz2[nonzero] * x3 / (x1 * x2y[nonzero]))
+      dz <- -sum(efxyz2[nonzero] * log(ax2y[nonzero]) / x1)
 
       c(dx, dy, dz)
     },
@@ -102,14 +112,32 @@ gulf <- function(m = 99) {
       x2 <- par[2]
       x3 <- par[3]
       h <- matrix(0.0, ncol = 3, nrow = 3)
+      zero_h22 <- 0
       d1 <- p66
       for (i in 1:m) {
         arg <- 0.01 * i
         r <- (-50.0 * log(arg))^d1 + 25.0 - x2
+        if (isTRUE(r == 0)) {
+          # All other entries vanish. The endpoint has leading term
+          # |r|^(2*x3)/x1^2; an interior residual has -(2/x1)*(1-arg)*|r|^x3.
+          threshold <- if (arg == 1) 1 else 2
+          if (x3 < threshold) {
+            stop(
+              "Gulf: Hessian is undefined at zero distance for this exponent",
+              call. = FALSE
+            )
+          }
+          if (x3 == threshold) {
+            zero_h22 <- zero_h22 +
+              if (arg == 1) 2 / x1^2 else -4 * (1 - arg) / x1
+          }
+          next
+        }
         t1 <- abs(r)^x3 / x1
         t2 <- exp(-t1)
-        t3 <- t1 * t2 * (t1 * t2 + (t1 - 1.0) * (t2 - arg))
-        t <- t1 * t2 * (t2 - arg)
+        residual <- expm1(-t1) + (1 - arg)
+        t3 <- t1 * t2 * (t1 * t2 + (t1 - 1.0) * residual)
+        t <- t1 * t2 * residual
         logr <- log(abs(r))
         h[1, 1] <- h[1, 1] + t3 - t
         h[1, 2] <- h[1, 2] + t3 / r
@@ -124,6 +152,7 @@ gulf <- function(m = 99) {
       h[2, 2] <- h[2, 2] * x3
       h[1, 3] <- h[1, 3] / x1
       h <- 2.0 * h
+      h[2, 2] <- h[2, 2] + zero_h22
       h[2, 1] <- h[1, 2]
       h[3, 1] <- h[1, 3]
       h[3, 2] <- h[2, 3]
@@ -143,12 +172,20 @@ gulf <- function(m = 99) {
       ax2y <- abs(x2y)
       x2yz <- ax2y^x3
       e <- exp(-x2yz / x1)
-      fi <- e - ti
+      fi <- expm1(-x2yz / x1) + (1 - ti)
       efxyz2 <- 2 * e * fi * x2yz
 
+      zero <- which(x2y == 0)
+      if (any(x3 <= ifelse(ti[zero] == 1, 0.5, 1))) {
+        stop(
+          "Gulf: gradient is undefined at zero distance for this exponent",
+          call. = FALSE
+        )
+      }
+      nonzero <- x2y != 0
       dx <- sum(efxyz2 / (x1 * x1))
-      dy <- -sum(efxyz2 * x3 / (x1 * x2y))
-      dz <- -sum(efxyz2 * log(ax2y) / x1)
+      dy <- -sum(efxyz2[nonzero] * x3 / (x1 * x2y[nonzero]))
+      dz <- -sum(efxyz2[nonzero] * log(ax2y[nonzero]) / x1)
 
       fsum <- sum(fi * fi)
       grad <- c(dx, dy, dz)
