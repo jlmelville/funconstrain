@@ -26,8 +26,7 @@ test_that("optimx parser helpers expand ranges and method strings", {
     repeated_integer_specification = parse_test_integers("2:4, 4, 2"),
     methods = parse_methods(
       'c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")'
-    ),
-    no_methods = parse_methods("no quoted methods")
+    )
   )
   expected <- list(
     ascending_range = 1:3,
@@ -35,11 +34,115 @@ test_that("optimx parser helpers expand ranges and method strings", {
     scalar = 5L,
     mixed_integer_specification = c(1L, 3L, 4L, 5L, 7L),
     repeated_integer_specification = c(2L, 3L, 4L, 4L, 2L),
-    methods = c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs"),
-    no_methods = character()
+    methods = c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")
   )
 
   expect_identical(actual, expected)
+  expect_error(parse_methods("no quoted methods"), "methods")
+})
+
+test_that("rejected RFO configurations never create or overwrite output", {
+  testthat::local_mocked_bindings(
+    require_optimx = function() NULL,
+    fufn = function(...) stop("execution reached"),
+    .package = "funconstrain"
+  )
+  valid <- c("1", 'c("L-BFGS-B")', "FALSE")
+  cases <- list(
+    missing_problems = character(),
+    missing_methods = "1",
+    missing_bounds = valid[1:2],
+    bad_bounds = c(valid[1:2], "TURUE"),
+    extra_line = c(valid, "unexpected"),
+    empty_methods = c("1", 'c("")', "FALSE"),
+    no_methods = c("1", "no quoted methods", "FALSE"),
+    malformed_methods = c("1", 'junk "L-BFGS-B"', "FALSE")
+  )
+  for (ids in c(
+    "",
+    "1.9",
+    "1:4:6",
+    "1,,2",
+    "1,",
+    ",1",
+    "1e0",
+    "NA",
+    "0",
+    "36",
+    "1:99999999999999999999"
+  )) {
+    cases[[paste0("ids=", ids)]] <- c(ids, valid[2:3])
+  }
+  sentinel <- charToRaw("distinctive output\r\nwith exact bytes\n")
+  for (case_name in names(cases)) {
+    for (existing in c(FALSE, TRUE)) {
+      rfo <- tempfile("rejected-rfo-")
+      output <- tempfile("preserved-output-")
+      if (existing) writeBin(sentinel, output)
+      writeLines(c(output, cases[[case_name]]), rfo)
+      depth <- sink.number()
+      capture.output(err <- tryCatch(fufnrun(rfo), error = identity))
+      expect_true(inherits(err, "error"), info = case_name)
+      expect_identical(file.exists(output), existing, info = case_name)
+      if (existing) {
+        expect_identical(
+          readBin(output, "raw", n = 1000),
+          sentinel,
+          info = case_name
+        )
+      }
+      expect_equal(sink.number(), depth, info = case_name)
+      expect_identical(open_file_connections(rfo), integer(), info = case_name)
+    }
+  }
+})
+
+test_that("valid RFO whitespace, descending ranges, sorting and duplicates survive", {
+  testthat::skip_if_not_installed("optimx")
+  seen <- integer()
+  methods <- NULL
+  testthat::local_mocked_bindings(
+    fufn = function(fnum) {
+      seen <<- c(seen, fnum)
+      list(
+        fname = "fixture",
+        x0 = 1,
+        fffn = function(x) x^2,
+        ffgr = function(x) 2 * x,
+        ffhe = function(x) matrix(2)
+      )
+    },
+    .package = "funconstrain"
+  )
+  testthat::local_mocked_bindings(
+    opm = function(..., method) {
+      methods <<- method
+      data.frame(value = 0)
+    },
+    .package = "optimx"
+  )
+  rfo <- tempfile("valid-rfo-")
+  output <- tempfile("valid-output-")
+  writeLines(c(output, " 3 : 1, 2 ", ' c( "BFGS", "BFGS" ) ', " FALSE "), rfo)
+  capture.output(fufnrun(rfo))
+  expect_identical(seen, 1:3)
+  expect_identical(methods, "BFGS")
+})
+
+test_that("a solver failure after valid configuration cleans up the sink", {
+  testthat::local_mocked_bindings(
+    require_optimx = function() NULL,
+    fufn = function(...) stop("solver setup failed"),
+    .package = "funconstrain"
+  )
+  rfo <- tempfile("solver-error-rfo-")
+  output <- tempfile("partial-log-")
+  writeLines(c(output, "1", 'c("BFGS")', "FALSE"), rfo)
+  depth <- sink.number()
+  capture.output(expect_error(fufnrun(rfo), "solver setup failed"))
+  expect_equal(sink.number(), depth)
+  expect_identical(open_file_connections(rfo), integer())
+  expect_true(file.exists(output))
 })
 
 test_that("fufn and fufnrun report missing optimx clearly", {

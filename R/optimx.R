@@ -90,17 +90,32 @@ fufnrun <- function(filename = "RFO.txt") {
   # RFO.txt is input file
   require_optimx()
 
-  mycon <- file(filename, open = "r", blocking = TRUE)
-  mycon_open <- TRUE
-  on.exit(
-    {
-      if (mycon_open) {
-        close(mycon)
-      }
-    },
-    add = TRUE
-  )
+  config <- readLines(filename, warn = FALSE)
+  if (length(config) < 4L || any(nzchar(trimws(config[-seq_len(4L)])))) {
+    stop("RFO configuration must contain four lines", call. = FALSE)
+  }
+  sfname <- config[1L]
+  if (!nzchar(trimws(sfname))) {
+    stop("RFO output path must not be empty", call. = FALSE)
+  }
+  probc <- sort(unique(parse_test_integers(config[2L])))
+  methc <- unique(parse_methods(config[3L]))
+  tbounds <- trimws(config[4L])
+  if (!tbounds %in% c("TRUE", "FALSE")) {
+    stop("RFO bounds flag must be TRUE or FALSE", call. = FALSE)
+  }
+  have_bounds <- tbounds == "TRUE"
 
+  for (package in c("lbfgs", "lbfgsb3c")) {
+    if (package %in% methc && !requireNamespace(package, quietly = TRUE)) {
+      stop(
+        paste(package, "package is required, please install it"),
+        call. = FALSE
+      )
+    }
+  }
+
+  # Rejected configuration must not create or overwrite the output file.
   sink_open <- FALSE
   on.exit(
     {
@@ -110,75 +125,15 @@ fufnrun <- function(filename = "RFO.txt") {
     },
     add = TRUE
   )
-
-  sfname <- readLines(mycon, n = 1)
-  if (length(sfname) == 0) {
-    cat("no sink file\n")
-  } else {
-    cat("opening sink file ", sfname, "\n")
-    sink(sfname, split = TRUE)
-    sink_open <- TRUE
-  } # open sink file
+  cat("opening sink file ", sfname, "\n")
+  sink(sfname, split = TRUE)
+  sink_open <- TRUE
   cat("sink file name=", sfname, "\n")
-
-  lin2 <- readLines(mycon, n = 1)
-  cat("probs =", lin2, "\n")
-  if (length(lin2) == 0) {
-    stop("Unexpected null probs")
-  }
-  probc <- parse_test_integers(lin2)
-
-  # ?? should we check it worked?
-  cat("Problem numbers:\n")
-  print(probc)
-  print(unique(probc))
-  if (length(unique(probc)) < length(probc)) {
-    cat("Duplicated problem numbers, simplifying\n")
-    probc <- unique(probc)
-  }
-  probc <- sort(probc)
   cat("Final problem numbers:\n")
   print(probc)
-  # check loop
-  for (iprob in probc) {
-    # loop over problems
-    if ((iprob < 1) || (iprob > 35)) {
-      stop("Problem number out of range. Stopping.")
-    }
-  } # end check loop
-  meths <- readLines(mycon, n = 1)
-  if (length(meths) == 0) {
-    stop("Unexpected null meths")
-  }
-  cat("Methods:\n")
-  cat(meths, "\n")
-
-  methc <- parse_methods(meths)
-  for (package in c("lbfgs", "lbfgsb3c")) {
-    if (package %in% methc) {
-      if (!requireNamespace(package, quietly = TRUE)) {
-        stop(
-          paste(package, "package is required, please install it"),
-          call. = FALSE
-        )
-      }
-    }
-  }
-
-  if (length(unique(methc)) < length(methc)) {
-    cat("Duplicated methods, simplifying\n")
-    methc <- unique(methc)
-  }
   cat("methods in list form:")
   print(methc)
-  tbounds <- readLines(mycon, n = 1)
-  have_bounds <- FALSE
-  if (tbounds == "TRUE") {
-    have_bounds <- TRUE
-  }
   cat("have.bounds:", have_bounds, "\n")
-  close(mycon)
-  mycon_open <- FALSE
   for (iprob in probc) {
     # loop over problems
     tfun <- fufn(fnum = iprob)
@@ -248,17 +203,27 @@ require_optimx <- function() {
 
 # converts e.g. 1:3 -> 1, 2, 3
 expand_ranges <- function(x) {
-  if (grepl(":", x)) {
-    range_boundaries <- as.integer(unlist(strsplit(x, ":")))
-    return(seq(from = range_boundaries[1], to = range_boundaries[2]))
+  if (!grepl("^\\s*[0-9]+\\s*(:\\s*[0-9]+\\s*)?$", x)) {
+    stop("Invalid problem ID or range", call. = FALSE)
   }
-  as.integer(x)
+  boundaries <- as.double(strsplit(x, ":", fixed = TRUE)[[1L]])
+  if (any(!is.finite(boundaries) | boundaries < 1 | boundaries > 35)) {
+    stop("Problem number out of range. Stopping.", call. = FALSE)
+  }
+  boundaries <- as.integer(boundaries)
+  if (length(boundaries) == 2L) {
+    return(seq.int(boundaries[1L], boundaries[2L]))
+  }
+  boundaries
 }
 
 # parse the integers from a string like "1, 2, 3, 4:6" -> c(1, 2, 3, 4, 5, 6)
 # the integers represent the test ids of the functions in this package
 parse_test_integers <- function(test_fun_str) {
-  elements <- strsplit(test_fun_str, ",\\s*")[[1]]
+  if (!nzchar(trimws(test_fun_str)) || grepl(",\\s*$", test_fun_str)) {
+    stop("Problem selection must contain nonempty IDs or ranges", call. = FALSE)
+  }
+  elements <- strsplit(test_fun_str, ",", fixed = TRUE)[[1L]]
   unlist(lapply(elements, expand_ranges))
 }
 
@@ -266,12 +231,23 @@ parse_test_integers <- function(test_fun_str) {
 # 'c("L-BFGS-B", "lbfgs", "lbfgsb3c", "lbfgs")' to an actual R character vector
 # without going through eval
 parse_methods <- function(input) {
-  matches <- gregexpr('"(.*?)"', input, perl = TRUE)
-  if (matches[[1]][1] == -1) {
-    return(character())
+  input <- trimws(input)
+  if (grepl("^c\\s*\\(", input)) {
+    if (!grepl("\\)$", input)) {
+      stop("Invalid methods specification", call. = FALSE)
+    }
+    input <- sub("^c\\s*\\(", "", input)
+    input <- sub("\\)$", "", input)
   }
+  if (!grepl('^\\s*"[^"]+"\\s*(,\\s*"[^"]+"\\s*)*$', input)) {
+    stop("Invalid or empty methods specification", call. = FALSE)
+  }
+  matches <- gregexpr('"[^"]+"', input)
   string_list <- regmatches(input, matches)[[1]]
   res <- sapply(string_list, function(x) substr(x, 2, nchar(x) - 1))
   names(res) <- NULL
+  if (any(!nzchar(trimws(res)))) {
+    stop("Invalid or empty methods specification", call. = FALSE)
+  }
   res
 }
