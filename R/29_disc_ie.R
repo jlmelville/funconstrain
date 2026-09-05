@@ -40,70 +40,37 @@
 #'                       method = "L-BFGS-B")
 #' @export
 disc_ie <- function() {
+  # Multiply by K[i,j] = min(t[i], t[j]) * (1 - max(t[i], t[j])).
+  # Accumulate both directions directly: a total-minus-prefix suffix can lose
+  # the small terms near the end of the vector.
+  integral_sum <- function(values, t) {
+    prefix <- cumsum(t * values)
+    suffix <- rev(cumsum(rev((1 - t) * values)))
+    (1 - t) * prefix + t * c(suffix[-1], 0)
+  }
+
   list(
     fn = function(par) {
       par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Integral Equation")
       h <- 1 / (n + 1)
-
-      pt1 <- par + (1:n * h) + 1
+      tii <- seq_len(n) * h
+      pt1 <- par + tii + 1
       pt13 <- pt1 * pt1 * pt1
-      tii <- 1:n * h
-
-      # for each i, sum1 loops from 1:i, so we start at 0 and accumulate by
-      # adding the new i value at each iteration
-      sum1 <- 0
-      # for each i, sum2 loops from i+1:n, so here we start with the sum of 1:n
-      # and subtract the ith value at each iteration
-      sum2 <- sum((1 - tii) * pt13)
-
-      fsum <- 0
-      for (i in 1:n) {
-        ti <- tii[i]
-        ti1 <- 1 - ti
-
-        sum1 <- sum1 + ti * pt13[i]
-        sum2 <- sum2 - ti1 * pt13[i]
-
-        fi <- par[i] + 0.5 * h * (ti1 * sum1 + ti * sum2)
-        fsum <- fsum + fi * fi
-      }
+      fi <- par + 0.5 * h * integral_sum(pt13, tii)
+      fsum <- sum(fi * fi)
+      names(fsum) <- names(par)[1L]
       fsum
     },
     gr = function(par) {
       par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Integral Equation")
-      grad <- rep(0, n)
-
       h <- 1 / (n + 1)
-
-      pt1 <- par + (1:n * h) + 1
+      tii <- seq_len(n) * h
+      pt1 <- par + tii + 1
       pt12 <- pt1 * pt1
-      pt13 <- pt12 * pt1
-      hp3 <- 3 * h * pt12
-      tii <- 1:n * h
-
-      sum1 <- 0
-      sum2 <- sum((1 - tii) * pt13)
-
-      for (i in 1:n) {
-        ti <- tii[i]
-        ti1 <- 1 - ti
-
-        sum1 <- sum1 + ti * pt13[i]
-        sum2 <- sum2 - ti1 * pt13[i]
-
-        fi <- par[i] + 0.5 * h * (ti1 * sum1 + ti * sum2)
-
-        fhp3 <- fi * hp3
-        grad[1:i] <- grad[1:i] + fhp3[1:i] * (1 - tii[i]) * tii[1:i]
-        grad[i] <- grad[i] + 2 * fi
-        if (i < n) {
-          r2 <- (i + 1):n
-          grad[r2] <- grad[r2] + fhp3[r2] * (1 - tii[r2]) * tii[i]
-        }
-      }
-      grad
+      fi <- par + 0.5 * h * integral_sum(pt12 * pt1, tii)
+      as.vector(2 * fi + 3 * h * pt12 * integral_sum(fi, tii))
     },
     he = function(x) {
       x <- promote_integer(x)
@@ -182,38 +149,14 @@ disc_ie <- function() {
     fg = function(par) {
       par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Integral Equation")
-
       h <- 1 / (n + 1)
-
-      pt1 <- par + (1:n * h) + 1
+      tii <- seq_len(n) * h
+      pt1 <- par + tii + 1
       pt12 <- pt1 * pt1
-      pt13 <- pt12 * pt1
-      hp3 <- 3 * h * pt12
-      tii <- 1:n * h
-
-      sum1 <- 0
-      sum2 <- sum((1 - tii) * pt13)
-
-      fsum <- 0
-      grad <- rep(0, n)
-      for (i in 1:n) {
-        ti <- tii[i]
-        ti1 <- 1 - ti
-
-        sum1 <- sum1 + ti * pt13[i]
-        sum2 <- sum2 - ti1 * pt13[i]
-
-        fi <- par[i] + 0.5 * h * (ti1 * sum1 + ti * sum2)
-        fsum <- fsum + fi * fi
-
-        fhp3 <- fi * hp3
-        grad[1:i] <- grad[1:i] + fhp3[1:i] * (1 - tii[i]) * tii[1:i]
-        grad[i] <- grad[i] + 2 * fi
-        if (i < n) {
-          r2 <- (i + 1):n
-          grad[r2] <- grad[r2] + fhp3[r2] * (1 - tii[r2]) * tii[i]
-        }
-      }
+      fi <- par + 0.5 * h * integral_sum(pt12 * pt1, tii)
+      fsum <- sum(fi * fi)
+      names(fsum) <- names(par)[1L]
+      grad <- as.vector(2 * fi + 3 * h * pt12 * integral_sum(fi, tii))
 
       list(
         fn = fsum,
