@@ -1,4 +1,15 @@
 testfun <- beale()
+test_that("Beale Hessian is defined when the second coordinate is zero", {
+  for (a in c(-2, 0, 1, 3)) {
+    par <- c(a, 0)
+    expected <- matrix(c(6, 3 - 4 * a, 3 - 4 * a, 9 * a - 2 * a^2), 2)
+    expect_equal(testfun$he(par), expected)
+    expect_hfd(testfun, par, tolerance = 1e-6)
+    for (b in c(-1e-5, 1e-5)) {
+      expect_hfd(testfun, c(a, b), tolerance = 1e-6)
+    }
+  }
+})
 test_that("Analytical and finite difference gradients match at x0", {
   expect_gfd(testfun, testfun$x0, tolerance = 1e-3)
 })

@@ -76,8 +76,10 @@ beale <- function() {
         h[1, 1] <- h[1, 1] + 2.0 * (x2^i - 1.0)^2
         h[1, 2] <- h[1, 2] +
           2.0 * (t1 * i * x2^(i - 1) + i * x1 * x2^(i - 1) * (x2^i - 1.0))
+        # The linear residual has zero second derivative, including at x2 = 0.
+        d2 <- if (i == 1) 0 else (i - 1) * i * x1 * x2^(i - 2)
         h[2, 2] <- h[2, 2] +
-          2.0 * (t1 * (i - 1) * i * x1 * x2^(i - 2) + (i * x1 * x2^(i - 1))^2)
+          2.0 * (t1 * d2 + (i * x1 * x2^(i - 1))^2)
         h[2, 1] <- h[1, 2]
       }
       h
