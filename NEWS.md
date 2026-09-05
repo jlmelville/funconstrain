@@ -2,6 +2,13 @@
 
 ## Bug fixes and minor improvements
 
+- `fufnrun()` now rejects malformed configurations before creating or overwriting the output file.
+- Fixed integer-overflow errors with integer parameter vectors and in `chebyquad()` for large `m`.
+- Fixed the `beale()` Hessian when the second parameter is zero.
+- Corrected `gulf()` gradients and Hessians at zero-distance observations, including `m = 100`.
+  Genuinely undefined derivatives now raise explicit errors.
+- Improved performance of `disc_ie()` gradients and combined callbacks, and `brown_al()` Hessians,
+  especially at larger dimensions.
 - Added `funconstrain_catalog()` and `funconstrain_problem()` for ordered
   problem discovery and strict, solver-neutral resolution of concrete test
   configurations.
