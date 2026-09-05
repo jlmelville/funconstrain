@@ -35,6 +35,7 @@ freud_roth <- function() {
   list(
     m = NA,
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Freudenstein-Roth",
@@ -50,6 +51,7 @@ freud_roth <- function() {
       f1 * f1 + f2 * f2
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Freudenstein-Roth",
@@ -74,6 +76,7 @@ freud_roth <- function() {
       )
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Freudenstein-Roth",
@@ -97,6 +100,7 @@ freud_roth <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Freudenstein-Roth",

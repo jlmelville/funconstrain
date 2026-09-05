@@ -69,6 +69,7 @@ meyer <- function() {
   m <- 16
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Meyer", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
@@ -80,6 +81,7 @@ meyer <- function() {
       sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Meyer", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
@@ -98,6 +100,7 @@ meyer <- function() {
       c(dx, dy, dz)
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Meyer", min = 3L, max = 3L)
       #      y10 <- c(34780.0, 28610.0, 23650.0, 19630.0, 16370.0, 13720.0, 11540.0, 9744.0,
       #           8261.0, 7030.0, 6005.0, 5147.0, 4427.0, 3820.0, 3307.0, 2872.0)
@@ -129,6 +132,7 @@ meyer <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Meyer", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]

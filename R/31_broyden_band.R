@@ -51,6 +51,7 @@ broyden_band <- function() {
 
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Broyden Banded")
 
       xx <- par * par
@@ -62,6 +63,7 @@ broyden_band <- function() {
       sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Broyden Banded")
 
       xx <- par * par
@@ -81,6 +83,7 @@ broyden_band <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Broyden Banded")
       h <- matrix(0.0, nrow = n, ncol = n)
 
@@ -137,6 +140,7 @@ broyden_band <- function() {
     },
 
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Broyden Banded")
 
       xx <- par * par

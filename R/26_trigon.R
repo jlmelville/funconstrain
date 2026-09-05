@@ -47,6 +47,7 @@ trigon <- function() {
   list(
     m = 30,
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Trigonometric")
 
       cos_sum <- sum(cos(par))
@@ -54,6 +55,7 @@ trigon <- function() {
       sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Trigonometric")
       cosx <- cos(par)
       sinx <- sin(par)
@@ -63,6 +65,7 @@ trigon <- function() {
       2 * (fi * (1:n * sinx - cosx) + sinx * sum(fi))
     },
     he = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Trigonometric")
       h <- matrix(0.0, nrow = n, ncol = n)
 
@@ -104,6 +107,7 @@ trigon <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Trigonometric")
       cosx <- cos(par)
       sinx <- sin(par)

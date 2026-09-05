@@ -45,6 +45,7 @@ penalty_2 <- function() {
 
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Penalty Function II")
       ex01 <- exp(par * 0.1)
       ei <- exp(1:n * 0.1)
@@ -76,6 +77,7 @@ penalty_2 <- function() {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Penalty Function II")
       grad <- rep(0, n)
       grad[1] <- grad[1] + 2 * (par[1] - 0.2)
@@ -111,6 +113,7 @@ penalty_2 <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       # ?? failing? Why?
       n <- validate_dimension(length(x), "Penalty Function II")
       h <- matrix(0.0, nrow = n, ncol = n)
@@ -151,6 +154,7 @@ penalty_2 <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Penalty Function II")
       ex01 <- exp(par * 0.1)
       ei <- exp(1:n * 0.1)

@@ -66,6 +66,7 @@ chebyquad <- function(m = NULL) {
   list(
     m = NA,
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Chebyquad")
       current_m <- effective_m(n)
 
@@ -85,7 +86,7 @@ chebyquad <- function(m = NULL) {
 
         fi <- sum(ti) / n
         if (i %% 2 == 0) {
-          fi <- fi + 1 / (i * i - 1)
+          fi <- fi + 1 / (i^2 - 1)
         }
         fsum <- fsum + fi * fi
       }
@@ -93,6 +94,7 @@ chebyquad <- function(m = NULL) {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Chebyquad")
       current_m <- effective_m(n)
 
@@ -127,7 +129,7 @@ chebyquad <- function(m = NULL) {
 
         fi <- sum(ti) / n
         if (i %% 2 == 0) {
-          fi <- fi + 1 / (i * i - 1)
+          fi <- fi + 1 / (i^2 - 1)
         }
 
         grad <- grad + 2 * fi * gi
@@ -135,6 +137,7 @@ chebyquad <- function(m = NULL) {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Chebyquad")
       current_m <- effective_m(n)
       h <- matrix(0.0, nrow = n, ncol = n)
@@ -220,6 +223,7 @@ chebyquad <- function(m = NULL) {
     },
 
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Chebyquad")
       current_m <- effective_m(n)
 
@@ -256,7 +260,7 @@ chebyquad <- function(m = NULL) {
 
         fi <- sum(ti) / n
         if (i %% 2 == 0) {
-          fi <- fi + 1 / (i * i - 1)
+          fi <- fi + 1 / (i^2 - 1)
         }
         fsum <- fsum + fi * fi
         grad <- grad + 2 * fi * gi

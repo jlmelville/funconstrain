@@ -42,6 +42,7 @@ watson <- function() {
   # m = 31
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Watson", min = 2L, max = 31L)
       fsum <- 0
       for (i in 1:29) {
@@ -65,6 +66,7 @@ watson <- function() {
       fsum + f30 * f30 + f31 * f31
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Watson", min = 2L, max = 31L)
       grad <- rep(0, n)
       for (i in 1:29) {
@@ -93,6 +95,7 @@ watson <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Watson", min = 2L, max = 31L)
       h <- matrix(0.0, ncol = n, nrow = n)
       for (i in 1:29) {
@@ -136,6 +139,7 @@ watson <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Watson", min = 2L, max = 31L)
 
       fsum <- 0

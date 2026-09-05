@@ -42,6 +42,7 @@
 disc_bv <- function() {
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Boundary Value")
       h <- 1 / (n + 1)
       hsq <- h * h
@@ -56,6 +57,7 @@ disc_bv <- function() {
       fsum <- sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Boundary Value")
       grad <- rep(0, n)
 
@@ -78,6 +80,7 @@ disc_bv <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Discrete Boundary Value")
       h <- matrix(0.0, nrow = n, ncol = n)
       d1 <- 1.0 / (n + 1.0)
@@ -134,6 +137,7 @@ disc_bv <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Boundary Value")
 
       h <- 1 / (n + 1)

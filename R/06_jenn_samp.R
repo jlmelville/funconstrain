@@ -50,6 +50,7 @@ jenn_samp <- function(m = 10) {
   list(
     m = NA,
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Jennrich-Sampson",
@@ -67,6 +68,7 @@ jenn_samp <- function(m = 10) {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Jennrich-Sampson",
@@ -87,6 +89,7 @@ jenn_samp <- function(m = 10) {
       grad
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Jennrich-Sampson",
@@ -108,6 +111,7 @@ jenn_samp <- function(m = 10) {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Jennrich-Sampson",

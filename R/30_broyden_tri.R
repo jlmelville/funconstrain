@@ -42,6 +42,7 @@
 broyden_tri <- function() {
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Broyden Tridiagonal")
 
       fi <- (3 - 2 * par) * par + 1
@@ -52,6 +53,7 @@ broyden_tri <- function() {
       sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Broyden Tridiagonal")
 
       fi <- (3 - 2 * par) * par + 1
@@ -69,6 +71,7 @@ broyden_tri <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Broyden Tridiagonal")
       h <- matrix(0.0, nrow = n, ncol = n)
       if (n == 1) {
@@ -116,6 +119,7 @@ broyden_tri <- function() {
     },
 
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Broyden Tridiagonal")
 
       fi <- (3 - 2 * par) * par + 1

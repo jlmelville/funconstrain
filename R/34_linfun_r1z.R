@@ -55,6 +55,7 @@ linfun_r1z <- function(m = 100) {
   list(
     m = m,
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(
         length(par),
         "Linear Function - Rank 1 with Zero Columns and Rows"
@@ -72,6 +73,7 @@ linfun_r1z <- function(m = 100) {
       sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(
         length(par),
         "Linear Function - Rank 1 with Zero Columns and Rows"
@@ -94,6 +96,7 @@ linfun_r1z <- function(m = 100) {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(
         length(x),
         "Linear Function - Rank 1 with Zero Columns and Rows"
@@ -134,6 +137,7 @@ linfun_r1z <- function(m = 100) {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(
         length(par),
         "Linear Function - Rank 1 with Zero Columns and Rows"

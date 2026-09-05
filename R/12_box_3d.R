@@ -45,6 +45,7 @@ box_3d <- function(m = 20) {
   m <- validate_dimension(m, "Box 3D", min = 3L, label = "m")
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Box 3D", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
@@ -59,6 +60,7 @@ box_3d <- function(m = 20) {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Box 3D", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
@@ -79,6 +81,7 @@ box_3d <- function(m = 20) {
       grad
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Box 3D", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]
@@ -105,6 +108,7 @@ box_3d <- function(m = 20) {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Box 3D", min = 3L, max = 3L)
       x1 <- par[1]
       x2 <- par[2]

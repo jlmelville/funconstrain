@@ -37,6 +37,7 @@
 var_dim <- function() {
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Variably Dimensioned")
       fsum <- 0
       fn1 <- 0
@@ -52,6 +53,7 @@ var_dim <- function() {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Variably Dimensioned")
 
       fsum <- 0
@@ -70,6 +72,7 @@ var_dim <- function() {
       grad
     },
     he = function(par) {
+      par <- promote_integer(par)
       # quite big discrepancy in n, n from numeric approx.
       n <- validate_dimension(length(par), "Variably Dimensioned")
       h <- matrix(0.0, nrow = n, ncol = n)
@@ -97,6 +100,7 @@ var_dim <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Variably Dimensioned")
 
       fsum <- 0

@@ -56,6 +56,7 @@ helical <- function() {
 
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Helical Valley",
@@ -74,6 +75,7 @@ helical <- function() {
       f1 * f1 + f2 * f2 + f3 * f3
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Helical Valley",
@@ -99,6 +101,7 @@ helical <- function() {
       c(dx, dy, dz)
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Helical Valley",
@@ -142,6 +145,7 @@ helical <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Helical Valley",

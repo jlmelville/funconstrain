@@ -49,6 +49,7 @@ linfun_fr <- function(m = 100) {
   list(
     m = m,
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
@@ -61,6 +62,7 @@ linfun_fr <- function(m = 100) {
       sum(fi * fi) + (m - n) * fnm * fnm
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
@@ -73,6 +75,7 @@ linfun_fr <- function(m = 100) {
       2 * fi - (m4 * (sum(fi) + (m - n) * fnm))
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")
@@ -84,6 +87,7 @@ linfun_fr <- function(m = 100) {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Linear Function - Full Rank")
       if (m < n) {
         stop("Linear Function - Full Rank: m must be >= n")

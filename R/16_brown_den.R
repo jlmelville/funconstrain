@@ -45,6 +45,7 @@ brown_den <- function(m = 20) {
 
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Brown Dennis", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
@@ -58,6 +59,7 @@ brown_den <- function(m = 20) {
       sum(f * f)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Brown Dennis", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
@@ -79,6 +81,7 @@ brown_den <- function(m = 20) {
       )
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Brown Dennis", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]
@@ -113,6 +116,7 @@ brown_den <- function(m = 20) {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(length(par), "Brown Dennis", min = 4L, max = 4L)
       x1 <- par[1]
       x2 <- par[2]

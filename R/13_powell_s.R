@@ -35,6 +35,7 @@
 powell_s <- function() {
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Singular",
@@ -56,6 +57,7 @@ powell_s <- function() {
       f1 * f1 + f2s + f3 * f3 + f4s
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Singular",
@@ -82,6 +84,7 @@ powell_s <- function() {
       )
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Singular",
@@ -117,6 +120,7 @@ powell_s <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Singular",

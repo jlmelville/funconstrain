@@ -42,6 +42,7 @@
 disc_ie <- function() {
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Integral Equation")
       h <- 1 / (n + 1)
 
@@ -70,6 +71,7 @@ disc_ie <- function() {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Integral Equation")
       grad <- rep(0, n)
 
@@ -104,6 +106,7 @@ disc_ie <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Discrete Integral Equation")
       w1 <- rep(0, n)
       w2 <- rep(0, n + 1)
@@ -177,6 +180,7 @@ disc_ie <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Discrete Integral Equation")
 
       h <- 1 / (n + 1)

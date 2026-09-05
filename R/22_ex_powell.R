@@ -44,6 +44,7 @@ ex_powell <- function() {
 
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(
         length(par),
         "Extended Powell",
@@ -68,6 +69,7 @@ ex_powell <- function() {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(
         length(par),
         "Extended Powell",
@@ -99,6 +101,7 @@ ex_powell <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(
         length(x),
         "Extended Powell",
@@ -136,6 +139,7 @@ ex_powell <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(
         length(par),
         "Extended Powell",

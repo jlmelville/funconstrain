@@ -35,6 +35,7 @@ powell_bs <- function() {
   list(
     m = NA,
     fn = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Badly Scaled",
@@ -50,6 +51,7 @@ powell_bs <- function() {
       f1 * f1 + f2 * f2
     },
     gr = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Badly Scaled",
@@ -67,6 +69,7 @@ powell_bs <- function() {
       )
     },
     he = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Badly Scaled",
@@ -85,6 +88,7 @@ powell_bs <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       validate_dimension(
         length(par),
         "Powell Badly Scaled",

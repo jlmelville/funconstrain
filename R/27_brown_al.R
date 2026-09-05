@@ -52,12 +52,14 @@ brown_al <- function() {
 
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Brown Almost-Linear")
       fi <- par + sum(par) - (n + 1)
       fi[n] <- prod(par) - 1
       sum(fi * fi)
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Brown Almost-Linear")
       fi <- par + sum(par) - (n + 1)
       residuals <- if (n > 1) seq_len(n - 1) else integer(0)
@@ -69,6 +71,7 @@ brown_al <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Brown Almost-Linear")
       m <- n
       h <- matrix(0.0, nrow = n, ncol = n)
@@ -134,6 +137,7 @@ brown_al <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Brown Almost-Linear")
       fi <- par + sum(par) - (n + 1)
       residuals <- if (n > 1) seq_len(n - 1) else integer(0)

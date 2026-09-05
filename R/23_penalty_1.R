@@ -44,6 +44,7 @@ penalty_1 <- function() {
   sqrta <- sqrt(a)
   list(
     fn = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Penalty Function I")
       fsum <- 0
       fn1 <- 0
@@ -58,6 +59,7 @@ penalty_1 <- function() {
       fsum
     },
     gr = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Penalty Function I")
       grad <- rep(0, n)
       fn1 <- 0
@@ -72,6 +74,7 @@ penalty_1 <- function() {
       grad
     },
     he = function(x) {
+      x <- promote_integer(x)
       n <- validate_dimension(length(x), "Penalty Function I")
       h <- matrix(0.0, nrow = n, ncol = n)
       t1 <- -0.25
@@ -100,6 +103,7 @@ penalty_1 <- function() {
       h
     },
     fg = function(par) {
+      par <- promote_integer(par)
       n <- validate_dimension(length(par), "Penalty Function I")
 
       fn1 <- 0

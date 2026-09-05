@@ -77,6 +77,30 @@ chebyquad_objective <- function(par, m) {
 
 
 testfun <- chebyquad()
+test_that("large Chebyquad residual counts do not overflow integer indices", {
+  m <- 50000L
+  problem <- chebyquad(m)
+  x <- 0.5
+  i <- as.double(seq_len(m))
+  # At the shifted coordinate zero, T_i(0) cycles exactly through 0,-1,0,1.
+  residual <- rep(c(0, -1, 0, 1), length.out = m)
+  even <- i %% 2 == 0
+  residual[even] <- residual[even] + 1 / (i[even]^2 - 1)
+  expected_fn <- sum(residual^2)
+  first <- rep(c(1, 0, -1, 0), length.out = m) * i
+  second <- -i^2 * rep(c(0, -1, 0, 1), length.out = m)
+  expected_he <- matrix(8 * sum(first^2 + residual * second))
+  expect_warning(value <- problem$fn(x), NA)
+  expect_warning(gradient <- problem$gr(x), NA)
+  expect_warning(combined <- problem$fg(x), NA)
+  expect_warning(hessian <- problem$he(x), NA)
+  expect_true(all(is.finite(c(value, gradient, unlist(combined), hessian))))
+  expect_equal(value, expected_fn)
+  expect_equal(gradient, 0)
+  expect_equal(combined$fn, value)
+  expect_equal(combined$gr, gradient)
+  expect_equal(hessian, expected_he)
+})
 
 
 test_that("Analytical and finite difference gradients match at x0", {
