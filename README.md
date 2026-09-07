@@ -11,6 +11,9 @@ paper by
 (to varying degrees) for testing unconstrained numerical optimization methods
 such as steepest descent, Newton, BFGS, L-BFGS, and conjugate gradient.
 
+It also provides positive-semidefinite (PSD) factorization and nonlinear spring problems. Their
+quality measures assess weak-mode recovery and field/edge accuracy, outside the MGH catalog.
+
 ## Install
 
 ```R
@@ -61,6 +64,10 @@ names(raw_problem)
 See `?funconstrain_catalog` for the resolver contract and
 `package?funconstrain` for the raw factory contract and full function list.
 
+Use `psd_factorization()` or `nonlinear_springs()` for manufactured problems. They return numeric
+starting points and a `quality()` callback to assess the optimizer's returned parameters; see the
+[manufactured-family examples](https://jlmelville.github.io/funconstrain/articles/getting-started.html#manufactured-families).
+
 ## Why do this?
 
 For testing numerical optimization routines, the go-to set of test problems is
@@ -76,7 +83,7 @@ failed to find such a package.
 
 ## Are the functions correct?
 
-There are unit tests for each test problem which ensure that:
+The MGH problems have unit tests which ensure that:
 
 - The analytical gradients match finite difference estimates at the suggested starting point.
 - The Hessians have the expected shape and symmetry at the suggested starting point.
@@ -95,8 +102,8 @@ Not really. My goal was correctness, and to make the code clear. Also perhaps, t
 anyone ever wants to translate these into other languages without having to know a lot of idiomatic
 R.
 
-I have made use of vectorized arithmetic operation rather than explicit `for` loops where possible
-as well as using functions like `sum`. Also, I am pretty profligate in storing pre-computed
+In the MGH implementations I have used vectorized arithmetic rather than explicit `for` loops where
+possible, as well as functions like `sum`. Also, I am pretty profligate in storing pre-computed
 vectors, trading off memory consumption for clarity and potentially fast vectorized computations (I
 have not done any profiling). But I consciously eschewed the use of  `apply` `sweep` or other
 cleverness.
@@ -107,7 +114,7 @@ values inside loops.
 ## See also
 
 - The aforementioned [CUTEst](https://github.com/ralna/CUTEst). I believe all
-or nearly all of the test problems in this package are implemented in CUTEst, but I make no
+or nearly all of the MGH test problems in this package are implemented in CUTEst, but I make no
 representation that you will get the same results (if there are any differences, assume it's a bug
 in `funconstrain`).
 - I made ample use of the excellent [Derivative Calculator](https://www.derivative-calculator.net/)

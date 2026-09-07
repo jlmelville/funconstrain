@@ -76,7 +76,9 @@ test_that("internal manifest is the authoritative ordered factory registry", {
       "fufn",
       "fufnrun",
       "funconstrain_catalog",
-      "funconstrain_problem"
+      "funconstrain_problem",
+      "psd_factorization",
+      "nonlinear_springs"
     )
   )
 

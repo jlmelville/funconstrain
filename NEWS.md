@@ -2,6 +2,9 @@
 
 ## Bug fixes and minor improvements
 
+- Added `psd_factorization()` and `nonlinear_springs()` as standalone manufactured problem families,
+  with reproducible starts, analytic derivatives, current-configuration minima, and solution-quality
+  callbacks. The numbered MGH catalog and resolver are unchanged.
 - `fufnrun()` now rejects malformed configurations before creating or overwriting the output file.
 - Fixed integer-overflow errors with integer parameter vectors and in `chebyquad()` for large `m`.
 - Fixed the `beale()` Hessian when the second parameter is zero.

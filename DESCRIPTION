@@ -8,9 +8,10 @@ Authors@R: c(
     person(given = "John C", family = "Nash",
            email = "nashjc@uottawa.ca", role = c("ctb"))
     )
-Description: Functions for testing unconstrained numerical optimization, taken
-    from Moré, Garbow and Hillstrom's paper "Testing Unconstrained Optimization
-    Software".
+Description: Functions for testing unconstrained numerical optimization,
+    including the 35 problems from Moré, Garbow and Hillstrom's paper "Testing
+    Unconstrained Optimization Software", and manufactured positive semidefinite
+    factorization and nonlinear spring problems with solution-quality measures.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

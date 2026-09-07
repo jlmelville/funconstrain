@@ -18,7 +18,7 @@ stopifnot(
 ```
 
 Use this page to find the residual equations, supported dimensions, and
-standard starting point for any problem implemented by `funconstrain`. The
+standard starting point for any MGH catalog problem implemented by `funconstrain`. The
 definitions follow Section 3 of
 [Moré, Garbow, and Hillstrom
 (1981)](https://doi.org/10.1145/355934.355936) using one notation throughout.

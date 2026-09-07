@@ -5,7 +5,9 @@ test_that("factory contract list covers all exported problem factories", {
       "fufn",
       "fufnrun",
       "funconstrain_catalog",
-      "funconstrain_problem"
+      "funconstrain_problem",
+      "psd_factorization",
+      "nonlinear_springs"
     )
   )
 
@@ -16,6 +18,18 @@ test_that("factory contract list covers all exported problem factories", {
   expected <- list(names = sort(exported_factories), count = 35L)
 
   expect_identical(actual, expected)
+})
+
+test_that("standalone families are separate from the MGH registry", {
+  standalone <- c("psd_factorization", "nonlinear_springs")
+  exports <- getNamespaceExports("funconstrain")
+
+  expect_true(all(standalone %in% exports))
+  expect_false(any(standalone %in% problem_factory_names()))
+  for (name in standalone) {
+    problem <- getExportedValue("funconstrain", name)()
+    expect_true(all(problem_factory_core_fields() %in% names(problem)))
+  }
 })
 
 test_that("problem factories expose documented core fields", {

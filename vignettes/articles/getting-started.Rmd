@@ -69,7 +69,7 @@ stopifnot(
 
 ## Browse the catalogue
 
-`funconstrain_catalog()` lists all 35 problems in paper order. Here `n` is the
+`funconstrain_catalog()` lists the 35 MGH problems in paper order. Here `n` is the
 number of parameters and `m` is the number of residual functions:
 
 ```{r catalog}
@@ -176,6 +176,63 @@ stopifnot(
   identical(extended$reference$xmin$source_configuration, list(n = 8L))
 )
 ```
+
+## Manufactured families
+
+For factor recovery or grid accuracy tests, use `psd_factorization()` and `nonlinear_springs()`
+directly. They are outside the numbered MGH catalog. Each returns a numeric starting point and a
+minimizer for the chosen configuration, together with the usual objective and derivatives.
+
+This small panel varies the positive target spectrum for factorization and pairs harmonic and
+nonlinear springs using the same grid, target, and start:
+
+```{r manufactured-panel}
+panel <- list(
+  factor_k10 = psd_factorization(kappa = 10, seed = 101),
+  factor_k100 = psd_factorization(kappa = 100, seed = 101),
+  springs_harmonic = nonlinear_springs(gamma = 0, seed = 101),
+  springs_nonlinear = nonlinear_springs(gamma = 10, seed = 101)
+)
+```
+
+Defaults give 64-by-4 factors (256 parameters) and an 8-by-8 interior spring grid (64 parameters).
+Constructors restore `RNGkind()` and `.Random.seed`. This preserves stream continuation with R's
+default Inversion normal generator, but not a cached Box–Muller draw. See the constructor help when
+interleaving calls with a nondefault generator. Save the generated problem with `saveRDS()`
+when a comparison needs the same arrays across sessions; seeds alone do not guarantee bitwise
+agreement across numerical-library environments.
+
+Assess the optimizer's returned point with the problem's `quality()` callback:
+
+```{r manufactured-fit}
+spring <- panel$springs_nonlinear
+spring_fit <- stats::optim(
+  par = spring$x0,
+  fn = spring$fn,
+  gr = spring$gr,
+  method = "BFGS",
+  control = list(maxit = 1000, reltol = 1e-12)
+)
+spring$quality(spring_fit$par)
+```
+
+Spring quality reports relative field and edge-gradient errors. Factorization quality reports
+relative product error and the largest relative target-mode residual. A small objective does not
+necessarily mean that weak modes or edge gradients are accurate. For factorization, compare the
+product or its mode residuals: different factors can represent the same solution. If you also record
+accuracy reached during a solve, keep that separate from accuracy at the returned point.
+
+```{r manufactured-check, include=FALSE}
+stopifnot(
+  identical(panel$springs_harmonic$x0, panel$springs_nonlinear$x0),
+  identical(panel$springs_harmonic$xmin, panel$springs_nonlinear$xmin),
+  all(is.finite(unlist(spring$quality(spring_fit$par))))
+)
+```
+
+The [`psd_factorization()`](../reference/psd_factorization.html) and
+[`nonlinear_springs()`](../reference/nonlinear_springs.html) reference pages define the controls and
+quality measures. Both provide dense Hessians; storage grows quadratically in the parameter count.
 
 ## Next steps
 

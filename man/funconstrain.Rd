@@ -8,10 +8,11 @@
 \description{
 The funconstrain package provides 35 test functions taken from the paper
 of Moré, Garbow and Hillstrom, useful for testing numerical optimization
-methods.
+methods. It also provides manufactured \code{\link[=psd_factorization]{psd_factorization()}} and \code{\link[=nonlinear_springs]{nonlinear_springs()}}
+problems with solution-quality measures.
 }
 \details{
-The functions all take the form of a nonlinear least squares problem, with
+The 35 MGH functions take the form of a nonlinear least squares problem, with
 the goal of minimizing the output of \code{m} functions, each of which is a
 function, \eqn{f_i}{fi} of the same \code{n} parameters:
 
@@ -22,7 +23,7 @@ f([x1, x2, ..., xn]) = sum(i = 1:m) fi([x1, x2, ..., xn]) ^ 2}
 \section{Function Details}{
 
 
-The documentation of each function provides details on:
+The documentation of each MGH function provides details on:
 \itemize{
 \item \code{m}: The number of summand functions, \eqn{f_i}{fi}. Some functions are
 defined for a fixed \code{m}, others require the user to specify a value of \code{m}.
@@ -154,6 +155,21 @@ in the original Moré, Garbow and Hillstrom paper:
 }
 
 For details, see the specific function help text.
+}
+
+\section{Manufactured Families}{
+
+
+\code{\link[=psd_factorization]{psd_factorization()}} and \code{\link[=nonlinear_springs]{nonlinear_springs()}} are standalone constructors outside the
+numbered MGH catalog. Choose their dimensions and family controls at construction; each returns
+numeric \code{x0} and \code{xmin} vectors, \code{fmin = 0}, and the same \code{fn}, \code{gr}, \code{he}, and \code{fg} callbacks.
+Their reference minima are generated for the chosen configuration. Dense Hessians require
+storage quadratic in the number of parameters.
+
+Use the returned \code{quality()} callback on the optimizer's returned parameter vector to check
+weak-mode recovery (factorization) or field and edge accuracy (springs). These measures can
+reveal errors that a small objective alone does not exclude. The constructor help pages define
+their controls, metadata, quality measures, and reproducibility conditions.
 }
 
 \examples{
