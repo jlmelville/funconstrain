@@ -11,8 +11,8 @@ paper by
 (to varying degrees) for testing unconstrained numerical optimization methods
 such as steepest descent, Newton, BFGS, L-BFGS, and conjugate gradient.
 
-It also provides positive-semidefinite (PSD) factorization and nonlinear spring problems. Their
-quality measures assess weak-mode recovery and field/edge accuracy, outside the MGH catalog.
+It also provides positive-semidefinite (PSD) factorization and nonlinear spring problems, with known
+solutions and measures of how accurately those solutions have been recovered.
 
 ## Install
 
@@ -80,6 +80,13 @@ gradients for them. I did look to see if all 35 problems were implemented in one
 failed to find such a package.
 
 [John Nash](https://github.com/nashjc) contributed the Hessians.
+
+*September 7 2026*: added the factorization and spring problems to make it easier to check what a small objective
+value tells us about the solution. For factorization, the smaller eigenvalues can be poorly
+recovered even when the overall matrix error looks small. For springs, getting the grid values right
+is a different test from getting the differences between neighboring points right. Both
+families have known solutions and controls for varying the problem, so they are useful for testing
+these distinctions without having to estimate the answer first.
 
 ## Are the functions correct?
 

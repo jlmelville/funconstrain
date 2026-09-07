@@ -179,9 +179,21 @@ stopifnot(
 
 ## Manufactured families
 
-For factor recovery or grid accuracy tests, use `psd_factorization()` and `nonlinear_springs()`
-directly. They are outside the numbered MGH catalog. Each returns a numeric starting point and a
-minimizer for the chosen configuration, together with the usual objective and derivatives.
+How much does a small objective value tell us about the solution? The answer depends on what we
+want to recover. I added two problem families to make this distinction easier to explore:
+
+- `psd_factorization()` looks for a low-rank factor of a positive semidefinite matrix. Errors in
+  directions with small eigenvalues can contribute little to the objective, even when their relative
+  error is large. Also, different factors can give exactly the same matrix, so comparing a factor
+  directly with one stored answer would be misleading.
+- `nonlinear_springs()` looks for the equilibrium of a spring network on a square grid. Here we can
+  check both the values at grid points (the *field*) and their differences along edges. Small field
+  error need not imply small edge error. The `gamma` control lets us move from a quadratic problem
+  to a nonlinear one while keeping the solution and starting point fixed.
+
+These are *manufactured* problems: we choose the solution first and construct a problem around it.
+Each returns a minimizer for the chosen configuration, a starting point, and the usual objective and
+derivatives. These aren't part of the numbered MGH catalogue, so use the constructors directly.
 
 This small panel varies the positive target spectrum for factorization and pairs harmonic and
 nonlinear springs using the same grid, target, and start:
@@ -204,9 +216,8 @@ agreement across numerical-library environments.
 
 ### Compare objective reduction and solution quality
 
-Run the same BFGS settings on each panel member and assess the optimizer's returned point with
-`quality()`. This small benchmark recipe uses only `funconstrain` and base R; run it after loading
-the package and creating `panel` above. The settings illustrate reporting, not solver rankings.
+Let's use BFGS again, then call `quality()` on each returned point. This example needs only
+`funconstrain` and base R; run it after loading the package and creating `panel` above.
 
 ```{r manufactured-fit}
 panel_results <- lapply(panel, function(problem) {
@@ -219,20 +230,14 @@ panel_results <- lapply(panel, function(problem) {
     control = list(maxit = 1000, reltol = 1e-12)
   )
   quality <- problem$quality(fit$par)
-  solution_error <- if ("max_relative_mode_error" %in% names(quality)) {
-    quality$max_relative_mode_error
-  } else {
-    max(quality$relative_field_error, quality$relative_edge_error)
-  }
   list(
     fit = fit,
     quality = quality,
-    objective_ratio = problem$fn(fit$par) / initial_objective,
-    solution_error = solution_error
+    objective_ratio = problem$fn(fit$par) / initial_objective
   )
 })
 
-benchmark_summary <- do.call(
+fit_summary <- do.call(
   rbind,
   lapply(names(panel_results), function(name) {
     result <- panel_results[[name]]
@@ -241,43 +246,56 @@ benchmark_summary <- do.call(
       convergence = result$fit$convergence,
       fn_calls = unname(result$fit$counts["function"]),
       gr_calls = unname(result$fit$counts["gradient"]),
-      objective_ratio = signif(result$objective_ratio, 3),
-      solution_error = signif(result$solution_error, 3),
-      coarse = result$objective_ratio <= 0.01,
-      accurate = result$solution_error <= 1e-3
+      objective_ratio = signif(result$objective_ratio, 3)
     )
   })
 )
-benchmark_summary
+fit_summary
 ```
 
-`coarse` means at least 99% objective reduction from the problem's start. `accurate` uses a separate
-relative error threshold of 0.001: the largest target-mode residual for factorization, or the larger
-of field and edge-gradient error for springs. These are example acceptance criteria, not constructor
-defaults or optimizer stopping rules. Both verdicts use unrounded values at the returned point;
-`convergence` reports the optimizer's own termination assessment.
+`objective_ratio` compares the final objective with its value at the starting point. As before,
+`convergence` is the optimizer's own assessment. The call counts come from `optim()` and exclude the
+evaluations used for reporting. Objective and gradient calls can have different costs, so their sum
+is not necessarily a useful measure of work.
 
-The call counts come from `optim()` and exclude the objective and quality evaluations used for
-reporting. Objective and gradient calls can have different costs, so keep them separate and do not
-treat their sum as a universal work score. For individual quality measures or returned parameters,
-inspect `panel_results[["springs_nonlinear"]]$quality` or its `$fit$par`.
+Now for the solution errors:
 
-A small objective does not necessarily mean that weak modes or edge gradients are accurate.
-For factorization, compare the product or its mode residuals: different factors can represent the
-same solution. If you also record accuracy reached during a solve, keep that separate from accuracy
-at the returned point.
+```{r manufactured-quality}
+quality_summary <- do.call(
+  rbind,
+  lapply(names(panel_results), function(name) {
+    quality <- panel_results[[name]]$quality
+    data.frame(
+      problem = name,
+      measure = names(quality),
+      relative_error = signif(unlist(quality, use.names = FALSE), 3)
+    )
+  })
+)
+quality_summary
+```
+
+For factorization, `relative_product_error` measures the overall matrix error. It contains the same
+information as the objective, on a relative scale. `max_relative_mode_error` checks each target
+eigenvector separately, relative to its eigenvalue, and reports the largest error. This gives the
+smaller eigenvalues a say in whether we consider the result accurate.
+
+For springs, `relative_field_error` and `relative_edge_error` report the two errors separately.
+All these measures compare with the known solution, rather than with the starting point. They
+describe the parameters returned by the optimizer; the full results are still available in
+`panel_results`, including each fit's `$par` and unrounded `$quality` values.
 
 ```{r manufactured-check, include=FALSE}
 stopifnot(
   identical(panel$springs_harmonic$x0, panel$springs_nonlinear$x0),
   identical(panel$springs_harmonic$xmin, panel$springs_nonlinear$xmin),
-  nrow(benchmark_summary) == length(panel),
+  nrow(fit_summary) == length(panel),
+  nrow(quality_summary) == 2L * length(panel),
   all(vapply(
     panel_results,
     function(result) {
       all(is.finite(unlist(result$quality))) &&
-        is.finite(result$objective_ratio) &&
-        is.finite(result$solution_error)
+        is.finite(result$objective_ratio)
     },
     logical(1)
   ))

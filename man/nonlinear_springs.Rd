@@ -24,12 +24,11 @@ The additional \code{quality(par)} callback returns \code{relative_field_error},
 \eqn{\lVert x-x_*\rVert_2/\lVert x_*\rVert_2}, and
 \code{relative_edge_error},
 \eqn{\lVert D(x-x_*)\rVert_2/\lVert D x_*\rVert_2}. Check both errors:
-small field error need not imply small edge error. \code{configuration} records
-the concrete
-constructor controls and parameter dimension \code{n}. \code{data} contains the grid
-spacing \code{h} and oriented \code{edge_from} and \code{edge_to} indices; zero denotes an
-eliminated boundary value. These values are inspectable snapshots rather
-than setters for the callbacks.
+small field error need not imply small edge error. \code{configuration}
+records the concrete constructor controls and parameter dimension \code{n}.
+\code{data} contains the grid spacing \code{h} and oriented \code{edge_from} and
+\code{edge_to} indices; zero denotes an eliminated boundary value. These values
+are inspectable snapshots rather than setters for the callbacks.
 
 Construction uses a local Mersenne-Twister/Inversion/Rejection stream and
 restores the caller's \code{RNGkind()} settings and \code{.Random.seed}, including an
@@ -39,16 +38,24 @@ uninterrupted ambient normal stream is required. Exact generated values
 can depend on the R and numerical-library environment.
 }
 \description{
-Constructs a spring network on an interior \code{grid_size} by \code{grid_size} grid
-with eliminated zero boundary values. If \code{D} is the oriented edge-difference
-operator divided by the grid spacing, \verb{z = D x}, and \verb{s = D x_*}, the
-grid spacing is \code{h = 1 / (grid_size + 1)} on the unit square, the objective is
+Find the equilibrium of a spring network with a known solution on a square
+grid. The \code{quality()} callback checks both the values at grid points and
+the differences along edges: a small error in the first need not imply a
+small error in the second. Setting \code{gamma = 0} gives a quadratic problem;
+positive \code{gamma} adds nonlinearity while keeping the same solution and,
+for a fixed seed, the same starting point.
+}
+\details{
+The network has an interior \code{grid_size} by \code{grid_size} grid on the unit
+square, with zero boundary values. The grid spacing is
+\code{h = 1 / (grid_size + 1)}. Let \code{D} take oriented differences along edges and
+divide by \code{h}. Write \verb{z = D x} for the current edge values and \verb{s = D x_*}
+for those at the known solution. The objective is
 \deqn{h^2 \sum_e (z_e-s_e)^2\left\{\frac{1}{2}+
 \frac{\gamma}{4}\left[(z_e+s_e)^2+2s_e^2\right]\right\}.}
 Thus the generated target \verb{x_*} is a known global minimizer, and \code{gamma = 0}
 gives the harmonic member of the family.
-}
-\details{
+
 Before normalization, the target at interior grid point \verb{(i, j)} is
 \deqn{\sin(\pi i h)\sin(\pi j h) +
 0.1\sin(3\pi i h)\sin(2\pi j h).}

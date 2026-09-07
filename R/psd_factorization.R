@@ -1,6 +1,13 @@
 #' Symmetric Positive Semidefinite Factorization Problem
 #'
-#' Constructs the nonconvex factorization problem
+#' Find a low-rank factor of a positive semidefinite matrix with a known
+#' spectrum. This problem separates overall matrix accuracy from recovery of
+#' the smaller eigenvalues: a small objective can hide large relative errors
+#' in those parts of the target. The `quality()` callback measures both,
+#' without requiring the factor to match one particular minimizer.
+#'
+#' @details
+#' The nonconvex factorization problem is
 #' \deqn{F(U) = \lVert UU^T - M \rVert_F^2 / 4,}
 #' where \eqn{r} is `rank` and
 #' \deqn{M = Q \mathop{\rm diag}(\lambda) Q^T, \qquad
