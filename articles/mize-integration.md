@@ -240,7 +240,7 @@ data.frame(
 #> 4    R version R version 4.6.2 (2026-10-29)
 #> 5 funconstrain                        0.1.1
 #> 6         mize                        0.3.0
-#> 7  mize commit                 726976d67f13
+#> 7  mize commit                 e950b04e415c
 #> 8   R platform          x86_64-pc-linux-gnu
 ```
 
