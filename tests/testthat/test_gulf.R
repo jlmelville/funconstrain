@@ -5,7 +5,9 @@ test_that("Gulf endpoint limits include zero and nonzero curvature", {
     shorter <- gulf(99)
     full <- gulf(100)
     delta_h <- matrix(0, 3, 3)
-    if (p == 1) delta_h[2, 2] <- 0.0008
+    if (p == 1) {
+      delta_h[2, 2] <- 0.0008
+    }
     expect_warning(gradient <- full$gr(x), NA)
     expect_warning(combined <- full$fg(x), NA)
     expect_warning(hessian <- full$he(x), NA)
@@ -26,7 +28,9 @@ test_that("Gulf interior zero distances retain negative or zero curvature", {
     shorter <- gulf(49)
     full <- gulf(50)
     delta_h <- matrix(0, 3, 3)
-    if (p == 2) delta_h[2, 2] <- -0.04
+    if (p == 2) {
+      delta_h[2, 2] <- -0.04
+    }
     expect_equal(full$fn(x) - shorter$fn(x), (1 - t)^2)
     expect_equal(full$gr(x), shorter$gr(x))
     expect_equal(full$fg(x)$gr, full$gr(x))

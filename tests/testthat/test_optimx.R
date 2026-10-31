@@ -78,7 +78,9 @@ test_that("rejected RFO configurations never create or overwrite output", {
     for (existing in c(FALSE, TRUE)) {
       rfo <- tempfile("rejected-rfo-")
       output <- tempfile("preserved-output-")
-      if (existing) writeBin(sentinel, output)
+      if (existing) {
+        writeBin(sentinel, output)
+      }
       writeLines(c(output, cases[[case_name]]), rfo)
       depth <- sink.number()
       capture.output(err <- tryCatch(fufnrun(rfo), error = identity))

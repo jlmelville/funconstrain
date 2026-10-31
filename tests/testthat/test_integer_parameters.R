@@ -44,7 +44,9 @@ test_that("all factories promote integer arithmetic consistently in every callba
     problem <- get_problem_factory(name)()
     for (named in c(FALSE, TRUE)) {
       x <- integer_parameter_cases[[name]]
-      if (named) names(x) <- paste0("x", seq_along(x))
+      if (named) {
+        names(x) <- paste0("x", seq_along(x))
+      }
       double_x <- x + 0
       for (callback in c("fn", "gr", "fg", "he")) {
         label <- paste(name, callback, if (named) "named" else "unnamed")
