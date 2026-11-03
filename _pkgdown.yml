@@ -2,6 +2,16 @@ url: https://jlmelville.github.io/funconstrain/
 template:
   bootstrap: 5
   math-rendering: katex
+  light-switch: true
+  theme: github-light
+  theme-dark: github-dark
+  bslib:
+    danger: "#A6081A"
+
+development:
+  mode: unreleased
+
+llm-docs: true
 
 articles:
 - title: Core guides
@@ -13,3 +23,55 @@ articles:
   - articles/mize-integration
   - articles/optimx-bridge
   - RunFunconstrainTests
+
+reference:
+  - title: Discover and run problems
+    desc: Find a problem, construct its callbacks, or run the optimx interface.
+    contents:
+      - funconstrain_catalog
+      - fufn
+      - fufnrun
+  - title: Fixed parameter dimension
+    desc: Test problems with a fixed number of parameters; some allow a variable number of residuals.
+    contents:
+      - rosen
+      - freud_roth
+      - powell_bs
+      - brown_bs
+      - beale
+      - jenn_samp
+      - helical
+      - bard
+      - gauss
+      - meyer
+      - gulf
+      - box_3d
+      - powell_s
+      - wood
+      - kow_osb
+      - brown_den
+      - osborne_1
+      - biggs_exp6
+      - osborne_2
+  - title: Variable parameter dimension
+    desc: Problems whose parameter dimension can be selected within documented bounds.
+    contents:
+      - watson
+      - ex_rosen
+      - ex_powell
+      - penalty_1
+      - penalty_2
+      - var_dim
+      - trigon
+      - brown_al
+      - disc_bv
+      - disc_ie
+      - broyden_tri
+      - broyden_band
+      - linfun_fr
+      - linfun_r1
+      - linfun_r1z
+      - chebyquad
+  - title: Package overview
+    contents:
+      - funconstrain
