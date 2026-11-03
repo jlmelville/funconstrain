@@ -208,30 +208,33 @@ sourceable example harness:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">suite_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">suite</span><span class="op">$</span><span class="va">runs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">run</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    problem <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">name</span>,</span>
-<span>    n <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
-<span>    m <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span>,</span>
-<span>    status <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">status</span>,</span>
-<span>    objective_evaluations <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">work</span><span class="op">$</span><span class="va">native</span><span class="op">$</span><span class="va">nf</span>,</span>
-<span>    gradient_evaluations <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">work</span><span class="op">$</span><span class="va">native</span><span class="op">$</span><span class="va">ng</span>,</span>
-<span>    final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">objective</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>    gradient_inf_norm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span></span>
-<span>      <span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">gradient_inf_norm</span>,</span>
-<span>      <span class="fl">3</span></span>
+<span><span class="va">suite_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
+<span>  <span class="va">rbind</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">suite</span><span class="op">$</span><span class="va">runs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">run</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      problem <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">name</span>,</span>
+<span>      n <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
+<span>      m <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span>,</span>
+<span>      status <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">outcome</span><span class="op">$</span><span class="va">status</span>,</span>
+<span>      objective_evaluations <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">work</span><span class="op">$</span><span class="va">native</span><span class="op">$</span><span class="va">nf</span>,</span>
+<span>      gradient_evaluations <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">work</span><span class="op">$</span><span class="va">native</span><span class="op">$</span><span class="va">ng</span>,</span>
+<span>      final_objective <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">objective</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>      gradient_inf_norm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span></span>
+<span>        <span class="va">run</span><span class="op">$</span><span class="va">quality</span><span class="op">$</span><span class="va">final</span><span class="op">$</span><span class="va">gradient_inf_norm</span>,</span>
+<span>        <span class="fl">3</span></span>
+<span>      <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">suite_table</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">suite_table</span></span>
 <span><span class="co">#&gt;     problem n  m    status objective_evaluations gradient_evaluations</span></span>
 <span><span class="co">#&gt; 1     rosen 2  2 converged                    48                   48</span></span>
 <span><span class="co">#&gt; 2  ex_rosen 4  4 converged                    54                   54</span></span>
-<span><span class="co">#&gt; 3 jenn_samp 2 20 converged                    61                   61</span></span>
+<span><span class="co">#&gt; 3 jenn_samp 2 20 converged                    74                   74</span></span>
 <span><span class="co">#&gt;   final_objective gradient_inf_norm</span></span>
 <span><span class="co">#&gt; 1        5.59e-16          6.23e-07</span></span>
-<span><span class="co">#&gt; 2        9.65e-24          1.02e-11</span></span>
+<span><span class="co">#&gt; 2        9.64e-24          1.02e-11</span></span>
 <span><span class="co">#&gt; 3        1.45e+03          4.70e-07</span></span></code></pre></div>
 <p>All three runs use the same method and stopping rule. The same
 harness handles a fixed problem, a chosen parameter dimension, and a
@@ -276,8 +279,10 @@ report:</p>
 <span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">title</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>      <span class="st">"n = "</span>, <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
-<span>      <span class="st">", m = "</span>, <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span></span>
+<span>      <span class="st">"n = "</span>,</span>
+<span>      <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">n</span>,</span>
+<span>      <span class="st">", m = "</span>,</span>
+<span>      <span class="va">rosen_run</span><span class="op">$</span><span class="va">problem</span><span class="op">$</span><span class="va">configuration</span><span class="op">$</span><span class="va">effective</span><span class="op">$</span><span class="va">m</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">method</span>,</span>
 <span>    <span class="va">rosen_run</span><span class="op">$</span><span class="va">provenance</span><span class="op">$</span><span class="va">r_version</span>,</span>
@@ -295,7 +300,7 @@ report:</p>
 <span><span class="co">#&gt; 4    R version R version 4.6.2 (2026-10-29)</span></span>
 <span><span class="co">#&gt; 5 funconstrain                        0.1.1</span></span>
 <span><span class="co">#&gt; 6         mize                        0.3.0</span></span>
-<span><span class="co">#&gt; 7  mize commit                 376c1964adb6</span></span>
+<span><span class="co">#&gt; 7  mize commit                 9feac64cd7d4</span></span>
 <span><span class="co">#&gt; 8   R platform          x86_64-pc-linux-gnu</span></span></code></pre></div>
 <p>The result also retains the complete supplied control list in
 <code>rosen_run$controls</code>.</p>

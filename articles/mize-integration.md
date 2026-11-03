@@ -150,30 +150,33 @@ suite <- run_mize_suite(
   )
 )
 
-suite_table <- do.call(rbind, lapply(suite$runs, function(run) {
-  data.frame(
-    problem = run$problem$name,
-    n = run$problem$configuration$effective$n,
-    m = run$problem$configuration$effective$m,
-    status = run$outcome$status,
-    objective_evaluations = run$work$native$nf,
-    gradient_evaluations = run$work$native$ng,
-    final_objective = signif(run$quality$final$objective, 3),
-    gradient_inf_norm = signif(
-      run$quality$final$gradient_inf_norm,
-      3
+suite_table <- do.call(
+  rbind,
+  lapply(suite$runs, function(run) {
+    data.frame(
+      problem = run$problem$name,
+      n = run$problem$configuration$effective$n,
+      m = run$problem$configuration$effective$m,
+      status = run$outcome$status,
+      objective_evaluations = run$work$native$nf,
+      gradient_evaluations = run$work$native$ng,
+      final_objective = signif(run$quality$final$objective, 3),
+      gradient_inf_norm = signif(
+        run$quality$final$gradient_inf_norm,
+        3
+      )
     )
-  )
-}))
+  })
+)
 rownames(suite_table) <- NULL
 suite_table
 #>     problem n  m    status objective_evaluations gradient_evaluations
 #> 1     rosen 2  2 converged                    48                   48
 #> 2  ex_rosen 4  4 converged                    54                   54
-#> 3 jenn_samp 2 20 converged                    61                   61
+#> 3 jenn_samp 2 20 converged                    74                   74
 #>   final_objective gradient_inf_norm
 #> 1        5.59e-16          6.23e-07
-#> 2        9.65e-24          1.02e-11
+#> 2        9.64e-24          1.02e-11
 #> 3        1.45e+03          4.70e-07
 ```
 
@@ -221,8 +224,10 @@ data.frame(
   value = c(
     rosen_run$problem$title,
     paste0(
-      "n = ", rosen_run$problem$configuration$effective$n,
-      ", m = ", rosen_run$problem$configuration$effective$m
+      "n = ",
+      rosen_run$problem$configuration$effective$n,
+      ", m = ",
+      rosen_run$problem$configuration$effective$m
     ),
     rosen_run$method,
     rosen_run$provenance$r_version,
@@ -240,7 +245,7 @@ data.frame(
 #> 4    R version R version 4.6.2 (2026-10-29)
 #> 5 funconstrain                        0.1.1
 #> 6         mize                        0.3.0
-#> 7  mize commit                 376c1964adb6
+#> 7  mize commit                 9feac64cd7d4
 #> 8   R platform          x86_64-pc-linux-gnu
 ```
 
