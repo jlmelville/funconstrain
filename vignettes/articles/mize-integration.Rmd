@@ -162,21 +162,24 @@ suite <- run_mize_suite(
   )
 )
 
-suite_table <- do.call(rbind, lapply(suite$runs, function(run) {
-  data.frame(
-    problem = run$problem$name,
-    n = run$problem$configuration$effective$n,
-    m = run$problem$configuration$effective$m,
-    status = run$outcome$status,
-    objective_evaluations = run$work$native$nf,
-    gradient_evaluations = run$work$native$ng,
-    final_objective = signif(run$quality$final$objective, 3),
-    gradient_inf_norm = signif(
-      run$quality$final$gradient_inf_norm,
-      3
+suite_table <- do.call(
+  rbind,
+  lapply(suite$runs, function(run) {
+    data.frame(
+      problem = run$problem$name,
+      n = run$problem$configuration$effective$n,
+      m = run$problem$configuration$effective$m,
+      status = run$outcome$status,
+      objective_evaluations = run$work$native$nf,
+      gradient_evaluations = run$work$native$ng,
+      final_objective = signif(run$quality$final$objective, 3),
+      gradient_inf_norm = signif(
+        run$quality$final$gradient_inf_norm,
+        3
+      )
     )
-  )
-}))
+  })
+)
 rownames(suite_table) <- NULL
 suite_table
 ```
@@ -249,8 +252,10 @@ data.frame(
   value = c(
     rosen_run$problem$title,
     paste0(
-      "n = ", rosen_run$problem$configuration$effective$n,
-      ", m = ", rosen_run$problem$configuration$effective$m
+      "n = ",
+      rosen_run$problem$configuration$effective$n,
+      ", m = ",
+      rosen_run$problem$configuration$effective$m
     ),
     rosen_run$method,
     rosen_run$provenance$r_version,
