@@ -6,12 +6,13 @@ will fit Rosenbrock with BFGS, look at the optimization as it
 progresses, and then use a small harness to repeat the same setup
 consistently.
 
-> **Version requirement.** These examples use `mize` 0.3.0 or later.
-> Install the current version with:
+> **Version requirement.** These examples work with `mize` 0.3.0 or
+> later, available from [CRAN](https://cran.r-project.org/package=mize).
+> Install it with:
 >
 > ``` r
 >
-> pak::pak("jlmelville/mize")
+> install.packages("mize")
 > ```
 
 ## Fit Rosenbrock with BFGS
@@ -173,10 +174,10 @@ suite_table
 #>     problem n  m    status objective_evaluations gradient_evaluations
 #> 1     rosen 2  2 converged                    48                   48
 #> 2  ex_rosen 4  4 converged                    54                   54
-#> 3 jenn_samp 2 20 converged                    74                   74
+#> 3 jenn_samp 2 20 converged                    61                   61
 #>   final_objective gradient_inf_norm
 #> 1        5.59e-16          6.23e-07
-#> 2        9.64e-24          1.02e-11
+#> 2        9.65e-24          1.02e-11
 #> 3        1.45e+03          4.70e-07
 ```
 
@@ -245,7 +246,7 @@ data.frame(
 #> 4    R version R version 4.6.2 (2026-10-29)
 #> 5 funconstrain                        0.1.1
 #> 6         mize                        0.3.0
-#> 7  mize commit                 05b80d5474ac
+#> 7  mize commit                        0.3.0
 #> 8   R platform          x86_64-pc-linux-gnu
 ```
 

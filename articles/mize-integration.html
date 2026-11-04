@@ -77,10 +77,11 @@ the optimizer. We will fit Rosenbrock with BFGS, look at the
 optimization as it progresses, and then use a small harness to repeat
 the same setup consistently.</p>
 <blockquote>
-<p><strong>Version requirement.</strong> These examples use
-<code>mize</code> 0.3.0 or later. Install the current version with:</p>
+<p><strong>Version requirement.</strong> These examples work with
+<code>mize</code> 0.3.0 or later, available from <a href="https://cran.r-project.org/package=mize" class="external-link">CRAN</a>. Install it
+with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jlmelville/mize"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"mize"</span><span class="op">)</span></span></code></pre></div>
 </blockquote>
 <div class="section level2">
 <h2 id="fit-rosenbrock-with-bfgs">Fit Rosenbrock with BFGS<a class="anchor" aria-label="anchor" href="#fit-rosenbrock-with-bfgs"></a>
@@ -231,10 +232,10 @@ sourceable example harness:</p>
 <span><span class="co">#&gt;     problem n  m    status objective_evaluations gradient_evaluations</span></span>
 <span><span class="co">#&gt; 1     rosen 2  2 converged                    48                   48</span></span>
 <span><span class="co">#&gt; 2  ex_rosen 4  4 converged                    54                   54</span></span>
-<span><span class="co">#&gt; 3 jenn_samp 2 20 converged                    74                   74</span></span>
+<span><span class="co">#&gt; 3 jenn_samp 2 20 converged                    61                   61</span></span>
 <span><span class="co">#&gt;   final_objective gradient_inf_norm</span></span>
 <span><span class="co">#&gt; 1        5.59e-16          6.23e-07</span></span>
-<span><span class="co">#&gt; 2        9.64e-24          1.02e-11</span></span>
+<span><span class="co">#&gt; 2        9.65e-24          1.02e-11</span></span>
 <span><span class="co">#&gt; 3        1.45e+03          4.70e-07</span></span></code></pre></div>
 <p>All three runs use the same method and stopping rule. The same
 harness handles a fixed problem, a chosen parameter dimension, and a
@@ -300,7 +301,7 @@ report:</p>
 <span><span class="co">#&gt; 4    R version R version 4.6.2 (2026-10-29)</span></span>
 <span><span class="co">#&gt; 5 funconstrain                        0.1.1</span></span>
 <span><span class="co">#&gt; 6         mize                        0.3.0</span></span>
-<span><span class="co">#&gt; 7  mize commit                 05b80d5474ac</span></span>
+<span><span class="co">#&gt; 7  mize commit                        0.3.0</span></span>
 <span><span class="co">#&gt; 8   R platform          x86_64-pc-linux-gnu</span></span></code></pre></div>
 <p>The result also retains the complete supplied control list in
 <code>rosen_run$controls</code>.</p>
