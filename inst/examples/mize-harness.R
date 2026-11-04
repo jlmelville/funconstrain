@@ -68,7 +68,7 @@ run_mize_problem <- function(
     stop(
       "run_mize_problem() requires mize >= ",
       minimum_mize_version,
-      "; install it with pak::pak(\"jlmelville/mize\")",
+      "; install it with install.packages(\"mize\")",
       call. = FALSE
     )
   }

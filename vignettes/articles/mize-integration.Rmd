@@ -15,11 +15,11 @@ supplies the optimizer. We will fit Rosenbrock with BFGS, look at the
 optimization as it progresses, and then use a small harness to repeat the same
 setup consistently.
 
-> **Version requirement.** These examples use `mize` 0.3.0 or later. Install
-> the current version with:
+> **Version requirement.** These examples work with `mize` 0.3.0 or later,
+> available from [CRAN](https://cran.r-project.org/package=mize). Install it with:
 >
 > ```r
-> pak::pak("jlmelville/mize")
+> install.packages("mize")
 > ```
 
 ## Fit Rosenbrock with BFGS

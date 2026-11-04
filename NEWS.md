@@ -16,8 +16,8 @@
 - Improved dimension and input validation, including consistent errors where Hessians are undefined.
 - Extended `chebyquad()` to support the full `m >= n` problem family while retaining `m = n` when
   `m` is omitted.
-- Updated the mize integration harness and article for stable mize 0.3.0; release installs no longer
-  need GitHub commit metadata.
+- Updated the mize integration harness and article for mize 0.3.0 from CRAN; release installs no
+  longer need GitHub commit metadata.
 - Removed the duplicate `"L-BFGS-B"` entry from the optimizer methods returned by `fufn()`.
 - `fufn()` now rejects malformed, non-whole, and out-of-range problem numbers with clear validation
   errors.
