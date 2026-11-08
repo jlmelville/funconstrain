@@ -174,10 +174,10 @@ suite_table
 #>     problem n  m    status objective_evaluations gradient_evaluations
 #> 1     rosen 2  2 converged                    48                   48
 #> 2  ex_rosen 4  4 converged                    54                   54
-#> 3 jenn_samp 2 20 converged                    74                   74
+#> 3 jenn_samp 2 20 converged                    61                   61
 #>   final_objective gradient_inf_norm
 #> 1        5.59e-16          6.23e-07
-#> 2        9.64e-24          1.02e-11
+#> 2        9.65e-24          1.02e-11
 #> 3        1.45e+03          4.70e-07
 ```
 
