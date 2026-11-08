@@ -15,22 +15,8 @@ gfd <- function(par, fn, rel_eps = .Machine$double.eps^(1 / 3)) {
   g
 }
 
-make_gfd <- function(fn, rel_eps = .Machine$double.eps^(1 / 3)) {
-  function(par) {
-    gfd(par, fn, rel_eps)
-  }
-}
-
-# test analytical gradient equals finite difference gradient at par
-expect_gfd <- function(testfun, par, tolerance = 1e-6, tol = NULL) {
-  if (!is.null(tol)) {
-    tolerance <- tol
-  }
-
-  fd <- make_gfd(testfun$fn)(par)
-  an <- testfun$gr(par)
-
-  expect_equal(fd, an, tolerance = tolerance)
+expect_gfd <- function(testfun, par, tolerance = 1e-6) {
+  expect_equal(gfd(par, testfun$fn), testfun$gr(par), tolerance = tolerance)
 }
 
 problem_factory_names <- function() {
@@ -118,31 +104,5 @@ expect_hfd <- function(
       is_symmetric = TRUE
     ),
     tolerance = tolerance
-  )
-}
-
-factory_m_metadata <- function() {
-  do.call(
-    rbind,
-    lapply(problem_factory_names(), function(name) {
-      testfun <- get_problem_factory(name)()
-      if ("m" %in% names(testfun)) {
-        return(data.frame(
-          factory = name,
-          m_present = TRUE,
-          m_type = typeof(testfun$m),
-          m_value = paste(testfun$m, collapse = ","),
-          stringsAsFactors = FALSE
-        ))
-      }
-
-      data.frame(
-        factory = name,
-        m_present = FALSE,
-        m_type = NA_character_,
-        m_value = NA_character_,
-        stringsAsFactors = FALSE
-      )
-    })
   )
 }

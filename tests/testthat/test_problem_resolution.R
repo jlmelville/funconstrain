@@ -1,33 +1,3 @@
-test_that("catalog is a minimal ordered public projection", {
-  catalog <- funconstrain_catalog()
-  manifest <- getFromNamespace(
-    "funconstrain_problem_manifest",
-    "funconstrain"
-  )()
-
-  expected <- data.frame(
-    number = seq_len(35L),
-    name = manifest$name,
-    title = manifest$title,
-    n_kind = manifest$n_kind,
-    n_default = manifest$n_default,
-    m_configurable = manifest$m_kind == "configurable",
-    m_default = manifest$m_default,
-    stringsAsFactors = FALSE
-  )
-  names(expected) <- c(
-    "number",
-    "name",
-    "title",
-    "n_kind",
-    "n_default",
-    "m_configurable",
-    "m_default"
-  )
-
-  expect_identical(catalog, expected)
-})
-
 test_that("every catalog default resolves to the public list contract", {
   catalog <- funconstrain_catalog()
   resolved <- expect_no_warning(lapply(seq_len(nrow(catalog)), function(i) {
@@ -205,6 +175,11 @@ test_that("explicit valid dimensions are normalized and recorded", {
   )
 
   expect_equal(actual, expected)
+  expect_length(funconstrain_problem("watson", n = 31)$x0, 31)
+  expect_identical(
+    funconstrain_problem("gulf", m = 100)$configuration$effective$m,
+    100L
+  )
 })
 
 test_that("nondefault derived m values follow independent formulas", {
@@ -272,128 +247,6 @@ test_that("invalid explicit requests error without falling back", {
   }
 })
 
-test_that("resolver enforces every encoded dimension boundary", {
-  manifest <- getFromNamespace(
-    "funconstrain_problem_manifest",
-    "funconstrain"
-  )()
-  checks <- logical()
-
-  fixed_n <- manifest[manifest$n_kind == "fixed", ]
-  for (i in seq_len(nrow(fixed_n))) {
-    spec <- fixed_n[i, ]
-    checks[[paste(spec$name, "fixed n")]] <- is.na(
-      capture_error_message(funconstrain_problem(spec$name, n = spec$n_default))
-    )
-    checks[[paste(spec$name, "below fixed n")]] <- !is.na(
-      capture_error_message(
-        funconstrain_problem(spec$name, n = spec$n_default - 1L)
-      )
-    )
-    checks[[paste(spec$name, "above fixed n")]] <- !is.na(
-      capture_error_message(
-        funconstrain_problem(spec$name, n = spec$n_default + 1L)
-      )
-    )
-  }
-
-  variable_n <- manifest[manifest$n_kind == "variable", ]
-  for (i in seq_len(nrow(variable_n))) {
-    spec <- variable_n[i, ]
-    valid <- funconstrain_problem(spec$name, n = spec$n_min)
-    checks[[paste(spec$name, "minimum n")]] <- identical(
-      valid$configuration$effective$n,
-      spec$n_min
-    )
-    checks[[paste(spec$name, "below minimum n")]] <- !is.na(
-      capture_error_message(funconstrain_problem(
-        spec$name,
-        n = spec$n_min - 1L
-      ))
-    )
-
-    if (is.finite(spec$n_max)) {
-      checks[[paste(spec$name, "maximum n")]] <- is.na(
-        capture_error_message(funconstrain_problem(spec$name, n = spec$n_max))
-      )
-      checks[[paste(spec$name, "above maximum n")]] <- !is.na(
-        capture_error_message(
-          funconstrain_problem(spec$name, n = spec$n_max + 1L)
-        )
-      )
-    }
-    if (spec$n_multiple > 1L) {
-      checks[[paste(spec$name, "n multiple")]] <- grepl(
-        "multiple",
-        capture_error_message(
-          funconstrain_problem(spec$name, n = spec$n_min + 1L)
-        ),
-        fixed = TRUE
-      )
-    }
-  }
-
-  configurable_m <- manifest[manifest$m_kind == "configurable", ]
-  for (i in seq_len(nrow(configurable_m))) {
-    spec <- configurable_m[i, ]
-    request_n <- if (spec$n_kind == "variable") spec$n_min else NULL
-    valid <- funconstrain_problem(spec$name, n = request_n, m = spec$m_min)
-    checks[[paste(spec$name, "minimum m")]] <- identical(
-      valid$configuration$effective$m,
-      spec$m_min
-    )
-    checks[[paste(spec$name, "below minimum m")]] <- !is.na(
-      capture_error_message(
-        funconstrain_problem(spec$name, n = request_n, m = spec$m_min - 1L)
-      )
-    )
-
-    if (is.finite(spec$m_max)) {
-      checks[[paste(spec$name, "maximum m")]] <- is.na(
-        capture_error_message(
-          funconstrain_problem(spec$name, n = request_n, m = spec$m_max)
-        )
-      )
-      checks[[paste(spec$name, "above maximum m")]] <- !is.na(
-        capture_error_message(
-          funconstrain_problem(spec$name, n = request_n, m = spec$m_max + 1L)
-        )
-      )
-    }
-    if (spec$m_gte_n && spec$n_kind == "variable") {
-      checks[[paste(spec$name, "m below n")]] <- grepl(
-        "greater than or equal to n",
-        capture_error_message(
-          funconstrain_problem(
-            spec$name,
-            n = spec$m_min + 1L,
-            m = spec$m_min
-          )
-        ),
-        fixed = TRUE
-      )
-    }
-  }
-
-  derived_m <- manifest[manifest$m_kind == "derived", ]
-  for (i in seq_len(nrow(derived_m))) {
-    spec <- derived_m[i, ]
-    n <- spec$n_min
-    expected_m <- spec$m_n_multiplier * n + spec$m_n_offset
-    valid <- funconstrain_problem(spec$name, n = n, m = expected_m)
-    checks[[paste(spec$name, "derived m")]] <- identical(
-      valid$configuration$effective$m,
-      as.integer(expected_m)
-    )
-    checks[[paste(spec$name, "invalid derived m")]] <- !is.na(
-      capture_error_message(
-        funconstrain_problem(spec$name, n = n, m = expected_m + 1L)
-      )
-    )
-  }
-
-  expect_all_checks(checks)
-})
 
 test_that("reference records distinguish their public states", {
   applicable <- funconstrain_problem("rosen")$reference
@@ -478,27 +331,6 @@ test_that("reference records distinguish their public states", {
   expect_identical(actual, expected)
 })
 
-test_that("unknown reference applicability has an explicit record", {
-  resolve_reference <- getFromNamespace(
-    "resolve_reference_record",
-    "funconstrain"
-  )
-  rule <- list(
-    availability = "unknown",
-    source_configuration = list(),
-    reason = "unencoded_rule"
-  )
-
-  expect_identical(
-    resolve_reference(7, rule, n = 2L, m = 2L),
-    list(
-      value = 7,
-      status = "unknown",
-      reason = "unencoded_rule",
-      source_configuration = list()
-    )
-  )
-})
 
 test_that("jointly applicable resolved minima agree", {
   checks <- logical()

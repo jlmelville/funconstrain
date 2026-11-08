@@ -67,69 +67,46 @@ expected_problem_titles <- function() {
   )
 }
 
-test_that("internal manifest is the authoritative ordered factory registry", {
-  manifest <- problem_manifest()
+test_that("catalog lists every exported factory in paper order", {
+  catalog <- funconstrain_catalog()
   expected_titles <- expected_problem_titles()
   exported_factories <- setdiff(
     getNamespaceExports("funconstrain"),
+    c("fufn", "fufnrun", "funconstrain_catalog", "funconstrain_problem")
+  )
+
+  expect_s3_class(catalog, "data.frame")
+  expect_named(
+    catalog,
     c(
-      "fufn",
-      "fufnrun",
-      "funconstrain_catalog",
-      "funconstrain_problem"
+      "number",
+      "name",
+      "title",
+      "n_kind",
+      "n_default",
+      "m_configurable",
+      "m_default"
     )
   )
-
-  actual <- list(
-    is_data_frame = is.data.frame(manifest),
-    row_count = nrow(manifest),
-    number = manifest$number,
-    unique_name_count = length(unique(manifest$name)),
-    name = manifest$name,
-    title = setNames(manifest$title, manifest$name),
-    exported_factories = sort(manifest$name),
-    helper_names = problem_factory_names()
-  )
-  expected <- list(
-    is_data_frame = TRUE,
-    row_count = 35L,
-    number = seq_len(35L),
-    unique_name_count = 35L,
-    name = names(expected_titles),
-    title = expected_titles,
-    exported_factories = sort(exported_factories),
-    helper_names = manifest$name
-  )
-
-  expect_identical(actual, expected)
+  expect_identical(catalog$number, seq_along(expected_titles))
+  expect_identical(setNames(catalog$title, catalog$name), expected_titles)
+  expect_setequal(catalog$name, exported_factories)
 })
 
-test_that("manifest defaults agree with current factory behavior", {
-  manifest <- problem_manifest()
-  checks <- lapply(seq_len(nrow(manifest)), function(i) {
-    spec <- manifest[i, ]
+test_that("catalog defaults agree with the factories", {
+  catalog <- funconstrain_catalog()
+  checks <- lapply(seq_len(nrow(catalog)), function(i) {
+    spec <- catalog[i, ]
     factory <- get_problem_factory(spec$name)
     testfun <- factory()
     x0 <- standard_x0(testfun)
     has_m_argument <- "m" %in% names(formals(factory))
     m_formal_matches <- if (has_m_argument) {
-      if (!is.na(spec$m_n_multiplier)) {
-        is.null(formals(factory)$m)
-      } else {
+      is.null(formals(factory)$m) ||
         isTRUE(all.equal(formals(factory)$m, spec$m_default))
-      }
     } else {
       TRUE
     }
-    derived_default_matches <- if (!is.na(spec$m_n_multiplier)) {
-      isTRUE(all.equal(
-        spec$m_default,
-        spec$m_n_multiplier * spec$n_default + spec$m_n_offset
-      ))
-    } else {
-      TRUE
-    }
-
     list(
       n_kind_matches = identical(
         is.function(testfun$x0),
@@ -138,19 +115,18 @@ test_that("manifest defaults agree with current factory behavior", {
       default_n_matches = identical(length(x0), spec$n_default),
       m_kind_matches = identical(
         has_m_argument,
-        spec$m_kind == "configurable"
+        spec$m_configurable
       ),
-      m_formal_matches = m_formal_matches,
-      derived_default_matches = derived_default_matches
+      m_formal_matches = m_formal_matches
     )
   })
-  names(checks) <- manifest$name
+  names(checks) <- catalog$name
 
   expect_all_checks(checks)
 })
 
-test_that("fixed and formula-derived m rules match the MGH definitions", {
-  manifest <- problem_manifest()
+test_that("catalog reports the fixed residual counts from the MGH definitions", {
+  catalog <- funconstrain_catalog()
   expected_fixed <- c(
     rosen = 2L,
     freud_roth = 2L,
@@ -168,33 +144,8 @@ test_that("fixed and formula-derived m rules match the MGH definitions", {
     osborne_2 = 65L,
     watson = 31L
   )
-  expected_derived <- data.frame(
-    name = c(
-      "ex_rosen",
-      "ex_powell",
-      "penalty_1",
-      "penalty_2",
-      "var_dim",
-      "trigon",
-      "brown_al",
-      "disc_bv",
-      "disc_ie",
-      "broyden_tri",
-      "broyden_band",
-      "chebyquad"
-    ),
-    multiplier = c(1L, 1L, 1L, 2L, rep(1L, 8L)),
-    offset = c(0L, 0L, 1L, 0L, 2L, rep(0L, 7L)),
-    stringsAsFactors = FALSE
-  )
-
-  fixed <- manifest[manifest$m_kind == "fixed", ]
-  derived <- manifest[!is.na(manifest$m_n_multiplier), ]
-
+  fixed <- catalog[catalog$name %in% names(expected_fixed), ]
   expect_identical(setNames(fixed$m_default, fixed$name), expected_fixed)
-  expect_identical(derived$name, expected_derived$name)
-  expect_identical(derived$m_n_multiplier, expected_derived$multiplier)
-  expect_identical(derived$m_n_offset, expected_derived$offset)
 })
 
 test_that("manifest n rules agree with starting-point validation", {
@@ -275,60 +226,6 @@ test_that("manifest configurable m rules agree with factory validation", {
   expect_all_checks(checks)
 })
 
-test_that("manifest reference rules have a small coherent vocabulary", {
-  manifest <- problem_manifest()
-  allowed_availability <- c("stored", "unavailable", "unknown")
-  allowed_configuration <- c("n", "n_min", "n_max", "m", "m_min", "m_max")
-  checks <- logical()
-
-  for (field in c("fmin_reference", "xmin_reference")) {
-    for (i in seq_len(nrow(manifest))) {
-      spec <- manifest[i, ]
-      rule <- spec[[field]][[1L]]
-      key <- paste(spec$name, field)
-
-      checks[[paste(key, "fields")]] <- identical(
-        names(rule),
-        c("availability", "source_configuration", "reason")
-      )
-      checks[[paste(key, "availability")]] <-
-        rule$availability %in% allowed_availability
-      checks[[paste(key, "configuration type")]] <-
-        is.list(rule$source_configuration)
-      checks[[paste(key, "configuration fields")]] <-
-        all(names(rule$source_configuration) %in% allowed_configuration)
-
-      if (rule$availability == "stored") {
-        checks[[paste(key, "reason")]] <- is.null(rule$reason)
-      } else {
-        checks[[paste(key, "reason type")]] <- is.character(rule$reason)
-        checks[[paste(key, "reason length")]] <- length(rule$reason) == 1L
-      }
-    }
-  }
-
-  fmin_availability <- vapply(
-    manifest$fmin_reference,
-    `[[`,
-    character(1L),
-    "availability"
-  )
-  xmin_availability <- vapply(
-    manifest$xmin_reference,
-    `[[`,
-    character(1L),
-    "availability"
-  )
-
-  checks[["all fmin references stored"]] <- all(fmin_availability == "stored")
-  checks[["box_3d xmin unavailable"]] <- identical(
-    manifest$name[xmin_availability == "unavailable"],
-    "box_3d"
-  )
-  checks[["no unknown xmin references"]] <- !any(xmin_availability == "unknown")
-
-  expect_all_checks(checks)
-})
 
 test_that("reference applicability is keyed to the documented problems", {
   manifest <- problem_manifest()

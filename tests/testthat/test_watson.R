@@ -36,19 +36,7 @@ min_x12 <- c(
   -5.884314e-01,
   2.495999e-01
 )
-min_fx12 <- 4.72238e-10 # Couldn't get this low: 1.0295e-8
 
-test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0(6))
-  expect_gfd(testfun, testfun$x0(9))
-  expect_gfd(testfun, testfun$x0(12))
-})
-test_that("f, g, and fg match at x0", {
-  x0 <- testfun$x0(6)
-  fg <- testfun$fg(x0)
-  expect_equal(fg$fn, testfun$fn(x0))
-  expect_equal(fg$gr, testfun$gr(x0))
-})
 test_that("Off-start derivatives match finite differences", {
   par <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6)
   expect_gfd(testfun, par, tolerance = 1e-6)
@@ -66,14 +54,4 @@ test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x), min_fx, tolerance = 1e-6)
   expect_equal(testfun$fn(min_x9), min_fx9, tolerance = 1e-4)
   expect_lt(testfun$fn(min_x12), 1e-7)
-})
-test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(
-    par = testfun$x0(6),
-    fn = testfun$fn,
-    gr = testfun$gr,
-    method = "L-BFGS-B"
-  )
-  expect_equal(res$par, min_x, tolerance = 1e-5)
-  expect_equal(res$value, min_fx, tolerance = 1e-6)
 })

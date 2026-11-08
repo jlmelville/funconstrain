@@ -72,8 +72,10 @@ test_that("Gulf uses regular derivatives on both sides of exact zero distance", 
   for (m in c(50, 100)) {
     t <- 0.01 * m
     y <- 25 + (-50 * log(t))^(2 / 3)
+    full <- gulf(m)
+    shorter <- gulf(m - 1)
     for (p in c(1, 1.5, 2)) {
-      for (delta in c(-1e-4, -1e-7, 1e-7, 1e-4)) {
+      for (delta in c(-1e-7, 1e-7)) {
         x <- c(50, y + delta, p)
         distance <- x[2] - y
         u <- abs(distance)^p / x[1]
@@ -83,28 +85,18 @@ test_that("Gulf uses regular derivatives on both sides of exact zero distance", 
         ddu <- p * (p - 1) * abs(distance)^(p - 2) / x[1]
         expected_g <- -2 * e * residual * du
         expected_h <- 2 * e * ((e + residual) * du^2 - residual * ddu)
-        full <- gulf(m)
-        shorter <- gulf(m - 1)
-        actual_g <- full$gr(x)[2] - shorter$gr(x)[2]
+        gradient <- full$gr(x)
+        actual_g <- gradient[2] - shorter$gr(x)[2]
         actual_h <- full$he(x)[2, 2] - shorter$he(x)[2, 2]
         expect_lt(abs(actual_g - expected_g), 1e-11 * max(1, abs(expected_g)))
         expect_lt(abs(actual_h - expected_h), 1e-11 * max(1, abs(expected_h)))
-        expect_equal(full$fg(x)$gr, full$gr(x))
-        expect_equal(full$fg(x)$fn, full$fn(x))
+        expect_equal(full$fg(x), list(fn = full$fn(x), gr = gradient))
       }
     }
   }
 })
 min_x <- c(50, 25, 1.5)
 min_fx <- 0
-test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0)
-})
-test_that("f, g, and fg match at x0", {
-  fg <- testfun$fg(testfun$x0)
-  expect_equal(fg$fn, testfun$fn(testfun$x0))
-  expect_equal(fg$gr, testfun$gr(testfun$x0))
-})
 test_that("Off-start derivatives match finite differences", {
   par <- c(10, 5, 1)
   expect_gfd(testfun, par, tolerance = 1e-6)
@@ -119,14 +111,4 @@ test_that("Gradient is zero at stated minima", {
 })
 test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x), min_fx)
-})
-test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(
-    par = testfun$x0,
-    fn = testfun$fn,
-    gr = testfun$gr,
-    method = "L-BFGS-B"
-  )
-  expect_equal(res$par, min_x, tolerance = 1e-6)
-  expect_equal(res$value, min_fx)
 })

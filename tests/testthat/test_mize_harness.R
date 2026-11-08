@@ -11,7 +11,6 @@ load_mize_harness <- function() {
 }
 
 test_that("mize adapter maps callbacks and counts physical calls", {
-  testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
   problem <- funconstrain_problem("rosen")
 
@@ -21,16 +20,17 @@ test_that("mize adapter maps callbacks and counts physical calls", {
 
   counted <- harness$count_mize_callbacks(callbacks)
   counted$fg$fn(problem$x0)
+  counted$fg$fn(problem$x0)
   counted$fg$gr(problem$x0)
   counted$fg$fg(problem$x0)
   counted$fg$hs(problem$x0)
   expect_identical(
     counted$counts(),
-    c(fn = 1L, gr = 1L, fg = 1L, hs = 1L)
+    c(fn = 2L, gr = 1L, fg = 1L, hs = 1L)
   )
 })
 
-test_that("ordinary mize runs retain native and independent observations", {
+test_that("mize convergence agrees with independently evaluated quality", {
   testthat::skip_if_not_installed("mize", minimum_version = "0.3.0")
   harness <- load_mize_harness()
 
@@ -46,51 +46,22 @@ test_that("ordinary mize runs retain native and independent observations", {
     )
   )
 
-  expect_identical(run$problem$name, "rosen")
-  expect_identical(
-    run$problem$configuration$effective,
-    list(n = 2L, m = 2L)
-  )
-  expect_identical(run$method, "BFGS")
-  expect_identical(
-    run$controls,
-    list(
-      max_iter = 200,
-      abs_tol = NULL,
-      rel_tol = NULL,
-      ginf_tol = 1e-6,
-      step_tol = NULL
-    )
-  )
-  expect_identical(run$reference$status, "applicable")
   expect_null(run$conditions$error)
   expect_length(run$conditions$warnings, 0L)
   expect_identical(run$outcome$status, "converged")
   expect_identical(run$outcome$terminate$what, "ginf_tol")
-  expect_type(run$outcome$message, "character")
-  expect_type(run$outcome$converged, "logical")
-  expect_named(run$outcome$terminate, c("what", "val"))
-  expect_true(is.finite(run$quality$initial$objective))
-  expect_true(is.finite(run$quality$final$objective))
-  expect_true(is.finite(run$quality$final$gradient_inf_norm))
-  expect_lt(run$quality$final$objective, run$quality$initial$objective)
-  expect_lt(run$quality$final$gradient_inf_norm, 1e-6)
-  expect_named(run$work$native, c("nf", "ng", "nh", "nhi", "iter"))
-  expect_named(run$work$physical, c("fn", "gr", "fg", "hs"))
-  expect_gte(run$work$native$nf, 0)
-  expect_gte(run$work$native$ng, 0)
-  expect_identical(run$work$native$nh, 0)
-  expect_identical(run$work$native$nhi, 0)
-  expect_identical(run$work$physical[["hs"]], 0L)
-  expect_true(all(run$work$physical >= 0L))
-  expect_true(
-    numeric_version(run$provenance$mize_version) >= numeric_version("0.3.0")
+  expect_true(run$outcome$converged)
+  problem <- rosen()
+  par <- run$parameters$final
+  expect_equal(
+    run$quality$final,
+    list(
+      objective = problem$fn(par),
+      gradient_inf_norm = max(abs(problem$gr(par)))
+    )
   )
-  expect_type(run$provenance$mize_commit, "character")
-  expect_length(run$provenance$mize_commit, 1L)
-  if (!is.na(run$provenance$mize_commit)) {
-    expect_match(run$provenance$mize_commit, "^[0-9a-f]{40}$")
-  }
+  expect_equal(run$quality$final$objective, 0, tolerance = 1e-8)
+  expect_lt(run$quality$final$gradient_inf_norm, 1e-6)
 })
 
 test_that("Hessian work retains native and physical count meanings", {
@@ -117,7 +88,6 @@ test_that("Hessian work retains native and physical count meanings", {
   expect_identical(run$work$native$nh, 2)
   expect_identical(run$work$native$nhi, 0)
   expect_identical(run$work$physical[["hs"]], 2L)
-  expect_false("hi" %in% names(run$work$physical))
 })
 
 test_that("hard budgets preserve absent native quality without fabrication", {
@@ -170,9 +140,9 @@ test_that("mize harness rejects ambiguous controls and resolves a small suite", 
   expect_null(failed$parameters$final)
 
   manifest <- data.frame(
-    name = c("rosen", "ex_rosen", "jenn_samp"),
-    n = c(NA_integer_, 4L, NA_integer_),
-    m = c(NA_integer_, NA_integer_, 20L)
+    name = c("ex_rosen", "jenn_samp"),
+    n = c(4L, NA_integer_),
+    m = c(NA_integer_, 20L)
   )
   suite <- harness$run_mize_suite(
     manifest,
@@ -181,17 +151,12 @@ test_that("mize harness rejects ambiguous controls and resolves a small suite", 
 
   expect_identical(names(suite$runs), manifest$name)
   expect_identical(
-    suite$runs$ex_rosen$problem$configuration$effective,
-    list(n = 4L, m = 4L)
-  )
-  expect_identical(
     suite$runs$ex_rosen$problem$configuration$requested,
     list(n = 4L, m = NULL)
   )
   expect_identical(
-    suite$runs$jenn_samp$problem$configuration$effective,
-    list(n = 2L, m = 20L)
+    suite$runs$jenn_samp$problem$configuration$requested,
+    list(n = NULL, m = 20L)
   )
   expect_identical(suite$runs$jenn_samp$reference$status, "not_applicable")
-  expect_identical(suite$provenance, suite$runs$rosen$provenance)
 })

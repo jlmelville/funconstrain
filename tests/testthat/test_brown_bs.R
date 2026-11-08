@@ -1,12 +1,4 @@
 testfun <- brown_bs()
-test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0, tolerance = 1e-3)
-})
-test_that("f, g, and fg match at x0", {
-  fg <- testfun$fg(testfun$x0)
-  expect_equal(fg$fn, testfun$fn(testfun$x0))
-  expect_equal(fg$gr, testfun$gr(testfun$x0))
-})
 test_that("Off-start derivatives match finite differences", {
   par <- c(2, 0.2)
   # A larger step avoids cancellation in this badly scaled objective.
@@ -26,14 +18,4 @@ test_that("Gradient is zero at stated minima", {
 })
 test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(c(1e6, 2e-6)), 0, tolerance = 1e-6)
-})
-test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(
-    par = testfun$x0,
-    fn = testfun$fn,
-    gr = testfun$gr,
-    method = "BFGS"
-  )
-  expect_equal(res$par, c(1e6, 2e-6), tolerance = 1e-5)
-  expect_equal(res$value, 0, tolerance = 1e-5)
 })

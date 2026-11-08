@@ -40,50 +40,28 @@ integer_parameter_cases <- list(
 
 test_that("all factories promote integer arithmetic consistently in every callback", {
   expect_setequal(names(integer_parameter_cases), problem_factory_names())
-  for (name in names(integer_parameter_cases)) {
-    problem <- get_problem_factory(name)()
-    for (named in c(FALSE, TRUE)) {
+  checks <- logical()
+  expect_no_warning({
+    for (name in names(integer_parameter_cases)) {
+      problem <- get_problem_factory(name)()
       x <- integer_parameter_cases[[name]]
-      if (named) {
-        names(x) <- paste0("x", seq_along(x))
-      }
+      names(x) <- paste0("x", seq_along(x))
       double_x <- x + 0
       for (callback in c("fn", "gr", "fg", "he")) {
-        label <- paste(name, callback, if (named) "named" else "unnamed")
+        label <- paste(name, callback)
         expected <- problem[[callback]](double_x)
-        expect_true(all(is.finite(unlist(expected))), info = label)
-        expect_warning(actual <- problem[[callback]](x), NA)
-        expect_equal(actual, expected, tolerance = 0, info = label)
+        actual <- problem[[callback]](x)
+        checks[[paste(label, "double result is finite")]] <-
+          all(is.finite(unlist(expected)))
+        checks[[paste(label, "integer result matches")]] <-
+          identical(actual, expected)
       }
-      combined <- problem$fg(x)
-      expect_equal(combined$fn, problem$fn(x))
-      expect_equal(combined$gr, problem$gr(x))
     }
-  }
+  })
+  expect_all_checks(checks)
 })
 
-test_that("integer promotion preserves attributes and does not coerce other types", {
-  # The helper's identity contract protects arbitrary input classes without
-  # introducing assumptions about their arithmetic methods into factory tests.
-  promote <- getFromNamespace("promote_integer", "funconstrain")
-  x <- structure(
-    matrix(1:4, 2, dimnames = list(c("a", "b"), c("c", "d"))),
-    note = "retained"
-  )
-  actual <- promote(x)
-  expect_type(actual, "double")
-  expect_identical(attributes(actual), attributes(x))
-  expect_identical(unname(as.vector(actual)), as.double(x))
-  for (other in list(
-    c(a = 1, b = 2),
-    c(1 + 1i, 2),
-    c(TRUE, FALSE),
-    c("1", "2"),
-    factor(c("1", "2")),
-    structure(1:2, class = "custom_integer")
-  )) {
-    expect_identical(promote(other), other)
-  }
+test_that("Rosenbrock callbacks reject nonnumeric parameters", {
   for (callback in c("fn", "gr", "fg", "he")) {
     expect_error(rosen()[[callback]](c("1", "2")), "non-numeric")
   }

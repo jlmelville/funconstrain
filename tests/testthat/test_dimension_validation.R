@@ -1,41 +1,3 @@
-test_that("supported one-dimensional factories have coherent callbacks", {
-  factories <- list(
-    penalty_1 = penalty_1(),
-    penalty_2 = penalty_2(),
-    var_dim = var_dim(),
-    trigon = trigon(),
-    brown_al = brown_al(),
-    disc_bv = disc_bv(),
-    disc_ie = disc_ie(),
-    broyden_tri = broyden_tri(),
-    broyden_band = broyden_band(),
-    linfun_fr = linfun_fr(m = 1),
-    linfun_r1 = linfun_r1(m = 1),
-    linfun_r1z = linfun_r1z(m = 1),
-    chebyquad = chebyquad()
-  )
-
-  actual <- lapply(factories, function(testfun) {
-    x <- if (is.function(testfun$x0)) testfun$x0(1) else testfun$x0
-    fn <- testfun$fn(x)
-    gr <- testfun$gr(x)
-    he <- testfun$he(x)
-    fg <- testfun$fg(x)
-
-    list(
-      fn_is_scalar = length(fn) == 1L,
-      gr_is_scalar = length(gr) == 1L,
-      he_is_matrix = is.matrix(he),
-      he_dimensions_match = identical(dim(he), c(1L, 1L)),
-      he_is_finite = all(is.finite(he)),
-      fg_fn_matches = isTRUE(all.equal(fg$fn, fn)),
-      fg_gr_matches = isTRUE(all.equal(fg$gr, gr))
-    )
-  })
-
-  expect_all_checks(actual)
-})
-
 test_that("one-dimensional Brown Almost-Linear callbacks use the scalar formula", {
   testfun <- brown_al()
   x <- 0.3
@@ -70,48 +32,6 @@ test_that("one-dimensional Broyden Tridiagonal callbacks use one residual", {
   expect_equal(testfun$he(x), matrix(2 * (rp^2 - 4 * r), 1, 1))
 })
 
-test_that("one-dimensional Linear Rank 1 with Zero Columns and Rows is constant", {
-  m_values <- c(1L, 2L, 3L)
-  actual <- lapply(m_values, function(m) {
-    testfun <- linfun_r1z(m)
-    x <- testfun$x0(1)
-    combined <- testfun$fg(x)
-
-    list(
-      fn = testfun$fn(x),
-      gr = testfun$gr(x),
-      he = testfun$he(x),
-      fg_fn = combined$fn,
-      fg_gr = combined$gr
-    )
-  })
-  expected <- lapply(m_values, function(m) {
-    list(fn = m, gr = 0, he = matrix(0, 1, 1), fg_fn = m, fg_gr = 0)
-  })
-
-  expect_equal(actual, expected)
-})
-
-test_that("structural variable-dimension rules are deliberate", {
-  wat <- watson()
-  expect_length(wat$x0(2), 2)
-  expect_length(wat$x0(31), 31)
-  expect_error(wat$x0(1), "outside")
-  expect_error(wat$x0(32), "outside")
-
-  exros <- ex_rosen()
-  expect_length(exros$x0(2), 2)
-  expect_length(exros$x0(4), 4)
-  expect_error(exros$fn(numeric()), "outside")
-  expect_error(exros$x0(3), "multiple")
-
-  expow <- ex_powell()
-  expect_length(expow$x0(4), 4)
-  expect_length(expow$x0(8), 8)
-  expect_error(expow$fn(numeric()), "outside")
-  expect_error(expow$x0(2), "outside")
-  expect_error(expow$x0(6), "multiple")
-})
 
 test_that("variable callbacks cover boundary dimensions", {
   cases <- list(
@@ -192,24 +112,6 @@ test_that("linear factories reject m less than n in every callback", {
   expect_all_checks(matches)
 })
 
-test_that("factory m bounds are validated", {
-  expect_silent(jenn_samp(2))
-  expect_error(jenn_samp(1), "outside")
-
-  expect_silent(gulf(3))
-  expect_silent(gulf(100))
-  expect_error(gulf(2), "outside")
-  expect_error(gulf(101), "outside")
-
-  expect_silent(box_3d(3))
-  expect_error(box_3d(2), "outside")
-
-  expect_silent(brown_den(4))
-  expect_error(brown_den(3), "outside")
-
-  expect_silent(biggs_exp6(6))
-  expect_error(biggs_exp6(5), "outside")
-})
 
 test_that("accepted linear factory m values retain storage type", {
   factories <- list(

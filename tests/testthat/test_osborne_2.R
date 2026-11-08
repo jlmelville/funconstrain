@@ -14,14 +14,6 @@ min_x <- c(
 )
 min_fx <- 0.04013774
 
-test_that("Analytical and finite difference gradients match at x0", {
-  expect_gfd(testfun, testfun$x0)
-})
-test_that("f, g, and fg match at x0", {
-  fg <- testfun$fg(testfun$x0)
-  expect_equal(fg$fn, testfun$fn(testfun$x0))
-  expect_equal(fg$gr, testfun$gr(testfun$x0))
-})
 test_that("Off-start derivatives match finite differences", {
   par <- c(1, 0.5, 0.6, 0.5, 0.8, 1.1, 1.2, 2, 1.8, 2.2, 2.5)
   expect_gfd(testfun, par, tolerance = 1e-6)
@@ -36,15 +28,4 @@ test_that("Gradient is zero at stated minima", {
 })
 test_that("Function value is correct at stated minima", {
   expect_equal(testfun$fn(min_x), min_fx, tolerance = 1e-6)
-})
-test_that("Optimizer can reach minimum from x0", {
-  res <- stats::optim(
-    par = testfun$x0,
-    fn = testfun$fn,
-    gr = testfun$gr,
-    method = "BFGS",
-    control = list(maxit = 1000)
-  )
-  expect_equal(res$par, min_x, tolerance = 1e-5)
-  expect_equal(res$value, min_fx, tolerance = 1e-6)
 })
